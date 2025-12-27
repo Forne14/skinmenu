@@ -1,4 +1,4 @@
-from home.models import HomePage
+from pages.models import HomePage
 
 from wagtail.models import Page, Site
 from wagtail.test.utils import WagtailPageTestCase

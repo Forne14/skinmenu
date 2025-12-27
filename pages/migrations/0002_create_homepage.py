@@ -6,7 +6,7 @@ def create_homepage(apps, schema_editor):
     ContentType = apps.get_model("contenttypes.ContentType")
     Page = apps.get_model("wagtailcore.Page")
     Site = apps.get_model("wagtailcore.Site")
-    HomePage = apps.get_model("home.HomePage")
+    HomePage = apps.get_model("pages.HomePage")
 
     # Delete the default homepage (of type Page) as created by wagtailcore.0002_initial_data,
     # if it exists
@@ -19,7 +19,7 @@ def create_homepage(apps, schema_editor):
 
     # Create content type for homepage model
     homepage_content_type, __ = ContentType.objects.get_or_create(
-        model="homepage", app_label="home"
+        model="homepage", app_label="pages"
     )
 
     # Create a new homepage
@@ -41,14 +41,14 @@ def create_homepage(apps, schema_editor):
 def remove_homepage(apps, schema_editor):
     # Get models
     ContentType = apps.get_model("contenttypes.ContentType")
-    HomePage = apps.get_model("home.HomePage")
+    HomePage = apps.get_model("pages.HomePage")
 
     # Delete the default homepage
     # Page and Site objects CASCADE
     HomePage.objects.filter(slug="home", depth=2).delete()
 
     # Delete content type for homepage model
-    ContentType.objects.filter(model="homepage", app_label="home").delete()
+    ContentType.objects.filter(model="homepage", app_label="pages").delete()
 
 
 class Migration(migrations.Migration):
@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
     ]
 
     dependencies = [
-        ("home", "0001_initial"),
+        ("pages", "0001_initial"),
     ]
 
     operations = [
