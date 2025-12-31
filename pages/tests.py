@@ -39,4 +39,4 @@ class HomeTests(WagtailPageTestCase):
 
     def test_homepage_template_used(self):
         response = self.client.get(self.homepage.url)
-        self.assertTemplateUsed(response, "home/home_page.html")
+        self.assertTemplateUsed(response, "pages/home_page.html")

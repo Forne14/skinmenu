@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+  {% for block in page.sections %}
+    {% include "pages/blocks/"|add:block.block_type|add:".html" with block=block %}
+  {% endfor %}
+{% endblock %}

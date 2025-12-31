@@ -1,0 +1,36 @@
+/* SKINMENU Design Tokens (semantic, themeable)
+   Values are R G B triples so Tailwind can do rgb(var(--x) / alpha)
+*/
+
+:root {
+  /* shared */
+  --radius: 9999px;
+
+  /* LIGHT theme (default) */
+  --bg: 229 224 214; /* Soft Cream #e5e0d6 */
+  --fg: 38 27 22; /* Dark Espresso #261b16 */
+  --surface: 255 255 255; /* white */
+  --surface-2: 245 242 238; /* soft off-white */
+  --border: 184 166 147; /* Beige #b8a693 */
+  --muted: 120 96 80; /* Primary Brown #786050 */
+  --heading: 61 43 31; /* Deep Earth #3d2b1f */
+  --accent: 61 43 31; /* Deep Earth */
+  --accent-2: 120 96 80; /* Primary Brown */
+}
+
+/* Dark theme stays within SKINMENU palette:
+   - dark surfaces use espresso/earth
+   - text uses cream
+   - borders use beige (with opacity via alpha)
+*/
+:root[data-theme='dark'] {
+  --bg: 38 27 22; /* Espresso */
+  --fg: 229 224 214; /* Cream */
+  --surface: 61 43 31; /* Earth */
+  --surface-2: 77 38 33; /* Reddish Brown */
+  --border: 184 166 147; /* Beige */
+  --muted: 184 166 147; /* Beige */
+  --heading: 229 224 214; /* Cream */
+  --accent: 184 166 147; /* Beige */
+  --accent-2: 120 96 80; /* Primary Brown */
+}

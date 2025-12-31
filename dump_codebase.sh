@@ -91,10 +91,10 @@ EXCLUDE_NAMES=(
 
 # Exclude by extension (binary/media/fonts)
 EXCLUDE_EXTS=(
-  "png" "jpg" "jpeg" "gif" "webp" "svg" "ico"
+  "png" "jpg" "jpeg" "gif" "webp" "ico"
   "mp4" "mov" "webm" "mp3" "wav"
   "pdf" "zip" "tar" "gz" "bz2" "7z"
-  "woff" "woff2" "ttf" "otf" "eot"
+  "woff" "woff2" "ttf" "otf" "eot" "sh" "txt"
 )
 
 # Build the prune expression for find

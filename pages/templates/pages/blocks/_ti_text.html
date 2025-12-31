@@ -1,0 +1,12 @@
+{% load wagtailcore_tags %}
+<div class="space-y-4">
+  {% if block.value.eyebrow %}
+    <div class="text-xs font-semibold tracking-wide text-muted uppercase">
+      {{ block.value.eyebrow }}
+    </div>
+  {% endif %}
+  <h2 class="text-2xl md:text-3xl">{{ block.value.heading }}</h2>
+  <div class="prose max-w-none text-fg/85">
+    {{ block.value.body|richtext }}
+  </div>
+</div>

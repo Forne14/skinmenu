@@ -1,13 +1,4 @@
 
-=== File: ./codebase-drtegoclinic.txt ===
-=== Size: 43 bytes | Modified: Dec 28 05:37:13 2025 ===
-
-
-=== File: ./codebase-drtegoclinic.txt ===
-=== Size: 43 bytes | Modified: Dec 28 05:37:13 2025 ===
-
-
-
 === File: ./config/__init__.py ===
 === Size: 0 bytes | Modified: Dec 28 04:58:02 2025 ===
 
@@ -19,7 +10,7 @@
 
 
 === File: ./config/settings/base.py ===
-=== Size: 4921 bytes | Modified: Dec 28 05:06:01 2025 ===
+=== Size: 4974 bytes | Modified: Dec 28 06:16:39 2025 ===
 
 """
 Django settings for config project.
@@ -69,6 +60,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "wagtail.contrib.settings",
+    "site_settings",
 ]
 
 MIDDLEWARE = [
@@ -246,6 +239,11 @@ except ImportError:
     pass
 
 
+=== File: ./config/static/css/app.css ===
+=== Size: 17128 bytes | Modified: Dec 30 15:10:02 2025 ===
+
+*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:Work Sans,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}html{font-family:Work Sans,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;letter-spacing:-.025em}body{--tw-bg-opacity:1;background-color:rgb(var(--bg)/var(--tw-bg-opacity,1));--tw-text-opacity:1;color:rgb(var(--fg)/var(--tw-text-opacity,1));-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}h1,h2,h3,h4{font-family:Koh Santepheap,Work Sans,serif;font-weight:300;letter-spacing:-.01em;--tw-text-opacity:1;color:rgb(var(--heading)/var(--tw-text-opacity,1))}a{text-decoration-line:underline;text-decoration-color:rgb(var(--border)/1);text-underline-offset:4px}a:hover{text-decoration-color:rgb(var(--accent)/1)}.container-shell{margin-left:auto;margin-right:auto;max-width:72rem;padding-left:1.25rem;padding-right:1.25rem}@media (min-width:640px){.container-shell{padding-left:2rem;padding-right:2rem}}.\!btn{display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius);padding:.5rem 1.25rem;font-size:.875rem;line-height:1.25rem;font-weight:600;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.\!btn:focus{outline:2px solid transparent;outline-offset:2px;--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000);--tw-ring-opacity:1;--tw-ring-color:rgb(var(--border)/var(--tw-ring-opacity,1))}.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius);padding:.5rem 1.25rem;font-size:.875rem;line-height:1.25rem;font-weight:600;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.btn:focus{outline:2px solid transparent;outline-offset:2px;--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000);--tw-ring-opacity:1;--tw-ring-color:rgb(var(--border)/var(--tw-ring-opacity,1))}.btn-primary{display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius);padding:.5rem 1.25rem;font-size:.875rem;line-height:1.25rem;font-weight:600;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.btn-primary:focus{outline:2px solid transparent;outline-offset:2px;--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000);--tw-ring-opacity:1;--tw-ring-color:rgb(var(--border)/var(--tw-ring-opacity,1))}.btn-primary{--tw-bg-opacity:1;background-color:rgb(var(--accent)/var(--tw-bg-opacity,1));--tw-text-opacity:1;color:rgb(var(--fg)/var(--tw-text-opacity,1))}.btn-primary:hover{--tw-bg-opacity:1;background-color:rgb(var(--accent-2)/var(--tw-bg-opacity,1))}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}.pointer-events-none{pointer-events:none}.invisible{visibility:hidden}.static{position:static}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.bottom-0{bottom:0}.left-0{left:0}.right-0{right:0}.top-0{top:0}.z-40{z-index:40}.my-2{margin-top:.5rem;margin-bottom:.5rem}.ml-2{margin-left:.5rem}.mt-10{margin-top:2.5rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-16{height:4rem}.h-full{height:100%}.h-px{height:1px}.min-h-\[60vh\]{min-height:60vh}.min-h-full{min-height:100%}.w-64{width:16rem}.w-full{width:100%}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-10{gap:2.5rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-8{gap:2rem}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.rounded-2xl{border-radius:1rem}.rounded-pill{border-radius:var(--radius)}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-border\/30{border-color:rgb(var(--border)/.3)}.border-border\/40{border-color:rgb(var(--border)/.4)}.border-border\/60{border-color:rgb(var(--border)/.6)}.bg-accent{--tw-bg-opacity:1;background-color:rgb(var(--accent)/var(--tw-bg-opacity,1))}.bg-bg{--tw-bg-opacity:1;background-color:rgb(var(--bg)/var(--tw-bg-opacity,1))}.bg-bg\/85{background-color:rgb(var(--bg)/.85)}.bg-border\/30{background-color:rgb(var(--border)/.3)}.bg-surface{--tw-bg-opacity:1;background-color:rgb(var(--surface)/var(--tw-bg-opacity,1))}.p-3{padding:.75rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pl-3{padding-left:.75rem}.pt-2{padding-top:.5rem}.pt-6{padding-top:1.5rem}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xs{font-size:.75rem;line-height:1rem}.font-semibold{font-weight:600}.leading-relaxed{line-height:1.625}.tracking-tightish{letter-spacing:-.025em}.text-fg{--tw-text-opacity:1;color:rgb(var(--fg)/var(--tw-text-opacity,1))}.text-fg\/70{color:rgb(var(--fg)/.7)}.text-fg\/90{color:rgb(var(--fg)/.9)}.text-heading{--tw-text-opacity:1;color:rgb(var(--heading)/var(--tw-text-opacity,1))}.opacity-0{opacity:0}.shadow-sm{--tw-shadow:0 1px 2px 0 rgba(0,0,0,.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.outline-none{outline:2px solid transparent;outline-offset:2px}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur{--tw-backdrop-blur:blur(8px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}@font-face{font-family:Work Sans;src:url(/static/fonts/WorkSans-VariableFont_wght.woff2) format("woff2");font-weight:100 900;font-style:normal;font-display:swap}@font-face{font-family:Work Sans;src:url(/static/fonts/WorkSans-Italic-VariableFont_wght.woff2) format("woff2");font-weight:100 900;font-style:italic;font-display:swap}@font-face{font-family:Koh Santepheap;src:url(/static/fonts/KohSantepheap-Thin.woff2) format("woff2");font-weight:100;font-style:normal;font-display:swap}@font-face{font-family:Koh Santepheap;src:url(/static/fonts/KohSantepheap-Light.woff2) format("woff2");font-weight:300;font-style:normal;font-display:swap}@font-face{font-family:Koh Santepheap;src:url(/static/fonts/KohSantepheap-Regular.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:Koh Santepheap;src:url(/static/fonts/KohSantepheap-Bold.woff2) format("woff2");font-weight:700;font-style:normal;font-display:swap}@font-face{font-family:Koh Santepheap;src:url(/static/fonts/KohSantepheap-Black.woff2) format("woff2");font-weight:900;font-style:normal;font-display:swap}.hover\:border-accent:hover{--tw-border-opacity:1;border-color:rgb(var(--accent)/var(--tw-border-opacity,1))}.hover\:bg-surface-2\/70:hover{background-color:rgb(var(--surface-2)/.7)}.hover\:text-accent-2:hover{--tw-text-opacity:1;color:rgb(var(--accent-2)/var(--tw-text-opacity,1))}.focus\:not-sr-only:focus{position:static;width:auto;height:auto;padding:0;margin:0;overflow:visible;clip:auto;white-space:normal}.focus\:fixed:focus{position:fixed}.focus\:left-4:focus{left:1rem}.focus\:top-4:focus{top:1rem}.focus\:z-50:focus{z-index:50}.focus\:rounded-md:focus{border-radius:.375rem}.focus\:border-accent:focus{--tw-border-opacity:1;border-color:rgb(var(--accent)/var(--tw-border-opacity,1))}.focus\:bg-accent:focus{--tw-bg-opacity:1;background-color:rgb(var(--accent)/var(--tw-bg-opacity,1))}.focus\:px-4:focus{padding-left:1rem;padding-right:1rem}.focus\:py-2:focus{padding-top:.5rem;padding-bottom:.5rem}.focus\:text-fg:focus{--tw-text-opacity:1;color:rgb(var(--fg)/var(--tw-text-opacity,1))}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.focus\:ring-border:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(var(--border)/var(--tw-ring-opacity,1))}.data-\[open\=true\]\:pointer-events-auto[data-open=true]{pointer-events:auto}.data-\[open\=true\]\:visible[data-open=true]{visibility:visible}.data-\[open\=true\]\:opacity-100[data-open=true]{opacity:1}@media (min-width:640px){.sm\:inline{display:inline}.sm\:hidden{display:none}.sm\:flex-row{flex-direction:row}.sm\:items-center{align-items:center}.sm\:justify-between{justify-content:space-between}}@media (min-width:768px){.md\:flex{display:flex}.md\:hidden{display:none}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
 === File: ./config/static/css/config.css ===
 === Size: 0 bytes | Modified: Dec 28 04:58:02 2025 ===
 
@@ -254,6 +252,118 @@ except ImportError:
 === File: ./config/static/js/config.js ===
 === Size: 0 bytes | Modified: Dec 28 04:58:02 2025 ===
 
+
+
+=== File: ./config/static/js/site.js ===
+=== Size: 1879 bytes | Modified: Dec 29 17:19:58 2025 ===
+
+;(function () {
+  function qs(sel, root) {
+    return (root || document).querySelector(sel)
+  }
+  function qsa(sel, root) {
+    return Array.from((root || document).querySelectorAll(sel))
+  }
+
+  // Mobile nav toggle
+  const mobileToggle = qs('[data-mobile-nav-toggle]')
+  const mobileNav = qs('[data-mobile-nav]')
+
+  if (mobileToggle && mobileNav) {
+    mobileToggle.addEventListener('click', () => {
+      const isOpen = !mobileNav.classList.contains('hidden')
+      mobileNav.classList.toggle('hidden', isOpen)
+      mobileToggle.setAttribute('aria-expanded', String(!isOpen))
+    })
+  }
+
+  // Mobile subnav toggle
+  const mobileSubToggle = qs('[data-mobile-subnav-toggle]')
+  const mobileSubNav = qs('[data-mobile-subnav]')
+
+  if (mobileSubToggle && mobileSubNav) {
+    mobileSubToggle.addEventListener('click', () => {
+      const isOpen = !mobileSubNav.classList.contains('hidden')
+      mobileSubNav.classList.toggle('hidden', isOpen)
+      mobileSubToggle.setAttribute('aria-expanded', String(!isOpen))
+    })
+  }
+
+  // Desktop dropdown
+  qsa('[data-dropdown]').forEach((wrap) => {
+    const btn = qs('[data-dropdown-button]', wrap)
+    const menu = qs('[data-dropdown-menu]', wrap)
+
+    if (!btn || !menu) return
+
+    function setOpen(open) {
+      menu.dataset.open = open ? 'true' : 'false'
+      btn.setAttribute('aria-expanded', String(open))
+    }
+
+    setOpen(false)
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation()
+      setOpen(menu.dataset.open !== 'true')
+    })
+
+    // Close when clicking outside
+    document.addEventListener('click', () => setOpen(false))
+
+    // Basic ESC close for keyboard users
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false)
+    })
+  })
+
+  // Respect reduced motion preference: nothing to do here yet
+  // (We’ll keep animations purely CSS-based and minimal.)
+})()
+
+
+=== File: ./config/static/js/theme.js ===
+=== Size: 1112 bytes | Modified: Dec 29 18:02:08 2025 ===
+
+;(function () {
+  const STORAGE_KEY = 'skinmenu_theme'
+
+  function getPreferredTheme() {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored === 'light' || stored === 'dark') return stored
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light'
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.dataset.theme = theme
+    const btn = document.querySelector('[data-theme-toggle]')
+    if (btn) {
+      btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false')
+      btn.setAttribute('data-theme', theme)
+    }
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.dataset.theme || 'light'
+    const next = current === 'dark' ? 'light' : 'dark'
+    localStorage.setItem(STORAGE_KEY, next)
+    applyTheme(next)
+  }
+
+  // Initialize ASAP
+  const initial = getPreferredTheme()
+  applyTheme(initial)
+
+  // Wire toggle
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-theme-toggle]')
+    if (!t) return
+    e.preventDefault()
+    toggleTheme()
+  })
+})()
 
 
 === File: ./config/templates/404.html ===
@@ -291,54 +401,310 @@ except ImportError:
 
 
 === File: ./config/templates/base.html ===
-=== Size: 1550 bytes | Modified: Dec 28 04:58:02 2025 ===
+=== Size: 1833 bytes | Modified: Dec 30 15:02:13 2025 ===
 
 {% load static wagtailcore_tags wagtailuserbar %}
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>
-            {% block title %}
-            {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
-            {% endblock %}
-            {% block title_suffix %}
-            {% wagtail_site as current_site %}
-            {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
-            {% endblock %}
-        </title>
-        {% if page.search_description %}
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>
+      {% block title %}
+        {% if page.seo_title %}{{ page.seo_title }}{% elif page.title %}{{ page.title }}{% else %}SKINMENU{% endif %}
+      {% endblock %}
+    </title>
+
+    {% block meta %}
+      {% if page.search_description %}
         <meta name="description" content="{{ page.search_description }}" />
-        {% endif %}
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      {% endif %}
+    {% endblock %}
 
-        {# Force all links in the live preview panel to be opened in a new tab #}
-        {% if request.in_preview_panel %}
-        <base target="_blank">
-        {% endif %}
+    {# Prevent theme flash: set data-theme before CSS loads #}
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("skinmenu_theme");
+          if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
 
-        {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/config.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
 
-        {% block extra_css %}
-        {# Override this in templates to add extra stylesheets #}
-        {% endblock %}
-    </head>
+    <script defer src="{% static 'js/theme.js' %}"></script>
+    <script defer src="{% static 'js/site.js' %}"></script>
 
-    <body class="{% block body_class %}{% endblock %}">
-        {% wagtailuserbar %}
+    {% block extra_head %}{% endblock %}
+  </head>
 
-        {% block content %}{% endblock %}
+  <body class="min-h-full bg-bg text-fg">
+    {% wagtailuserbar %}
 
-        {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/config.js' %}"></script>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-accent focus:px-4 focus:py-2 focus:text-fg"
+    >
+      Skip to content
+    </a>
 
-        {% block extra_js %}
-        {# Override this in templates to add extra javascript #}
-        {% endblock %}
-    </body>
+    {% include "partials/header.html" %}
+
+    <main id="main" class="min-h-[60vh]">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% include "partials/footer.html" %}
+
+    <noscript>
+      <div class="fixed bottom-0 left-0 right-0 bg-accent text-fg px-4 py-2 text-sm">
+        This site works best with JavaScript enabled for navigation and interactive elements.
+      </div>
+    </noscript>
+  </body>
 </html>
+
+
+=== File: ./config/templates/partials/footer.html ===
+=== Size: 4191 bytes | Modified: Dec 30 15:02:30 2025 ===
+
+{% load wagtailsettings_tags %}
+{% get_settings %}
+{% with s=settings.site_settings.GlobalSiteSettings %}
+
+<footer class="border-t border-border/40 bg-bg">
+  <div class="container-shell py-12">
+    <div class="grid gap-10 md:grid-cols-3">
+      <!-- Left: Clinic details -->
+      <div class="space-y-4">
+        <div class="text-lg text-heading" style="font-family: 'Koh Santepheap', serif; font-weight: 300;">
+          {{ s.clinic_name|default:"SKINMENU" }}
+        </div>
+
+        {% if s.address %}
+          <div class="text-sm leading-relaxed text-fg/90">
+            <div class="flex gap-2">
+              <span aria-hidden="true">📍</span>
+              <span>{{ s.address|linebreaksbr }}</span>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="text-sm text-fg/90 space-y-1">
+          {% if s.email %}
+            <div><a class="hover:text-accent-2 transition" href="mailto:{{ s.email }}">{{ s.email }}</a></div>
+          {% endif %}
+          {% if s.phone %}
+            <div><a class="hover:text-accent-2 transition" href="tel:{{ s.phone|cut:' ' }}">{{ s.phone }}</a></div>
+          {% endif %}
+        </div>
+
+        <div class="flex flex-wrap gap-4 pt-2 text-sm font-semibold">
+          {% if s.instagram_url %}<a class="hover:text-accent-2 transition" href="{{ s.instagram_url }}" rel="noopener" target="_blank">Instagram</a>{% endif %}
+          {% if s.tiktok_url %}<a class="hover:text-accent-2 transition" href="{{ s.tiktok_url }}" rel="noopener" target="_blank">TikTok</a>{% endif %}
+          {% if s.facebook_url %}<a class="hover:text-accent-2 transition" href="{{ s.facebook_url }}" rel="noopener" target="_blank">Facebook</a>{% endif %}
+        </div>
+      </div>
+
+      <!-- Middle: Links -->
+      <div class="space-y-4">
+        <div class="text-sm font-semibold text-heading">Links</div>
+        <ul class="space-y-2 text-sm">
+          <li><a class="hover:text-accent-2 transition" href="/about/">About</a></li>
+          <li><a class="hover:text-accent-2 transition" href="/faqs/">FAQs</a></li>
+          <li><a class="hover:text-accent-2 transition" href="/contact/">Contact</a></li>
+          <li><a class="hover:text-accent-2 transition" href="/privacy-policy/">Privacy Policy</a></li>
+          <li><a class="hover:text-accent-2 transition" href="/terms/">Terms</a></li>
+        </ul>
+      </div>
+
+      <!-- Right: Newsletter -->
+      <div class="space-y-4">
+        <div class="text-sm font-semibold text-heading">
+          {{ s.newsletter_heading|default:"Stay in the know" }}
+        </div>
+        <p class="text-sm text-fg/90">
+          {{ s.newsletter_copy|default:"Enter your email to stay in the know" }}
+        </p>
+
+        {% if s.newsletter_form_action %}
+          <form
+            action="{{ s.newsletter_form_action }}"
+            method="post"
+            class="flex flex-col sm:flex-row gap-3"
+          >
+            <label class="sr-only" for="newsletter-email">Email</label>
+            <input
+              id="newsletter-email"
+              name="email"
+              type="email"
+              required
+              placeholder="Email address"
+              class="w-full rounded-pill border border-border/60 bg-surface px-4 py-2 text-sm outline-none
+                     focus:border-accent focus:ring-2 focus:ring-border"
+            />
+            <button class="btn-primary" type="submit">
+              {{ s.newsletter_button_label|default:"Subscribe" }}
+            </button>
+          </form>
+        {% else %}
+          <div class="text-sm text-fg/70">
+            Newsletter signup will appear here once configured in Settings.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="mt-10 flex flex-col gap-2 border-t border-border/30 pt-6 text-xs text-fg/70 sm:flex-row sm:items-center sm:justify-between">
+      <div>© {% now "Y" %} {{ s.clinic_name|default:"SKINMENU" }}. All rights reserved.</div>
+      <div class="flex gap-4">
+        <a class="hover:text-accent-2 transition" href="/cookies/">Cookies</a>
+        <a class="hover:text-accent-2 transition" href="/sitemap.xml">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% endwith %}
+
+
+=== File: ./config/templates/partials/header.html ===
+=== Size: 5436 bytes | Modified: Dec 30 15:02:22 2025 ===
+
+{% load wagtailcore_tags wagtailsettings_tags %}
+{% get_settings %}
+
+<header class="sticky top-0 z-40 border-b border-border/40 bg-bg/85 backdrop-blur">
+  <div class="container-shell">
+    <div class="flex h-16 items-center justify-between">
+      <!-- Brand -->
+      <a href="/" class="flex items-center gap-3">
+        <!-- Replace with SVG include later -->
+        <span class="text-lg tracking-tightish font-semibold text-heading" style="font-family: 'Koh Santepheap', serif;">
+          SKINMENU
+        </span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+        <a href="/" class="hover:text-accent-2 transition">Home</a>
+
+        <!-- The Menu dropdown -->
+        <div class="relative" data-dropdown>
+          <button
+            class="inline-flex items-center gap-2 hover:text-accent-2 transition"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            data-dropdown-button
+          >
+            The Menu
+            <span aria-hidden="true">▾</span>
+          </button>
+
+          <div
+            class="invisible opacity-0 pointer-events-none absolute right-0 mt-3 w-64 rounded-2xl border border-border/40 bg-surface shadow-sm transition
+                   data-[open=true]:visible data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto"
+            data-dropdown-menu
+          >
+            <div class="p-3">
+              <!-- Placeholder URLs until Wagtail pages exist -->
+              <a href="/treatments/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">
+                View all treatments
+              </a>
+              <div class="my-2 h-px bg-border/30"></div>
+              <a href="/treatments/laser/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">Lasers</a>
+              <a href="/treatments/injectables/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">Injectables</a>
+              <a href="/treatments/skin/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">Skin</a>
+            </div>
+          </div>
+        </div>
+
+        <a href="/about/" class="hover:text-accent-2 transition">About</a>
+        <a href="/blog/" class="hover:text-accent-2 transition">Journal</a>
+        <a href="/contact/" class="hover:text-accent-2 transition">Contact</a>
+
+        <a href="/contact/" class="btn-primary ml-2">Enquire</a>
+
+        <!-- Theme toggle -->
+        <button
+          type="button"
+          class="ml-2 inline-flex items-center justify-center rounded-pill border border-border/60 px-4 py-2 text-sm font-semibold
+                 hover:border-accent transition bg-surface"
+          aria-label="Toggle dark mode"
+          aria-pressed="false"
+          data-theme-toggle
+        >
+          <span class="hidden sm:inline">Theme</span>
+          <span class="sm:hidden">☾</span>
+        </button>
+      </nav>
+
+      <!-- Mobile toggle -->
+      <button
+        type="button"
+        class="md:hidden inline-flex items-center justify-center rounded-pill border border-border/60 bg-surface px-4 py-2 text-sm font-semibold
+               hover:border-accent transition"
+        aria-controls="mobile-nav"
+        aria-expanded="false"
+        data-mobile-nav-toggle
+      >
+        Menu
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Nav Drawer -->
+  <div
+    id="mobile-nav"
+    class="md:hidden hidden border-t border-border/40 bg-bg"
+    data-mobile-nav
+  >
+    <div class="container-shell py-4">
+      <div class="flex flex-col gap-2 text-base font-semibold">
+        <a href="/" class="rounded-xl px-3 py-3 hover:bg-surface-2/70 transition">Home</a>
+
+        <button
+          type="button"
+          class="flex items-center justify-between rounded-xl px-3 py-3 hover:bg-surface-2/70 transition"
+          aria-expanded="false"
+          data-mobile-subnav-toggle
+        >
+          The Menu <span aria-hidden="true">▾</span>
+        </button>
+
+        <div class="hidden pl-3" data-mobile-subnav>
+          <a href="/treatments/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">View all treatments</a>
+          <a href="/treatments/laser/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">Lasers</a>
+          <a href="/treatments/injectables/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">Injectables</a>
+          <a href="/treatments/skin/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">Skin</a>
+        </div>
+
+        <a href="/about/" class="rounded-xl px-3 py-3 hover:bg-surface-2/70 transition">About</a>
+        <a href="/blog/" class="rounded-xl px-3 py-3 hover:bg-surface-2/70 transition">Journal</a>
+        <a href="/contact/" class="rounded-xl px-3 py-3 hover:bg-surface-2/70 transition">Contact</a>
+
+        <div class="pt-2">
+          <a href="/contact/" class="btn-primary w-full">Enquire</a>
+
+          <button
+            type="button"
+            class="mt-2 w-full inline-flex items-center justify-center rounded-pill border border-border/60 bg-surface px-4 py-3 text-sm font-semibold
+                   hover:border-accent transition"
+            aria-label="Toggle dark mode"
+            aria-pressed="false"
+            data-theme-toggle
+          >
+            Toggle theme
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
 
 
 === File: ./config/urls.py ===
@@ -467,176 +833,6 @@ RUN python manage.py collectstatic --noinput --clear
 CMD set -xe; python manage.py migrate --noinput; gunicorn config.wsgi:application
 
 
-=== File: ./dump_codebase.sh ===
-=== Size: 3672 bytes | Modified: Dec 28 05:37:01 2025 ===
-
-#!/usr/bin/env bash
-set -euo pipefail
-
-# Dump a Django/Wagtail codebase into a single text file.
-# Usage:
-#   ./dump_codebase.sh
-#   ./dump_codebase.sh -o codebase-django.txt
-#   ./dump_codebase.sh -o /tmp/dump.txt
-#
-# Run from the repository root.
-
-OUTFILE="codebase-django.txt"
-
-while getopts ":o:" opt; do
-  case "$opt" in
-    o) OUTFILE="$OPTARG" ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      exit 2
-      ;;
-    :)
-      echo "Option -$OPTARG requires an argument." >&2
-      exit 2
-      ;;
-  esac
-done
-
-: > "$OUTFILE"
-
-# Directories to prune (ignored entirely)
-PRUNE_DIRS=(
-  ".git"
-  "venv" ".venv"
-  "__pycache__"
-  "node_modules"
-  "media"
-  "staticfiles"
-  ".mypy_cache"
-  ".pytest_cache"
-  ".ruff_cache"
-  ".tox"
-  ".eggs"
-  "dist"
-  "build"
-  ".cache"
-  ".idea"
-  ".vscode"
-)
-
-# File patterns to include (relevant code/config/docs)
-INCLUDE_NAMES=(
-  "*.py"
-  "*.html" "*.htm"
-  "*.css" "*.scss" "*.sass" "*.less"
-  "*.js" "*.jsx" "*.mjs" "*.cjs"
-  "*.ts" "*.tsx"
-  "*.json"
-  "*.yml" "*.yaml"
-  "*.toml"
-  "*.ini" "*.cfg"
-  "*.md" "*.mdx" "*.txt"
-  "*.sh"
-  "*.env.example" "*.env.sample"
-  "Dockerfile" "docker-compose.yml" "docker-compose.yaml"
-  "Makefile"
-  "Procfile"
-  "nginx.conf" "*.nginx" "*.conf"
-  "requirements.txt" "requirements*.txt"
-  "Pipfile" "Pipfile.lock"
-  "pyproject.toml"
-  "setup.cfg"
-  "manage.py"
-  "wsgi.py" "asgi.py"
-  "tailwind.config.js" "postcss.config.js"
-  "package.json"
-)
-
-# File patterns to exclude even if they match an include
-EXCLUDE_NAMES=(
-  "package-lock.json"
-  "yarn.lock"
-  "pnpm-lock.yaml"
-  "*.min.js"
-  "*.map"
-  ".env"
-  ".env.*"
-  "*.sqlite3"
-  "*.db"
-  "*.log"
-)
-
-# Exclude by extension (binary/media/fonts)
-EXCLUDE_EXTS=(
-  "png" "jpg" "jpeg" "gif" "webp" "svg" "ico"
-  "mp4" "mov" "webm" "mp3" "wav"
-  "pdf" "zip" "tar" "gz" "bz2" "7z"
-  "woff" "woff2" "ttf" "otf" "eot"
-)
-
-# Build the prune expression for find
-PRUNE_EXPR=()
-for d in "${PRUNE_DIRS[@]}"; do
-  PRUNE_EXPR+=( -name "$d" -o )
-done
-unset 'PRUNE_EXPR[${#PRUNE_EXPR[@]}-1]' 2>/dev/null || true
-
-# Build include expression
-INCLUDE_EXPR=()
-for p in "${INCLUDE_NAMES[@]}"; do
-  INCLUDE_EXPR+=( -name "$p" -o )
-done
-unset 'INCLUDE_EXPR[${#INCLUDE_EXPR[@]}-1]' 2>/dev/null || true
-
-# Build exclude-name expression
-EXCLUDE_NAME_EXPR=()
-for p in "${EXCLUDE_NAMES[@]}"; do
-  EXCLUDE_NAME_EXPR+=( ! -name "$p" )
-done
-
-# Build exclude extension expression
-EXCLUDE_EXT_EXPR=()
-for ext in "${EXCLUDE_EXTS[@]}"; do
-  EXCLUDE_EXT_EXPR+=( ! -iname "*.${ext}" )
-done
-
-echo "Writing dump to: $OUTFILE" >&2
-
-# Use -print0 to handle spaces/newlines in file names safely
-find . \
-  \( -type d \( "${PRUNE_EXPR[@]}" \) -prune \) -o \
-  \( -type f \( "${INCLUDE_EXPR[@]}" \) \
-     "${EXCLUDE_NAME_EXPR[@]}" \
-     "${EXCLUDE_EXT_EXPR[@]}" \
-     -print0 \
-  \) \
-| sort -z \
-| while IFS= read -r -d '' f; do
-    {
-      printf "\n=== File: %s ===\n" "$f"
-
-      # Helpful: show size, but don't depend on GNU stat formatting differences too much.
-      if command -v stat >/dev/null 2>&1; then
-        if stat --version >/dev/null 2>&1; then
-          # GNU stat
-          stat -c "=== Size: %s bytes | Modified: %y ===" "$f" || true
-        else
-          # BSD/macOS stat
-          stat -f "=== Size: %z bytes | Modified: %Sm ===" "$f" || true
-        fi
-        printf "\n"
-      fi
-
-      # If file has non-UTF8 bytes, strip them so the dump stays readable
-      # (iconv is common on macOS/Linux; if missing, just cat).
-      if command -v iconv >/dev/null 2>&1; then
-        iconv -f utf-8 -t utf-8 -c "$f" || cat "$f"
-      else
-        cat "$f"
-      fi
-
-      printf "\n"
-    } >> "$OUTFILE"
-  done
-
-echo "Done. Lines: $(wc -l < "$OUTFILE")" >&2
-
-
 === File: ./manage.py ===
 === Size: 666 bytes | Modified: Dec 28 04:58:02 2025 ===
 
@@ -662,6 +858,38 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+=== File: ./package.json ===
+=== Size: 769 bytes | Modified: Dec 29 16:02:43 2025 ===
+
+{
+  "name": "skinmenu",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "css:build": "tailwindcss -i ./src/styles/tailwind.css -o ./config/static/css/app.css --minify",
+    "css:watch": "tailwindcss -i ./src/styles/tailwind.css -o ./config/static/css/app.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Forne14/skinmenu.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Forne14/skinmenu/issues"
+  },
+  "homepage": "https://github.com/Forne14/skinmenu#readme",
+  "description": "",
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  }
+}
 
 
 === File: ./pages/__init__.py ===
@@ -721,7 +949,7 @@ class Migration(migrations.Migration):
 
 
 === File: ./pages/migrations/0002_create_homepage.py ===
-=== Size: 1885 bytes | Modified: Dec 28 05:34:19 2025 ===
+=== Size: 1889 bytes | Modified: Dec 28 05:43:33 2025 ===
 
 from django.db import migrations
 
@@ -731,7 +959,7 @@ def create_homepage(apps, schema_editor):
     ContentType = apps.get_model("contenttypes.ContentType")
     Page = apps.get_model("wagtailcore.Page")
     Site = apps.get_model("wagtailcore.Site")
-    HomePage = apps.get_model("home.HomePage")
+    HomePage = apps.get_model("pages.HomePage")
 
     # Delete the default homepage (of type Page) as created by wagtailcore.0002_initial_data,
     # if it exists
@@ -744,7 +972,7 @@ def create_homepage(apps, schema_editor):
 
     # Create content type for homepage model
     homepage_content_type, __ = ContentType.objects.get_or_create(
-        model="homepage", app_label="home"
+        model="homepage", app_label="pages"
     )
 
     # Create a new homepage
@@ -766,14 +994,14 @@ def create_homepage(apps, schema_editor):
 def remove_homepage(apps, schema_editor):
     # Get models
     ContentType = apps.get_model("contenttypes.ContentType")
-    HomePage = apps.get_model("home.HomePage")
+    HomePage = apps.get_model("pages.HomePage")
 
     # Delete the default homepage
     # Page and Site objects CASCADE
     HomePage.objects.filter(slug="home", depth=2).delete()
 
     # Delete content type for homepage model
-    ContentType.objects.filter(model="homepage", app_label="home").delete()
+    ContentType.objects.filter(model="homepage", app_label="pages").delete()
 
 
 class Migration(migrations.Migration):
@@ -992,33 +1220,42 @@ svg:not(:root) {
 }
 
 
-=== File: ./pages/templates/home/home_page.html ===
-=== Size: 546 bytes | Modified: Dec 28 04:58:02 2025 ===
+=== File: ./pages/templates/pages/home_page.html ===
+=== Size: 776 bytes | Modified: Dec 28 06:24:40 2025 ===
 
-{% extends "base.html" %}
-{% load static %}
+<!-- prettier ignore -->
+{% extends "base.html" %} {% load static %}
+<!-- prettier ignore -->
 
-{% block body_class %}template-homepage{% endblock %}
+{% block body_class %}template-homepage{% endblock %} {% block extra_css %}
+<!-- prettier ignore -->
 
-{% block extra_css %}
-
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-<link rel="stylesheet" href="{% static 'css/welcome_page.css' %}">
+{% comment %} Delete the line below if you're just getting started and want to
+remove the welcome screen! {% endcomment %}
+<link rel="stylesheet" href="{% static 'css/welcome_page.css' %}" />
 {% endblock extra_css %}
+<!-- prettier ignore -->
 
 {% block content %}
+<!-- prettier ignore -->
 
 {% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
+<!-- prettier ignore -->
+
+Delete the line below if you're just getting started and want to remove the
+welcome screen!
+<!-- prettier ignore -->
+
 {% endcomment %}
-{% include 'home/welcome_page.html' %}
+<!-- prettier ignore -->
+
+{% include 'pages/welcome_page.html' %}
+<!-- prettier ignore -->
 
 {% endblock content %}
 
 
-=== File: ./pages/templates/home/welcome_page.html ===
+=== File: ./pages/templates/pages/welcome_page.html ===
 === Size: 6421 bytes | Modified: Dec 28 04:58:02 2025 ===
 
 {% load i18n wagtailcore_tags %}
@@ -1076,9 +1313,9 @@ Delete the line below if you're just getting started and want to remove the welc
 
 
 === File: ./pages/tests.py ===
-=== Size: 1303 bytes | Modified: Dec 28 05:08:03 2025 ===
+=== Size: 1305 bytes | Modified: Dec 28 06:25:38 2025 ===
 
-from home.models import HomePage
+from pages.models import HomePage
 
 from wagtail.models import Page, Site
 from wagtail.test.utils import WagtailPageTestCase
@@ -1119,44 +1356,18 @@ class HomeTests(WagtailPageTestCase):
 
     def test_homepage_template_used(self):
         response = self.client.get(self.homepage.url)
-        self.assertTemplateUsed(response, "home/home_page.html")
+        self.assertTemplateUsed(response, "pages/home_page.html")
 
 
-=== File: ./requirements.txt ===
-=== Size: 615 bytes | Modified: Dec 28 04:58:22 2025 ===
+=== File: ./postcss.config.js ===
+=== Size: 82 bytes | Modified: Dec 29 15:56:56 2025 ===
 
-anyascii==0.3.3
-asgiref==3.11.0
-beautifulsoup4==4.14.3
-certifi==2025.11.12
-charset-normalizer==3.4.4
-defusedxml==0.7.1
-Django==5.2.9
-django-filter==25.2
-django-modelcluster==6.4.1
-django-permissionedforms==0.1
-django-stubs-ext==5.2.8
-django-taggit==6.1.0
-django-tasks==0.9.0
-django-treebeard==4.8.0
-djangorestframework==3.16.1
-draftjs_exporter==5.1.0
-et_xmlfile==2.0.0
-filetype==1.2.0
-idna==3.11
-laces==0.1.2
-modelsearch==1.1.1
-openpyxl==3.1.5
-pillow==12.0.0
-pillow_heif==1.1.1
-requests==2.32.5
-soupsieve==2.8.1
-sqlparse==0.5.5
-telepath==0.3.1
-typing_extensions==4.15.0
-urllib3==2.6.2
-wagtail==7.2.1
-Willow==1.12.0
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
 
 
 === File: ./search/__init__.py ===
@@ -1256,4 +1467,383 @@ def search(request):
             "search_results": search_results,
         },
     )
+
+
+=== File: ./site_settings/__init__.py ===
+=== Size: 0 bytes | Modified: Dec 28 06:15:26 2025 ===
+
+
+
+=== File: ./site_settings/admin.py ===
+=== Size: 63 bytes | Modified: Dec 28 06:15:26 2025 ===
+
+from django.contrib import admin
+
+# Register your models here.
+
+
+=== File: ./site_settings/apps.py ===
+=== Size: 157 bytes | Modified: Dec 28 06:15:26 2025 ===
+
+from django.apps import AppConfig
+
+
+class SiteSettingsConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'site_settings'
+
+
+=== File: ./site_settings/migrations/__init__.py ===
+=== Size: 0 bytes | Modified: Dec 28 06:15:26 2025 ===
+
+
+
+=== File: ./site_settings/migrations/0001_initial.py ===
+=== Size: 1351 bytes | Modified: Dec 28 06:17:23 2025 ===
+
+# Generated by Django 5.2.9 on 2025-12-27 23:17
+
+import django.db.models.deletion
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    initial = True
+
+    dependencies = [
+        ('wagtailcore', '0096_referenceindex_referenceindex_source_object_and_more'),
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='GlobalSiteSettings',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('clinic_name', models.CharField(default='SKINMENU', max_length=120)),
+                ('address', models.TextField(blank=True)),
+                ('opening_hours', models.TextField(blank=True, help_text='E.g. Mon–Fri 10:00–19:00')),
+                ('phone', models.CharField(blank=True, max_length=50)),
+                ('email', models.EmailField(blank=True, max_length=254)),
+                ('instagram_url', models.URLField(blank=True)),
+                ('tiktok_url', models.URLField(blank=True)),
+                ('facebook_url', models.URLField(blank=True)),
+                ('site', models.OneToOneField(editable=False, on_delete=django.db.models.deletion.CASCADE, to='wagtailcore.site')),
+            ],
+            options={
+                'abstract': False,
+            },
+        ),
+    ]
+
+
+=== File: ./site_settings/migrations/0002_globalsitesettings_newsletter_button_label_and_more.py ===
+=== Size: 1175 bytes | Modified: Dec 29 17:18:18 2025 ===
+
+# Generated by Django 5.2.9 on 2025-12-29 10:18
+
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('site_settings', '0001_initial'),
+    ]
+
+    operations = [
+        migrations.AddField(
+            model_name='globalsitesettings',
+            name='newsletter_button_label',
+            field=models.CharField(blank=True, default='Subscribe', max_length=40),
+        ),
+        migrations.AddField(
+            model_name='globalsitesettings',
+            name='newsletter_copy',
+            field=models.CharField(blank=True, default='Enter your email to stay in the know', max_length=180),
+        ),
+        migrations.AddField(
+            model_name='globalsitesettings',
+            name='newsletter_form_action',
+            field=models.URLField(blank=True, help_text='Optional: external newsletter form endpoint (Mailchimp/ConvertKit). Leave blank to hide the form.'),
+        ),
+        migrations.AddField(
+            model_name='globalsitesettings',
+            name='newsletter_heading',
+            field=models.CharField(blank=True, default='Stay in the know', max_length=80),
+        ),
+    ]
+
+
+=== File: ./site_settings/models.py ===
+=== Size: 2064 bytes | Modified: Dec 29 17:18:10 2025 ===
+
+from django.db import models
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
+
+
+@register_setting
+class GlobalSiteSettings(BaseSiteSetting):
+    clinic_name = models.CharField(max_length=120, default="SKINMENU")
+    address = models.TextField(blank=True)
+    opening_hours = models.TextField(blank=True, help_text="E.g. Mon–Fri 10:00–19:00")
+    phone = models.CharField(max_length=50, blank=True)
+    email = models.EmailField(blank=True)
+
+    instagram_url = models.URLField(blank=True)
+    tiktok_url = models.URLField(blank=True)
+    facebook_url = models.URLField(blank=True)
+
+        # Newsletter (simple, editor-friendly)
+    newsletter_heading = models.CharField(
+        max_length=80, default="Stay in the know", blank=True
+    )
+    newsletter_copy = models.CharField(
+        max_length=180, default="Enter your email to stay in the know", blank=True
+    )
+    newsletter_form_action = models.URLField(
+        blank=True,
+        help_text="Optional: external newsletter form endpoint (Mailchimp/ConvertKit). Leave blank to hide the form.",
+    )
+    newsletter_button_label = models.CharField(
+        max_length=40, default="Subscribe", blank=True
+    )
+
+
+    panels = [
+        MultiFieldPanel(
+            [
+                FieldPanel("clinic_name"),
+                FieldPanel("address"),
+                FieldPanel("opening_hours"),
+                FieldPanel("phone"),
+                FieldPanel("email"),
+            ],
+            heading="Clinic details",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("instagram_url"),
+                FieldPanel("tiktok_url"),
+                FieldPanel("facebook_url"),
+            ],
+            heading="Social links",
+        ),
+        MultiFieldPanel(
+    [
+        FieldPanel("newsletter_heading"),
+        FieldPanel("newsletter_copy"),
+        FieldPanel("newsletter_form_action"),
+        FieldPanel("newsletter_button_label"),
+    ],
+    heading="Newsletter",
+),
+
+    ]
+
+
+=== File: ./site_settings/tests.py ===
+=== Size: 60 bytes | Modified: Dec 28 06:15:26 2025 ===
+
+from django.test import TestCase
+
+# Create your tests here.
+
+
+=== File: ./site_settings/views.py ===
+=== Size: 63 bytes | Modified: Dec 28 06:15:26 2025 ===
+
+from django.shortcuts import render
+
+# Create your views here.
+
+
+=== File: ./src/styles/tailwind.css ===
+=== Size: 2590 bytes | Modified: Dec 29 18:01:02 2025 ===
+
+@import './tokens.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Brand base:
+  - Work Sans default with tighter tracking (kerning -25)
+  - Cream background with Espresso text for “legibility first”
+*/
+
+/* =========================
+   SKINMENU — Self-hosted Fonts
+   ========================= */
+
+@font-face {
+  font-family: 'Work Sans';
+  src: url('/static/fonts/WorkSans-VariableFont_wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Work Sans';
+  src: url('/static/fonts/WorkSans-Italic-VariableFont_wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('/static/fonts/KohSantepheap-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('/static/fonts/KohSantepheap-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('/static/fonts/KohSantepheap-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('/static/fonts/KohSantepheap-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('/static/fonts/KohSantepheap-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  html {
+    font-family: 'Work Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    letter-spacing: -0.025em;
+  }
+
+  body {
+    @apply bg-bg text-fg antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: 'Koh Santepheap', 'Work Sans', serif;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    @apply text-heading;
+  }
+
+  a {
+    @apply underline underline-offset-4 decoration-border hover:decoration-accent;
+  }
+}
+
+/* Minimal, reusable primitives (luxury-leaning, clean) */
+@layer components {
+  .container-shell {
+    @apply mx-auto max-w-6xl px-5 sm:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-pill px-5 py-2 text-sm font-semibold
+      transition focus:outline-none focus:ring-2 focus:ring-border;
+  }
+
+  .btn-primary {
+    @apply btn bg-accent text-fg hover:bg-accent-2;
+  }
+
+  .btn-secondary {
+    @apply btn border border-border text-heading hover:border-accent;
+  }
+}
+
+
+=== File: ./src/styles/tokens.css ===
+=== Size: 0 bytes | Modified: Dec 29 17:33:48 2025 ===
+
+
+
+=== File: ./tailwind.config.js ===
+=== Size: 1545 bytes | Modified: Dec 30 14:41:49 2025 ===
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './config/templates/**/*.html',
+    './pages/templates/**/*.html',
+    './site_settings/templates/**/*.html',
+    './search/templates/**/*.html',
+    './**/*.py',
+    './config/static/js/**/*.js',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // Theme tokens (semantic)
+        bg: 'rgb(var(--bg) / <alpha-value>)',
+        fg: 'rgb(var(--fg) / <alpha-value>)',
+        surface: 'rgb(var(--surface) / <alpha-value>)',
+        'surface-2': 'rgb(var(--surface-2) / <alpha-value>)',
+        border: 'rgb(var(--border) / <alpha-value>)',
+        muted: 'rgb(var(--muted) / <alpha-value>)',
+        heading: 'rgb(var(--heading) / <alpha-value>)',
+        accent: 'rgb(var(--accent) / <alpha-value>)',
+        'accent-2': 'rgb(var(--accent-2) / <alpha-value>)',
+
+        // Raw brand palette (occasional one-offs)
+        skinmenu: {
+          brown: '#786050',
+          earth: '#3d2b1f',
+          redbrown: '#4d2621',
+          beige: '#b8a693',
+          espresso: '#261b16',
+          cream: '#e5e0d6',
+        },
+      },
+
+      fontFamily: {
+        sans: [
+          '"Work Sans"',
+          'system-ui',
+          '-apple-system',
+          'Segoe UI',
+          'Roboto',
+          'Arial',
+          'sans-serif',
+        ],
+        display: ['"Koh Santepheap"', '"Work Sans"', 'serif'],
+      },
+
+      letterSpacing: {
+        tightish: '-0.025em',
+      },
+
+      borderRadius: {
+        pill: 'var(--radius)',
+      },
+    },
+  },
+  plugins: [],
+}
 

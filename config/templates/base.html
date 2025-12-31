@@ -1,46 +1,96 @@
-{% load static wagtailcore_tags wagtailuserbar %}
+{% load static wagtailcore_tags wagtailuserbar wagtailsettings_tags brand_tokens  %}
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>
-            {% block title %}
-            {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
-            {% endblock %}
-            {% block title_suffix %}
-            {% wagtail_site as current_site %}
-            {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
-            {% endblock %}
-        </title>
-        {% if page.search_description %}
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="icon" href="{% static 'brand/brand_mark/Logo-01.svg' %}" type="image/svg+xml" />
+    <link rel="icon" href="{% static 'brand/brand_mark/Logo-04.svg' %}" type="image/svg+xml" media="(prefers-color-scheme: dark)" />
+
+
+    <title>
+      {% block title %}
+        {% if page.seo_title %}{{ page.seo_title }}{% elif page.title %}{{ page.title }}{% else %}SKINMENU{% endif %}
+      {% endblock %}
+    </title>
+
+    {% block meta %}
+      {% if page.search_description %}
         <meta name="description" content="{{ page.search_description }}" />
-        {% endif %}
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      {% endif %}
+    {% endblock %}
 
-        {# Force all links in the live preview panel to be opened in a new tab #}
-        {% if request.in_preview_panel %}
-        <base target="_blank">
-        {% endif %}
+    {# Prevent theme flash: set data-theme before CSS loads #}
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("skinmenu_theme");
+          if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
 
-        {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/config.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
 
-        {% block extra_css %}
-        {# Override this in templates to add extra stylesheets #}
-        {% endblock %}
-    </head>
+        {% get_settings %}
+        {% with brand=settings.site_settings.BrandAppearanceSettings %}
+        <style>
+        :root {
+            --bg: {{ brand.light_bg|hex_to_rgb }};
+            --fg: {{ brand.light_fg|hex_to_rgb }};
+            --surface: {{ brand.light_surface|hex_to_rgb }};
+            --surface-2: {{ brand.light_surface_2|hex_to_rgb }};
+            --border: {{ brand.light_border|hex_to_rgb }};
+            --muted: {{ brand.light_muted|hex_to_rgb }};
+            --heading: {{ brand.light_heading|hex_to_rgb }};
+            --accent: {{ brand.light_accent|hex_to_rgb }};
+            --accent-2: {{ brand.light_accent_2|hex_to_rgb }};
+        }
+        :root[data-theme='dark'] {
+            --bg: {{ brand.dark_bg|hex_to_rgb }};
+            --fg: {{ brand.dark_fg|hex_to_rgb }};
+            --surface: {{ brand.dark_surface|hex_to_rgb }};
+            --surface-2: {{ brand.dark_surface_2|hex_to_rgb }};
+            --border: {{ brand.dark_border|hex_to_rgb }};
+            --muted: {{ brand.dark_muted|hex_to_rgb }};
+            --heading: {{ brand.dark_heading|hex_to_rgb }};
+            --accent: {{ brand.dark_accent|hex_to_rgb }};
+            --accent-2: {{ brand.dark_accent_2|hex_to_rgb }};
+        }
+        </style>
+        {% endwith %}
 
-    <body class="{% block body_class %}{% endblock %}">
-        {% wagtailuserbar %}
 
-        {% block content %}{% endblock %}
+    <script defer src="{% static 'js/theme.js' %}"></script>
+    <script defer src="{% static 'js/site.js' %}"></script>
 
-        {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/config.js' %}"></script>
+    {% block extra_head %}{% endblock %}
+  </head>
 
-        {% block extra_js %}
-        {# Override this in templates to add extra javascript #}
-        {% endblock %}
-    </body>
+  <body class="min-h-full bg-bg text-fg">
+    {% wagtailuserbar %}
+
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-accent focus:px-4 focus:py-2 focus:text-fg"
+    >
+      Skip to content
+    </a>
+
+    {% include "partials/header.html" %}
+
+    <main id="main" class="min-h-[60vh]">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% include "partials/footer.html" %}
+
+    <noscript>
+      <div class="fixed bottom-0 left-0 right-0 bg-accent text-fg px-4 py-2 text-sm">
+        This site works best with JavaScript enabled for navigation and interactive elements.
+      </div>
+    </noscript>
+  </body>
 </html>

@@ -1,0 +1,5 @@
+# Django / Wagtail templates
+**/templates/**/*.html
+
+# Django admin overrides (if any)
+**/wagtailadmin/**/*.html

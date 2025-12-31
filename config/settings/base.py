@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "wagtail.contrib.settings",
     "site_settings",
+    "colorfield"
 ]
 
 MIDDLEWARE = [

@@ -40,3 +40,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+dump_codebase.sh
+node_modules/
+
+# Django / Wagtail templates        

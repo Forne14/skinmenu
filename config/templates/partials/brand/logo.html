@@ -1,0 +1,15 @@
+{% load static %}
+
+{# Light theme logo #}
+<img
+  src="{% static 'brand/primary/Logo-08.svg' %}"
+  alt="SKINMENU"
+  class="h-6 w-auto block [html[data-theme='dark']_&]:hidden"
+/>
+
+{# Dark theme logo #}
+<img
+  src="{% static 'brand/primary/Logo-09.svg' %}"
+  alt="SKINMENU"
+  class="h-6 w-auto hidden [html[data-theme='dark']_&]:block"
+/>

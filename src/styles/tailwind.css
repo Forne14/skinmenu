@@ -1,0 +1,115 @@
+@import './tokens.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Brand base:
+  - Work Sans default with tighter tracking (kerning -25)
+  - Cream background with Espresso text for “legibility first”
+*/
+
+/* =========================
+   SKINMENU — Self-hosted Fonts
+   ========================= */
+
+@font-face {
+  font-family: 'Work Sans';
+  src: url('/static/fonts/WorkSans-VariableFont_wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Work Sans';
+  src: url('/static/fonts/WorkSans-Italic-VariableFont_wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('/static/fonts/KohSantepheap-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('/static/fonts/KohSantepheap-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('/static/fonts/KohSantepheap-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('/static/fonts/KohSantepheap-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('/static/fonts/KohSantepheap-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  html {
+    font-family: 'Work Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    letter-spacing: -0.025em;
+  }
+
+  body {
+    @apply bg-bg text-fg antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: 'Koh Santepheap', 'Work Sans', serif;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    @apply text-heading;
+  }
+
+  a {
+    @apply underline underline-offset-4 decoration-border hover:decoration-accent;
+  }
+}
+
+/* Minimal, reusable primitives (luxury-leaning, clean) */
+@layer components {
+  .container-shell {
+    @apply mx-auto max-w-6xl px-5 sm:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-pill px-5 py-2 text-sm font-semibold
+      transition focus:outline-none focus:ring-2 focus:ring-border;
+  }
+
+  .btn-primary {
+    @apply btn bg-accent text-fg hover:bg-accent-2;
+  }
+
+  .btn-secondary {
+    @apply btn border border-border text-heading hover:border-accent;
+  }
+}
