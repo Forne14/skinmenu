@@ -1,13 +1,14 @@
-{% load static %}
-
-<img
-  src="{% static 'brand/brand_mark/Logo-02.svg' %}"
-  alt=""
-  class="h-5 w-5 block [html[data-theme='dark']_&]:hidden"
-/>
-
-<img
-  src="{% static 'brand/brand_mark/Logo-03.svg' %}"
-  alt=""
-  class="h-5 w-5 hidden [html[data-theme='dark']_&]:block"
-/>
+{% load static wagtailsettings_tags %}
+{% get_settings %}
+{% with brand=settings.site_settings.BrandAppearanceSettings %}
+  <img
+    src="{% static brand.mark_light_path %}"
+    alt=""
+    class="h-5 w-5 block [html[data-theme='dark']_&]:hidden"
+  />
+  <img
+    src="{% static brand.mark_dark_path %}"
+    alt=""
+    class="h-5 w-5 hidden [html[data-theme='dark']_&]:block"
+  />
+{% endwith %}

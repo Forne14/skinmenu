@@ -1,98 +1,142 @@
-{% load wagtailsettings_tags %}
+{% load wagtailsettings_tags wagtailcore_tags %}
 {% get_settings %}
-{% with s=settings.site_settings.GlobalSiteSettings %}
 
+{% with gs=settings.site_settings.GlobalSiteSettings nav=settings.site_settings.NavigationSettings %}
 <footer class="border-t border-border/40 bg-bg">
-  <div class="container-shell py-12">
-    <div class="grid gap-10 md:grid-cols-3">
-      <!-- Left: Clinic details -->
-      <div class="space-y-4">
-        <div class="text-lg text-heading" style="font-family: 'Koh Santepheap', serif; font-weight: 300;">
-          {{ s.clinic_name|default:"SKINMENU" }}
-        </div>
-
-        {% if s.address %}
-          <div class="text-sm leading-relaxed text-fg/90">
-            <div class="flex gap-2">
-              <span aria-hidden="true">📍</span>
-              <span>{{ s.address|linebreaksbr }}</span>
+  <div class="container-shell">
+    <div class="py-12 sm:py-16">
+      <div class="grid gap-10 md:grid-cols-12">
+        <!-- Brand / clinic details -->
+        <div class="md:col-span-5">
+          <div class="flex items-start gap-3">
+            <div class="leading-none">
+              <div class="text-base font-semibold text-heading" style="font-family: 'Koh Santepheap', serif;">
+                {{ gs.clinic_name|default:"SKINMENU" }}
+              </div>
+              <p class="mt-1 text-sm text-fg/75 max-w-prose">
+                Bespoke treatment plans curated with restraint and precision.
+              </p>
             </div>
           </div>
-        {% endif %}
 
-        <div class="text-sm text-fg/90 space-y-1">
-          {% if s.email %}
-            <div><a class="hover:text-accent-2 transition" href="mailto:{{ s.email }}">{{ s.email }}</a></div>
+          {% if gs.address %}
+            <div class="mt-6 text-sm text-fg/80 whitespace-pre-line">{{ gs.address }}</div>
           {% endif %}
-          {% if s.phone %}
-            <div><a class="hover:text-accent-2 transition" href="tel:{{ s.phone|cut:' ' }}">{{ s.phone }}</a></div>
-          {% endif %}
-        </div>
 
-        <div class="flex flex-wrap gap-4 pt-2 text-sm font-semibold">
-          {% if s.instagram_url %}<a class="hover:text-accent-2 transition" href="{{ s.instagram_url }}" rel="noopener" target="_blank">Instagram</a>{% endif %}
-          {% if s.tiktok_url %}<a class="hover:text-accent-2 transition" href="{{ s.tiktok_url }}" rel="noopener" target="_blank">TikTok</a>{% endif %}
-          {% if s.facebook_url %}<a class="hover:text-accent-2 transition" href="{{ s.facebook_url }}" rel="noopener" target="_blank">Facebook</a>{% endif %}
-        </div>
-      </div>
+          <div class="mt-4 space-y-2 text-sm">
+            {% if gs.email %}
+              <div>
+                <a class="link-muted" href="mailto:{{ gs.email }}">{{ gs.email }}</a>
+              </div>
+            {% endif %}
 
-      <!-- Middle: Links -->
-      <div class="space-y-4">
-        <div class="text-sm font-semibold text-heading">Links</div>
-        <ul class="space-y-2 text-sm">
-          <li><a class="hover:text-accent-2 transition" href="/about/">About</a></li>
-          <li><a class="hover:text-accent-2 transition" href="/faqs/">FAQs</a></li>
-          <li><a class="hover:text-accent-2 transition" href="/contact/">Contact</a></li>
-          <li><a class="hover:text-accent-2 transition" href="/privacy-policy/">Privacy Policy</a></li>
-          <li><a class="hover:text-accent-2 transition" href="/terms/">Terms</a></li>
-        </ul>
-      </div>
-
-      <!-- Right: Newsletter -->
-      <div class="space-y-4">
-        <div class="text-sm font-semibold text-heading">
-          {{ s.newsletter_heading|default:"Stay in the know" }}
-        </div>
-        <p class="text-sm text-fg/90">
-          {{ s.newsletter_copy|default:"Enter your email to stay in the know" }}
-        </p>
-
-        {% if s.newsletter_form_action %}
-          <form
-            action="{{ s.newsletter_form_action }}"
-            method="post"
-            class="flex flex-col sm:flex-row gap-3"
-          >
-            <label class="sr-only" for="newsletter-email">Email</label>
-            <input
-              id="newsletter-email"
-              name="email"
-              type="email"
-              required
-              placeholder="Email address"
-              class="w-full rounded-pill border border-border/60 bg-surface px-4 py-2 text-sm outline-none
-                     focus:border-accent focus:ring-2 focus:ring-border"
-            />
-            <button class="btn-primary" type="submit">
-              {{ s.newsletter_button_label|default:"Subscribe" }}
-            </button>
-          </form>
-        {% else %}
-          <div class="text-sm text-fg/70">
-            Newsletter signup will appear here once configured in Settings.
+            {% if gs.google_maps_url %}
+              <div>
+                <a class="link-muted" href="{{ gs.google_maps_url }}" target="_blank" rel="noopener">
+                  View on Google Maps
+                </a>
+              </div>
+            {% endif %}
           </div>
-        {% endif %}
-      </div>
-    </div>
 
-    <div class="mt-10 flex flex-col gap-2 border-t border-border/30 pt-6 text-xs text-fg/70 sm:flex-row sm:items-center sm:justify-between">
-      <div>© {% now "Y" %} {{ s.clinic_name|default:"SKINMENU" }}. All rights reserved.</div>
-      <div class="flex gap-4">
-        <a class="hover:text-accent-2 transition" href="/cookies/">Cookies</a>
-        <a class="hover:text-accent-2 transition" href="/sitemap.xml">Sitemap</a>
+          <!-- Socials -->
+          <div class="mt-6 flex items-center gap-4 text-sm">
+            {% if gs.instagram_url %}
+              <a class="link-muted" href="{{ gs.instagram_url }}" rel="noopener" target="_blank">Instagram</a>
+            {% endif %}
+            {% if gs.tiktok_url %}
+              <a class="link-muted" href="{{ gs.tiktok_url }}" rel="noopener" target="_blank">TikTok</a>
+            {% endif %}
+            {% if gs.facebook_url %}
+              <a class="link-muted" href="{{ gs.facebook_url }}" rel="noopener" target="_blank">Facebook</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Footer links -->
+        <div class="md:col-span-3">
+          <h3 class="text-sm font-semibold text-heading">Links</h3>
+          <nav class="mt-4 flex flex-col gap-2 text-sm" aria-label="Footer links">
+            {% for b in nav.footer_links %}
+              {% with link=b.value %}
+                {% if link.page %}
+                  <a class="link-muted" href="{% pageurl link.page %}">{{ link.label }}</a>
+                {% else %}
+                  <a class="link-muted" href="{{ link.url }}" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                    {{ link.label }}
+                  </a>
+                {% endif %}
+              {% endwith %}
+            {% empty %}
+              <a class="link-muted" href="/contact/">Contact</a>
+              <a class="link-muted" href="/about/">About</a>
+              <a class="link-muted" href="/privacy/">Privacy</a>
+            {% endfor %}
+          </nav>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="md:col-span-4">
+          {% if gs.newsletter_form_action %}
+            <div class="card p-6">
+              <h3 class="text-sm font-semibold text-heading">
+                {{ gs.newsletter_heading|default:"Stay in the know" }}
+              </h3>
+              <p class="mt-2 text-sm text-fg/75">
+                {{ gs.newsletter_copy|default:"Enter your email to stay in the know" }}
+              </p>
+
+              <form
+                class="mt-4 flex flex-col gap-3"
+                action="{{ gs.newsletter_form_action }}"
+                method="post"
+                target="_blank"
+                rel="noopener"
+              >
+                <label class="sr-only" for="newsletter-email">Email address</label>
+                <input
+                  id="newsletter-email"
+                  name="email"
+                  type="email"
+                  required
+                  class="input"
+                  placeholder="Email address"
+                  autocomplete="email"
+                />
+                <button type="submit" class="btn-primary w-full">
+                  {{ gs.newsletter_button_label|default:"Subscribe" }}
+                </button>
+
+                <p class="text-xs text-fg/60">
+                  By subscribing, you agree to receive updates. Unsubscribe anytime.
+                </p>
+              </form>
+            </div>
+          {% else %}
+            <div class="card p-6">
+              <h3 class="text-sm font-semibold text-heading">Enquire</h3>
+              <p class="mt-2 text-sm text-fg/75">
+                For availability and recommendations, send us a note.
+              </p>
+              <a href="/contact/" class="btn-secondary mt-4 w-full">Contact</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="divider mt-10"></div>
+
+      <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs text-fg/65">
+        <div>
+          © {% now "Y" %} {{ gs.clinic_name|default:"SKINMENU" }}. All rights reserved.
+        </div>
+        <div class="flex flex-wrap gap-x-4 gap-y-2">
+          <a class="link-muted" href="/privacy/">Privacy</a>
+          <a class="link-muted" href="/cookies/">Cookies</a>
+          <a class="link-muted" href="/terms/">Terms</a>
+        </div>
       </div>
     </div>
   </div>
 </footer>
-
 {% endwith %}

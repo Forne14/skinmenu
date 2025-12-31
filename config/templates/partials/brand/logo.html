@@ -1,15 +1,14 @@
-{% load static %}
-
-{# Light theme logo #}
-<img
-  src="{% static 'brand/primary/Logo-08.svg' %}"
-  alt="SKINMENU"
-  class="h-6 w-auto block [html[data-theme='dark']_&]:hidden"
-/>
-
-{# Dark theme logo #}
-<img
-  src="{% static 'brand/primary/Logo-09.svg' %}"
-  alt="SKINMENU"
-  class="h-6 w-auto hidden [html[data-theme='dark']_&]:block"
-/>
+{% load static wagtailsettings_tags %}
+{% get_settings %}
+{% with brand=settings.site_settings.BrandAppearanceSettings %}
+  <img
+    src="{% static brand.logo_light_path %}"
+    alt="SKINMENU"
+    class="h-6 w-auto block [html[data-theme='dark']_&]:hidden"
+  />
+  <img
+    src="{% static brand.logo_dark_path %}"
+    alt="SKINMENU"
+    class="h-6 w-auto hidden [html[data-theme='dark']_&]:block"
+  />
+{% endwith %}

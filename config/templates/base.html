@@ -1,4 +1,4 @@
-{% load static wagtailcore_tags wagtailuserbar wagtailsettings_tags brand_tokens  %}
+{% load static wagtailcore_tags wagtailuserbar wagtailsettings_tags brand_tokens %}
 
 <!doctype html>
 <html lang="en" class="h-full">
@@ -6,9 +6,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    {% get_settings as site_settings %}
+
     <link rel="icon" href="{% static 'brand/brand_mark/Logo-01.svg' %}" type="image/svg+xml" />
     <link rel="icon" href="{% static 'brand/brand_mark/Logo-04.svg' %}" type="image/svg+xml" media="(prefers-color-scheme: dark)" />
-
 
     <title>
       {% block title %}
@@ -34,37 +35,117 @@
 
     <link rel="stylesheet" href="{% static 'css/app.css' %}" />
 
-        {% get_settings %}
-        {% with brand=settings.site_settings.BrandAppearanceSettings %}
-        <style>
+    {# Inline theme tokens from Wagtail settings (admin-editable) #}
+    {% with brand=site_settings.site_settings.BrandAppearanceSettings %}
+      <style>
         :root {
-            --bg: {{ brand.light_bg|hex_to_rgb }};
-            --fg: {{ brand.light_fg|hex_to_rgb }};
-            --surface: {{ brand.light_surface|hex_to_rgb }};
-            --surface-2: {{ brand.light_surface_2|hex_to_rgb }};
-            --border: {{ brand.light_border|hex_to_rgb }};
-            --muted: {{ brand.light_muted|hex_to_rgb }};
-            --heading: {{ brand.light_heading|hex_to_rgb }};
-            --accent: {{ brand.light_accent|hex_to_rgb }};
-            --accent-2: {{ brand.light_accent_2|hex_to_rgb }};
+          --bg: {{ brand.light_bg|hex_to_rgb }};
+          --fg: {{ brand.light_fg|hex_to_rgb }};
+          --surface: {{ brand.light_surface|hex_to_rgb }};
+          --surface-2: {{ brand.light_surface_2|hex_to_rgb }};
+          --border: {{ brand.light_border|hex_to_rgb }};
+          --muted: {{ brand.light_muted|hex_to_rgb }};
+          --heading: {{ brand.light_heading|hex_to_rgb }};
+          --accent: {{ brand.light_accent|hex_to_rgb }};
+          --accent-2: {{ brand.light_accent_2|hex_to_rgb }};
         }
         :root[data-theme='dark'] {
-            --bg: {{ brand.dark_bg|hex_to_rgb }};
-            --fg: {{ brand.dark_fg|hex_to_rgb }};
-            --surface: {{ brand.dark_surface|hex_to_rgb }};
-            --surface-2: {{ brand.dark_surface_2|hex_to_rgb }};
-            --border: {{ brand.dark_border|hex_to_rgb }};
-            --muted: {{ brand.dark_muted|hex_to_rgb }};
-            --heading: {{ brand.dark_heading|hex_to_rgb }};
-            --accent: {{ brand.dark_accent|hex_to_rgb }};
-            --accent-2: {{ brand.dark_accent_2|hex_to_rgb }};
+          --bg: {{ brand.dark_bg|hex_to_rgb }};
+          --fg: {{ brand.dark_fg|hex_to_rgb }};
+          --surface: {{ brand.dark_surface|hex_to_rgb }};
+          --surface-2: {{ brand.dark_surface_2|hex_to_rgb }};
+          --border: {{ brand.dark_border|hex_to_rgb }};
+          --muted: {{ brand.dark_muted|hex_to_rgb }};
+          --heading: {{ brand.dark_heading|hex_to_rgb }};
+          --accent: {{ brand.dark_accent|hex_to_rgb }};
+          --accent-2: {{ brand.dark_accent_2|hex_to_rgb }};
         }
-        </style>
-        {% endwith %}
+      </style>
+    {% endwith %}
 
-
+    {# Consent + site scripts #}
+    <script defer src="{% static 'js/consent.js' %}"></script>
     <script defer src="{% static 'js/theme.js' %}"></script>
     <script defer src="{% static 'js/site.js' %}"></script>
+
+    {# Consent-gated analytics loader (robust: reads localStorage directly; does NOT depend on consent.js load order) #}
+    {% with a=site_settings.site_settings.AnalyticsSettings %}
+      {% if a.ga4_measurement_id or a.meta_pixel_id %}
+        <script>
+          (function () {
+            var STORAGE_KEY = 'skinmenu_consent_v1';
+
+            function readConsent() {
+              try {
+                var raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return { necessary: true, analytics: false, marketing: false };
+                var parsed = JSON.parse(raw) || {};
+                return {
+                  necessary: true,
+                  analytics: !!parsed.analytics,
+                  marketing: !!parsed.marketing
+                };
+              } catch (e) {
+                return { necessary: true, analytics: false, marketing: false };
+              }
+            }
+
+            function loadGA4(measurementId) {
+              if (!measurementId) return;
+
+              // Prevent double-init
+              if (window.__skinmenu_ga4_loaded) return;
+              window.__skinmenu_ga4_loaded = true;
+
+              var s = document.createElement('script');
+              s.async = true;
+              s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(measurementId);
+              document.head.appendChild(s);
+
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){ window.dataLayer.push(arguments); }
+              window.gtag = window.gtag || gtag;
+
+              gtag('js', new Date());
+              gtag('config', measurementId, { anonymize_ip: true });
+            }
+
+            function loadMetaPixel(pixelId) {
+              if (!pixelId) return;
+
+              // Prevent double-init
+              if (window.__skinmenu_meta_loaded) return;
+              window.__skinmenu_meta_loaded = true;
+
+              !function(f,b,e,v,n,t,s){
+                if(f.fbq) return;
+                n=f.fbq=function(){ n.callMethod ? n.callMethod.apply(n,arguments) : n.queue.push(arguments) };
+                if(!f._fbq) f._fbq=n;
+                n.push=n; n.loaded=!0; n.version='2.0';
+                n.queue=[];
+                t=b.createElement(e); t.async=!0;
+                t.src=v;
+                s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s);
+              }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+              window.fbq('init', pixelId);
+              window.fbq('track', 'PageView');
+            }
+
+            function applyConsent() {
+              var c = readConsent();
+              if (c.analytics) loadGA4('{{ a.ga4_measurement_id|escapejs }}');
+              if (c.marketing) loadMetaPixel('{{ a.meta_pixel_id|escapejs }}');
+            }
+
+            // Run once after parse, and again whenever banner updates consent
+            document.addEventListener('DOMContentLoaded', applyConsent);
+            window.addEventListener('skinmenu:consent-updated', applyConsent);
+          })();
+        </script>
+      {% endif %}
+    {% endwith %}
 
     {% block extra_head %}{% endblock %}
   </head>
@@ -79,13 +160,15 @@
       Skip to content
     </a>
 
-    {% include "partials/header.html" %}
+    {% include "partials/header.html" with settings=site_settings only %}
 
     <main id="main" class="min-h-[60vh]">
       {% block content %}{% endblock %}
     </main>
 
-    {% include "partials/footer.html" %}
+    {% include "partials/footer.html" with settings=site_settings only %}
+
+    {% include "partials/cookie_banner.html" %}
 
     <noscript>
       <div class="fixed bottom-0 left-0 right-0 bg-accent text-fg px-4 py-2 text-sm">

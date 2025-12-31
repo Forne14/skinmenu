@@ -3,19 +3,29 @@ from django.db import models
 from colorfield.fields import ColorField
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
+from wagtail.fields import StreamField
+
+from .blocks import NavLinkBlock
 
 
 @register_setting
 class GlobalSiteSettings(BaseSiteSetting):
     clinic_name = models.CharField(max_length=120, default="SKINMENU")
     address = models.TextField(blank=True)
+
+    # NOTE: kept in model for backwards compatibility, but requirements want these unused.
     opening_hours = models.TextField(blank=True, help_text="E.g. Mon–Fri 10:00–19:00")
     phone = models.CharField(max_length=50, blank=True)
-    email = models.EmailField(blank=True)
 
+    email = models.EmailField(blank=True)
     instagram_url = models.URLField(blank=True)
     tiktok_url = models.URLField(blank=True)
     facebook_url = models.URLField(blank=True)
+
+    google_maps_url = models.URLField(
+        blank=True,
+        help_text="Optional: link to Google Maps location (for footer + contact).",
+    )
 
     # Newsletter (simple, editor-friendly)
     newsletter_heading = models.CharField(max_length=80, default="Stay in the know", blank=True)
@@ -31,9 +41,8 @@ class GlobalSiteSettings(BaseSiteSetting):
             [
                 FieldPanel("clinic_name"),
                 FieldPanel("address"),
-                FieldPanel("opening_hours"),
-                FieldPanel("phone"),
                 FieldPanel("email"),
+                FieldPanel("google_maps_url"),
             ],
             heading="Clinic details",
         ),
@@ -54,7 +63,61 @@ class GlobalSiteSettings(BaseSiteSetting):
             ],
             heading="Newsletter",
         ),
+        MultiFieldPanel(
+            [
+                FieldPanel("opening_hours"),
+                FieldPanel("phone"),
+            ],
+            heading="Legacy fields (not used on site)",
+            help_text="Client preference is to avoid showing phone/opening hours. Keep for reference only.",
+        ),
     ]
+
+
+@register_setting
+class NavigationSettings(BaseSiteSetting):
+    primary_links = StreamField(
+        [("link", NavLinkBlock())],
+        use_json_field=True,
+        blank=True,
+        help_text="Top-level navigation links.",
+    )
+
+    menu_label = models.CharField(max_length=30, default="The Menu", blank=True)
+    menu_links = StreamField(
+        [("link", NavLinkBlock())],
+        use_json_field=True,
+        blank=True,
+        help_text="Dropdown links under 'The Menu'.",
+    )
+
+    header_cta = StreamField(
+        [("link", NavLinkBlock())],
+        use_json_field=True,
+        blank=True,
+        max_num=1,
+        help_text="Optional single CTA button in header (e.g. Enquire).",
+    )
+
+    footer_links = StreamField(
+        [("link", NavLinkBlock())],
+        use_json_field=True,
+        blank=True,
+        help_text="Footer links column (e.g. About, Journal, Contact, Privacy).",
+    )
+
+    panels = [
+        MultiFieldPanel([FieldPanel("primary_links")], heading="Primary navigation"),
+        MultiFieldPanel(
+            [FieldPanel("menu_label"), FieldPanel("menu_links")],
+            heading="Dropdown: The Menu",
+        ),
+        MultiFieldPanel([FieldPanel("header_cta")], heading="Header CTA"),
+        MultiFieldPanel([FieldPanel("footer_links")], heading="Footer links"),
+    ]
+
+    class Meta:
+        verbose_name = "Navigation"
 
 
 LOGO_CHOICES = [
@@ -75,16 +138,36 @@ MARK_CHOICES = [
     ("brand/brand_mark/Logo-06.svg", "Mark 06"),
 ]
 
+@register_setting
+class AnalyticsSettings(BaseSiteSetting):
+    ga4_measurement_id = models.CharField(
+        max_length=32,
+        blank=True,
+        help_text="GA4 Measurement ID (e.g. G-XXXXXXX). Loaded only with analytics consent.",
+    )
+    meta_pixel_id = models.CharField(
+        max_length=32,
+        blank=True,
+        help_text="Meta Pixel ID. Loaded only with marketing consent.",
+    )
+
+    panels = [
+        FieldPanel("ga4_measurement_id"),
+        FieldPanel("meta_pixel_id"),
+    ]
+
+    class Meta:
+        verbose_name = "Analytics"
+
+
 
 @register_setting
 class BrandAppearanceSettings(BaseSiteSetting):
-    # Asset selection (defaults = your chosen ones)
     logo_light_path = models.CharField(max_length=255, choices=LOGO_CHOICES, default="brand/primary/Logo-08.svg")
     logo_dark_path = models.CharField(max_length=255, choices=LOGO_CHOICES, default="brand/primary/Logo-09.svg")
     mark_light_path = models.CharField(max_length=255, choices=MARK_CHOICES, default="brand/brand_mark/Logo-02.svg")
     mark_dark_path = models.CharField(max_length=255, choices=MARK_CHOICES, default="brand/brand_mark/Logo-03.svg")
 
-    # Theme tokens (hex) — defaults match your tokens.css
     light_bg = ColorField(default="#e5e0d6")
     light_fg = ColorField(default="#261b16")
     light_surface = ColorField(default="#ffffff")

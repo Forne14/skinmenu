@@ -1,13 +1,8 @@
 @import './tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/*
-  Brand base:
-  - Work Sans default with tighter tracking (kerning -25)
-  - Cream background with Espresso text for “legibility first”
-*/
 
 /* =========================
    SKINMENU — Self-hosted Fonts
@@ -20,7 +15,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: 'Work Sans';
   src: url('/static/fonts/WorkSans-Italic-VariableFont_wght.woff2') format('woff2');
@@ -36,7 +30,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: 'Koh Santepheap';
   src: url('/static/fonts/KohSantepheap-Light.woff2') format('woff2');
@@ -44,7 +37,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: 'Koh Santepheap';
   src: url('/static/fonts/KohSantepheap-Regular.woff2') format('woff2');
@@ -52,7 +44,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: 'Koh Santepheap';
   src: url('/static/fonts/KohSantepheap-Bold.woff2') format('woff2');
@@ -60,7 +51,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: 'Koh Santepheap';
   src: url('/static/fonts/KohSantepheap-Black.woff2') format('woff2');
@@ -69,10 +59,15 @@
   font-display: swap;
 }
 
+/* =========================
+   Base
+   ========================= */
+
 @layer base {
   html {
     font-family: 'Work Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.025em; /* guidelines kerning -25 */
+    text-rendering: geometricPrecision;
   }
 
   body {
@@ -84,32 +79,109 @@
   h3,
   h4 {
     font-family: 'Koh Santepheap', 'Work Sans', serif;
-    font-weight: 300;
+    font-weight: 300; /* Light */
     letter-spacing: -0.01em;
     @apply text-heading;
   }
 
+  /* Default links: subtle luxury underline */
   a {
     @apply underline underline-offset-4 decoration-border hover:decoration-accent;
   }
+
+  /* Make focus visible & elegant */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(var(--border) / 0.6);
+    border-radius: 10px;
+  }
+
+  /* Reduce motion support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      scroll-behavior: auto !important;
+      transition-duration: 0.001ms !important;
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
 }
 
-/* Minimal, reusable primitives (luxury-leaning, clean) */
+/* =========================
+   Components (reusable primitives)
+   ========================= */
+
 @layer components {
+  /* Layout */
   .container-shell {
     @apply mx-auto max-w-6xl px-5 sm:px-8;
   }
 
+  /* Surfaces */
+  .card {
+    @apply rounded-2xl border border-border/40 bg-surface shadow-sm;
+  }
+
+  /* Links */
+  .link {
+    @apply underline underline-offset-4 decoration-border hover:decoration-accent;
+  }
+
+  .link-muted {
+    @apply no-underline text-fg/75 hover:text-fg transition;
+  }
+
+  /* Buttons: consistent across site */
   .btn {
-    @apply inline-flex items-center justify-center rounded-pill px-5 py-2 text-sm font-semibold
-      transition focus:outline-none focus:ring-2 focus:ring-border;
+    @apply inline-flex items-center justify-center gap-2 rounded-pill px-5 py-2 text-sm font-semibold
+      border border-transparent transition
+      focus:outline-none focus-visible:ring-0;
   }
 
+  /* Primary = accent surface, readable in both themes */
   .btn-primary {
-    @apply btn bg-accent text-fg hover:bg-accent-2;
+    @apply btn bg-accent text-bg hover:bg-accent-2 active:translate-y-[1px];
   }
 
+  /* Secondary = outlined, subtle */
   .btn-secondary {
-    @apply btn border border-border text-heading hover:border-accent;
+    @apply btn bg-transparent border-border/70 text-heading hover:border-accent hover:bg-surface-2/60 active:translate-y-[1px];
+  }
+
+  /* Tertiary = text button */
+  .btn-ghost {
+    @apply btn bg-transparent text-heading hover:bg-surface-2/60 active:translate-y-[1px];
+  }
+
+  /* Disabled */
+  .btn[disabled],
+  .btn:disabled {
+    @apply opacity-60 cursor-not-allowed;
+  }
+
+  /* Small / Large variants */
+  .btn-sm {
+    @apply px-4 py-1.5 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-6 py-3 text-base;
+  }
+
+  /* Inputs */
+  .input {
+    @apply w-full rounded-2xl border border-border/50 bg-surface px-4 py-3 text-sm
+      placeholder:text-fg/50
+      focus:border-border focus:outline-none;
+  }
+
+  /* Section rhythm helper */
+  .section {
+    @apply py-12 sm:py-16;
+  }
+
+  /* Subtle divider */
+  .divider {
+    @apply h-px bg-border/35;
   }
 }

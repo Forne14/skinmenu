@@ -1,83 +1,114 @@
 {% load wagtailcore_tags wagtailsettings_tags %}
-{% get_settings %}
 
+{% get_settings %}
+{% with nav=settings.site_settings.NavigationSettings %}
 <header class="sticky top-0 z-40 border-b border-border/40 bg-bg/85 backdrop-blur">
   <div class="container-shell">
-    <div class="flex h-16 items-center justify-between gap-4">
+    <div class="flex h-16 items-center justify-between">
       <!-- Brand -->
       <a href="/" class="flex items-center gap-3 hover:opacity-90 transition">
         <span class="sr-only">SKINMENU</span>
-        {% include "partials/brand/logo.html" %}
+        {# Slightly smaller logo per footer/header sizing feedback #}
+        <div class="scale-[0.92] origin-left">
+          {% include "partials/brand/logo.html" %}
+        </div>
       </a>
 
       <!-- Desktop Nav -->
       <nav class="hidden md:flex items-center gap-8 text-sm font-semibold" aria-label="Primary">
-        <a href="/" class="hover:text-accent-2 transition">Home</a>
-
-        <!-- The Menu dropdown -->
-        <div class="relative" data-dropdown>
-          <button
-            class="inline-flex items-center gap-2 hover:text-accent-2 transition"
-            type="button"
-            aria-haspopup="true"
-            aria-expanded="false"
-            data-dropdown-button
-          >
-            The Menu
-            <span aria-hidden="true">▾</span>
-          </button>
-
-          <div
-            class="invisible opacity-0 pointer-events-none absolute right-0 mt-3 w-64 rounded-2xl border border-border/40 bg-surface shadow-sm transition
-                   data-[open=true]:visible data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto"
-            data-dropdown-menu
-          >
-            <div class="p-3">
-              <!-- Placeholder URLs until Wagtail pages exist -->
-              <a href="/treatments/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">
-                View all treatments
+        {% for b in nav.primary_links %}
+          {% with link=b.value %}
+            {% if link.page %}
+              <a href="{% pageurl link.page %}" class="hover:text-accent-2 transition">{{ link.label }}</a>
+            {% else %}
+              <a href="{{ link.url }}" class="hover:text-accent-2 transition" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                {{ link.label }}
               </a>
-              <div class="my-2 h-px bg-border/30"></div>
-              <a href="/treatments/laser/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">Lasers</a>
-              <a href="/treatments/injectables/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">Injectables</a>
-              <a href="/treatments/skin/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">Skin</a>
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
+
+        {% if nav.menu_links %}
+          <div class="relative" data-dropdown>
+            <button
+              class="inline-flex items-center gap-2 hover:text-accent-2 transition"
+              type="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+              data-dropdown-button
+            >
+              {{ nav.menu_label|default:"The Menu" }}
+              <span aria-hidden="true" class="text-xs opacity-80">▾</span>
+            </button>
+
+            <div
+              class="invisible opacity-0 pointer-events-none absolute right-0 mt-3 w-64 rounded-2xl border border-border/40 bg-surface shadow-sm
+                     transition duration-200 ease-out origin-top-right
+                     data-[open=true]:visible data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto"
+              data-dropdown-menu
+              role="menu"
+            >
+              <div class="p-2">
+                {% for b in nav.menu_links %}
+                  {% with link=b.value %}
+                    {% if link.page %}
+                      <a href="{% pageurl link.page %}"
+                         class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition"
+                         role="menuitem">
+                        {{ link.label }}
+                      </a>
+                    {% else %}
+                      <a href="{{ link.url }}"
+                         class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition"
+                         role="menuitem"
+                         {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                        {{ link.label }}
+                      </a>
+                    {% endif %}
+                  {% endwith %}
+                {% endfor %}
+              </div>
             </div>
           </div>
-        </div>
+        {% endif %}
 
-        <a href="/about/" class="hover:text-accent-2 transition">About</a>
-        <a href="/blog/" class="hover:text-accent-2 transition">Journal</a>
-        <a href="/contact/" class="hover:text-accent-2 transition">Contact</a>
-
-        <a href="/contact/" class="btn-primary ml-2">Enquire</a>
+        {% if nav.header_cta %}
+          {% with cta=nav.header_cta.0.value %}
+            {% if cta.page %}
+              <a href="{% pageurl cta.page %}" class="btn-primary ml-2">{{ cta.label }}</a>
+            {% else %}
+              <a href="{{ cta.url }}" class="btn-primary ml-2" {% if cta.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                {{ cta.label }}
+              </a>
+            {% endif %}
+          {% endwith %}
+        {% endif %}
 
         <!-- Theme toggle -->
         <button
           type="button"
           class="ml-2 inline-flex items-center justify-center rounded-pill border border-border/60 px-4 py-2 text-sm font-semibold
                  hover:border-accent transition bg-surface"
-          aria-label="Toggle dark mode"
+          aria-label="Toggle theme"
           aria-pressed="false"
           data-theme-toggle
         >
           <span class="hidden sm:inline">Theme</span>
-          <span class="sm:hidden">☾</span>
+          <span class="sm:hidden" aria-hidden="true">☾</span>
         </button>
       </nav>
 
       <!-- Mobile toggle -->
       <button
         type="button"
-        class="md:hidden inline-flex items-center justify-center rounded-pill border border-border/60 bg-surface px-4 py-2 text-sm font-semibold
+        class="md:hidden inline-flex items-center justify-center gap-2 rounded-pill border border-border/60 bg-surface px-4 py-2 text-sm font-semibold
                hover:border-accent transition"
         aria-controls="mobile-nav"
         aria-expanded="false"
         data-mobile-nav-toggle
       >
-        <span class="inline-flex items-center gap-2">
-          {% include "partials/brand/mark.html" %}
-          <span>Menu</span>
-        </span>
+        {% include "partials/brand/mark.html" %}
+        <span>Menu</span>
       </button>
     </div>
   </div>
@@ -89,44 +120,70 @@
     data-mobile-nav
   >
     <div class="container-shell py-4">
-      <nav class="flex flex-col gap-2 text-base font-semibold" aria-label="Mobile primary">
-        <a href="/" class="rounded-xl px-3 py-3 hover:bg-surface-2/70 transition">Home</a>
+      <div class="flex flex-col gap-2 text-base font-semibold">
+        {% for b in nav.primary_links %}
+          {% with link=b.value %}
+            {% if link.page %}
+              <a href="{% pageurl link.page %}" class="rounded-xl px-3 py-3 hover:bg-surface-2/70 transition">{{ link.label }}</a>
+            {% else %}
+              <a href="{{ link.url }}" class="rounded-xl px-3 py-3 hover:bg-surface-2/70 transition" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                {{ link.label }}
+              </a>
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
 
-        <button
-          type="button"
-          class="flex items-center justify-between rounded-xl px-3 py-3 hover:bg-surface-2/70 transition"
-          aria-expanded="false"
-          data-mobile-subnav-toggle
-        >
-          The Menu <span aria-hidden="true">▾</span>
-        </button>
+        {% if nav.menu_links %}
+          <button
+            type="button"
+            class="flex items-center justify-between rounded-xl px-3 py-3 hover:bg-surface-2/70 transition"
+            aria-expanded="false"
+            data-mobile-subnav-toggle
+          >
+            {{ nav.menu_label|default:"The Menu" }} <span aria-hidden="true" class="text-xs opacity-80">▾</span>
+          </button>
 
-        <div class="hidden pl-3" data-mobile-subnav>
-          <a href="/treatments/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">View all treatments</a>
-          <a href="/treatments/laser/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">Lasers</a>
-          <a href="/treatments/injectables/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">Injectables</a>
-          <a href="/treatments/skin/" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">Skin</a>
-        </div>
-
-        <a href="/about/" class="rounded-xl px-3 py-3 hover:bg-surface-2/70 transition">About</a>
-        <a href="/blog/" class="rounded-xl px-3 py-3 hover:bg-surface-2/70 transition">Journal</a>
-        <a href="/contact/" class="rounded-xl px-3 py-3 hover:bg-surface-2/70 transition">Contact</a>
+          <div class="hidden pl-3" data-mobile-subnav>
+            {% for b in nav.menu_links %}
+              {% with link=b.value %}
+                {% if link.page %}
+                  <a href="{% pageurl link.page %}" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">{{ link.label }}</a>
+                {% else %}
+                  <a href="{{ link.url }}" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                    {{ link.label }}
+                  </a>
+                {% endif %}
+              {% endwith %}
+            {% endfor %}
+          </div>
+        {% endif %}
 
         <div class="pt-2">
-          <a href="/contact/" class="btn-primary w-full">Enquire</a>
+          {% if nav.header_cta %}
+            {% with cta=nav.header_cta.0.value %}
+              {% if cta.page %}
+                <a href="{% pageurl cta.page %}" class="btn-primary w-full">{{ cta.label }}</a>
+              {% else %}
+                <a href="{{ cta.url }}" class="btn-primary w-full" {% if cta.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                  {{ cta.label }}
+                </a>
+              {% endif %}
+            {% endwith %}
+          {% endif %}
 
           <button
             type="button"
             class="mt-2 w-full inline-flex items-center justify-center rounded-pill border border-border/60 bg-surface px-4 py-3 text-sm font-semibold
                    hover:border-accent transition"
-            aria-label="Toggle dark mode"
+            aria-label="Toggle theme"
             aria-pressed="false"
             data-theme-toggle
           >
             Toggle theme
           </button>
         </div>
-      </nav>
+      </div>
     </div>
   </div>
 </header>
+{% endwith %}

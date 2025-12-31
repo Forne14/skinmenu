@@ -6,7 +6,9 @@
     return Array.from((root || document).querySelectorAll(sel))
   }
 
+  // =========================
   // Mobile nav toggle
+  // =========================
   const mobileToggle = qs('[data-mobile-nav-toggle]')
   const mobileNav = qs('[data-mobile-nav]')
 
@@ -18,10 +20,9 @@
     })
   }
 
-  // Mobile subnav toggle
+  // Mobile subnav toggle (supports single submenu for now)
   const mobileSubToggle = qs('[data-mobile-subnav-toggle]')
   const mobileSubNav = qs('[data-mobile-subnav]')
-
   if (mobileSubToggle && mobileSubNav) {
     mobileSubToggle.addEventListener('click', () => {
       const isOpen = !mobileSubNav.classList.contains('hidden')
@@ -30,34 +31,50 @@
     })
   }
 
-  // Desktop dropdown
-  qsa('[data-dropdown]').forEach((wrap) => {
+  // =========================
+  // Desktop dropdowns
+  // =========================
+  const dropdowns = qsa('[data-dropdown]')
+  function closeAllDropdowns() {
+    dropdowns.forEach((wrap) => {
+      const btn = qs('[data-dropdown-button]', wrap)
+      const menu = qs('[data-dropdown-menu]', wrap)
+      if (!btn || !menu) return
+      menu.dataset.open = 'false'
+      btn.setAttribute('aria-expanded', 'false')
+    })
+  }
+  function toggleDropdown(wrap) {
     const btn = qs('[data-dropdown-button]', wrap)
     const menu = qs('[data-dropdown-menu]', wrap)
-
     if (!btn || !menu) return
+    const open = menu.dataset.open === 'true'
+    closeAllDropdowns()
+    menu.dataset.open = open ? 'false' : 'true'
+    btn.setAttribute('aria-expanded', open ? 'false' : 'true')
+  }
 
-    function setOpen(open) {
-      menu.dataset.open = open ? 'true' : 'false'
-      btn.setAttribute('aria-expanded', String(open))
-    }
-
-    setOpen(false)
+  dropdowns.forEach((wrap) => {
+    const btn = qs('[data-dropdown-button]', wrap)
+    const menu = qs('[data-dropdown-menu]', wrap)
+    if (!btn || !menu) return
+    menu.dataset.open = 'false'
+    btn.setAttribute('aria-expanded', 'false')
 
     btn.addEventListener('click', (e) => {
+      e.preventDefault()
       e.stopPropagation()
-      setOpen(menu.dataset.open !== 'true')
-    })
-
-    // Close when clicking outside
-    document.addEventListener('click', () => setOpen(false))
-
-    // Basic ESC close for keyboard users
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') setOpen(false)
+      toggleDropdown(wrap)
     })
   })
 
-  // Respect reduced motion preference: nothing to do here yet
-  // (We’ll keep animations purely CSS-based and minimal.)
+  document.addEventListener('click', (e) => {
+    // close if click is outside any dropdown
+    const insideDropdown = e.target.closest('[data-dropdown]')
+    if (!insideDropdown) closeAllDropdowns()
+  })
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAllDropdowns()
+  })
 })()
