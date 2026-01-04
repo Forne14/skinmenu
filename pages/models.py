@@ -22,6 +22,7 @@ from .blocks import (
     ModularSections,
     BlogBody,
     AboutSections,
+    HeroBlock
 )
 
 
@@ -164,6 +165,12 @@ class MenuSectionPage(Page):
 
 
 class TreatmentPage(Page):
+    hero = StreamField(
+        [("hero_block", HeroBlock())], 
+        use_json_field=True, 
+        blank=True
+    )
+
     summary = models.TextField(
         blank=True,
         max_length=240,
@@ -185,6 +192,7 @@ class TreatmentPage(Page):
     )
 
     content_panels = Page.content_panels + [
+        FieldPanel("hero"),
         FieldPanel("summary"),
         FieldPanel("featured_image"),
         FieldPanel("sections"),

@@ -5,6 +5,7 @@ certifi==2025.11.12
 charset-normalizer==3.4.4
 defusedxml==0.7.1
 Django==5.2.9
+django-colorfield==0.14.0
 django-filter==25.2
 django-modelcluster==6.4.1
 django-permissionedforms==0.1
@@ -13,6 +14,7 @@ django-taggit==6.1.0
 django-tasks==0.9.0
 django-treebeard==4.8.0
 djangorestframework==3.16.1
+djhtml==3.0.10
 draftjs_exporter==5.1.0
 et_xmlfile==2.0.0
 filetype==1.2.0
