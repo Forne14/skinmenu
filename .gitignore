@@ -45,3 +45,5 @@ dump_codebase.sh
 node_modules/
 
 # Django / Wagtail templates        
+
+codebase-skinmenu.txt

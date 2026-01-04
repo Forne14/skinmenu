@@ -1,80 +1,275 @@
+/* SKINMENU site interactions:
+   - Header dropdown
+   - Mobile drawer + subnav
+   - Lightweight carousels (hero + reviews)
+*/
+
 ;(function () {
-  function qs(sel, root) {
-    return (root || document).querySelector(sel)
-  }
-  function qsa(sel, root) {
-    return Array.from((root || document).querySelectorAll(sel))
-  }
+  // ---------------------------
+  // Dropdown (desktop)
+  // ---------------------------
+  function initDropdowns() {
+    const dropdowns = document.querySelectorAll('[data-dropdown]')
+    if (!dropdowns.length) return
 
-  // =========================
-  // Mobile nav toggle
-  // =========================
-  const mobileToggle = qs('[data-mobile-nav-toggle]')
-  const mobileNav = qs('[data-mobile-nav]')
+    function closeAll() {
+      dropdowns.forEach((d) => {
+        d.dataset.open = 'false'
+        const btn = d.querySelector('[data-dropdown-button]')
+        if (btn) btn.setAttribute('aria-expanded', 'false')
+        const menu = d.querySelector('[data-dropdown-menu]')
+        if (menu) menu.dataset.open = 'false'
+      })
+    }
 
-  if (mobileToggle && mobileNav) {
-    mobileToggle.addEventListener('click', () => {
-      const isOpen = !mobileNav.classList.contains('hidden')
-      mobileNav.classList.toggle('hidden', isOpen)
-      mobileToggle.setAttribute('aria-expanded', String(!isOpen))
-    })
-  }
-
-  // Mobile subnav toggle (supports single submenu for now)
-  const mobileSubToggle = qs('[data-mobile-subnav-toggle]')
-  const mobileSubNav = qs('[data-mobile-subnav]')
-  if (mobileSubToggle && mobileSubNav) {
-    mobileSubToggle.addEventListener('click', () => {
-      const isOpen = !mobileSubNav.classList.contains('hidden')
-      mobileSubNav.classList.toggle('hidden', isOpen)
-      mobileSubToggle.setAttribute('aria-expanded', String(!isOpen))
-    })
-  }
-
-  // =========================
-  // Desktop dropdowns
-  // =========================
-  const dropdowns = qsa('[data-dropdown]')
-  function closeAllDropdowns() {
-    dropdowns.forEach((wrap) => {
-      const btn = qs('[data-dropdown-button]', wrap)
-      const menu = qs('[data-dropdown-menu]', wrap)
+    dropdowns.forEach((d) => {
+      const btn = d.querySelector('[data-dropdown-button]')
+      const menu = d.querySelector('[data-dropdown-menu]')
       if (!btn || !menu) return
+
+      d.dataset.open = 'false'
       menu.dataset.open = 'false'
-      btn.setAttribute('aria-expanded', 'false')
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation()
+        const open = d.dataset.open === 'true'
+        closeAll()
+        d.dataset.open = open ? 'false' : 'true'
+        menu.dataset.open = open ? 'false' : 'true'
+        btn.setAttribute('aria-expanded', open ? 'false' : 'true')
+      })
+    })
+
+    document.addEventListener('click', () => closeAll())
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAll()
     })
   }
-  function toggleDropdown(wrap) {
-    const btn = qs('[data-dropdown-button]', wrap)
-    const menu = qs('[data-dropdown-menu]', wrap)
-    if (!btn || !menu) return
-    const open = menu.dataset.open === 'true'
-    closeAllDropdowns()
-    menu.dataset.open = open ? 'false' : 'true'
-    btn.setAttribute('aria-expanded', open ? 'false' : 'true')
+
+  // ---------------------------
+  // Mobile nav
+  // ---------------------------
+  function initMobileNav() {
+    const toggle = document.querySelector('[data-mobile-nav-toggle]')
+    const panel = document.querySelector('[data-mobile-nav]')
+    if (!toggle || !panel) return
+
+    toggle.addEventListener('click', () => {
+      const isOpen = panel.classList.contains('hidden') === false
+      panel.classList.toggle('hidden')
+      toggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true')
+    })
+
+    const subToggle = document.querySelector('[data-mobile-subnav-toggle]')
+    const subnav = document.querySelector('[data-mobile-subnav]')
+    if (subToggle && subnav) {
+      subToggle.addEventListener('click', () => {
+        const isOpen = subnav.classList.contains('hidden') === false
+        subnav.classList.toggle('hidden')
+        subToggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true')
+      })
+    }
   }
 
-  dropdowns.forEach((wrap) => {
-    const btn = qs('[data-dropdown-button]', wrap)
-    const menu = qs('[data-dropdown-menu]', wrap)
-    if (!btn || !menu) return
-    menu.dataset.open = 'false'
-    btn.setAttribute('aria-expanded', 'false')
+  // ---------------------------
+  // Carousels (hero + reviews)
+  // ---------------------------
+  function initCarousels() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const carousels = document.querySelectorAll('[data-carousel]')
+    if (!carousels.length) return
 
-    btn.addEventListener('click', (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      toggleDropdown(wrap)
+    carousels.forEach((root) => {
+      const track = root.querySelector('[data-carousel-track]')
+      const slides = Array.from(root.querySelectorAll('[data-carousel-slide]'))
+      const dotsWrap = root.querySelector('[data-carousel-dots]')
+      const dots = dotsWrap ? Array.from(dotsWrap.querySelectorAll('[data-carousel-dot]')) : []
+
+      if (!track || slides.length <= 1) {
+        // Still ensure first slide is visible if we're using fade layers (hero)
+        slides.forEach((s, i) => {
+          if (s.style && root.dataset.carousel === 'hero') {
+            if (i === 0) {
+              s.style.opacity = '1'
+              s.dataset.active = 'true'
+            } else {
+              s.style.opacity = '0'
+              s.dataset.active = 'false'
+            }
+          }
+        })
+        return
+      }
+
+      const mode = root.dataset.carousel === 'hero' ? 'hero' : 'track'
+      let index = 0
+      let timer = null
+
+      // For hero we fade between absolute slides; for reviews we translate the track.
+      function apply(indexNext) {
+        index = Math.max(0, Math.min(slides.length - 1, indexNext))
+
+        if (mode === 'hero') {
+          slides.forEach((s, i) => {
+            const active = i === index
+            s.dataset.active = active ? 'true' : 'false'
+            s.style.opacity = active ? '1' : '0'
+          })
+        } else {
+          // reviews: translate track so slide aligns left
+          const slide = slides[index]
+          const left = slide.offsetLeft
+          track.style.transform = `translateX(${-left}px)`
+          slides.forEach((s, i) => (s.dataset.active = i === index ? 'true' : 'false'))
+        }
+
+        dots.forEach((d, i) => {
+          if (i === index) d.setAttribute('aria-current', 'true')
+          else d.removeAttribute('aria-current')
+        })
+      }
+
+      function next() {
+        apply((index + 1) % slides.length)
+      }
+
+      function startAutoplay() {
+        if (prefersReducedMotion) return
+        if (root.dataset.autoplay !== 'true') return
+        const interval = parseInt(root.dataset.interval || '8000', 10)
+        stopAutoplay()
+        timer = window.setInterval(next, interval)
+      }
+
+      function stopAutoplay() {
+        if (timer) window.clearInterval(timer)
+        timer = null
+      }
+
+      // Dots
+      dots.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const i = parseInt(btn.getAttribute('data-carousel-dot'), 10)
+          apply(i)
+          startAutoplay()
+        })
+      })
+
+      // Swipe/drag
+      let pointerDown = false
+      let startX = 0
+      let lastX = 0
+      let moved = false
+
+      function onDown(clientX) {
+        pointerDown = true
+        moved = false
+        startX = clientX
+        lastX = clientX
+        stopAutoplay()
+      }
+
+      function onMove(clientX) {
+        if (!pointerDown) return
+        const dx = clientX - startX
+        if (Math.abs(dx) > 8) moved = true
+        lastX = clientX
+      }
+
+      function onUp() {
+        if (!pointerDown) return
+        pointerDown = false
+
+        const dx = lastX - startX
+        if (moved && Math.abs(dx) > 40) {
+          if (dx < 0) apply(index + 1)
+          else apply(index - 1)
+        }
+
+        startAutoplay()
+      }
+
+      root.addEventListener('pointerdown', (e) => onDown(e.clientX), { passive: true })
+      root.addEventListener('pointermove', (e) => onMove(e.clientX), { passive: true })
+      root.addEventListener('pointerup', onUp, { passive: true })
+      root.addEventListener('pointercancel', onUp, { passive: true })
+
+      // Pause on hover/focus (desktop polish)
+      root.addEventListener('mouseenter', stopAutoplay)
+      root.addEventListener('mouseleave', startAutoplay)
+      root.addEventListener('focusin', stopAutoplay)
+      root.addEventListener('focusout', startAutoplay)
+
+      // Init
+      apply(0)
+      startAutoplay()
     })
-  })
+  }
 
-  document.addEventListener('click', (e) => {
-    // close if click is outside any dropdown
-    const insideDropdown = e.target.closest('[data-dropdown]')
-    if (!insideDropdown) closeAllDropdowns()
-  })
+  // ---------------------------
+  // Scroll-snap rails (treatments)
+  // ---------------------------
+  function initHscrollDots() {
+    const rails = document.querySelectorAll('[data-hscroll]')
+    if (!rails.length) return
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeAllDropdowns()
+    rails.forEach((root) => {
+      const track = root.querySelector('[data-hscroll-track]')
+      const slides = Array.from(root.querySelectorAll('[data-hscroll-slide]'))
+      const dotsWrap = root.querySelector('[data-hscroll-dots]')
+      const dots = dotsWrap ? Array.from(dotsWrap.querySelectorAll('[data-hscroll-dot]')) : []
+
+      if (!track || slides.length <= 1 || !dots.length) return
+
+      function setActive(i) {
+        dots.forEach((d, idx) => {
+          if (idx === i) d.setAttribute('aria-current', 'true')
+          else d.removeAttribute('aria-current')
+        })
+      }
+
+      function scrollToIndex(i) {
+        const slide = slides[i]
+        if (!slide) return
+        track.scrollTo({ left: slide.offsetLeft - track.offsetLeft, behavior: 'smooth' })
+        setActive(i)
+      }
+
+      // Click dots
+      dots.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const i = parseInt(btn.getAttribute('data-hscroll-dot') || '0', 10)
+          scrollToIndex(i)
+        })
+      })
+
+      // Track active slide on scroll (rAF throttled)
+      let raf = null
+      function onScroll() {
+        if (raf) return
+        raf = window.requestAnimationFrame(() => {
+          raf = null
+          const x = track.scrollLeft + track.clientWidth * 0.33
+          let active = 0
+          for (let i = 0; i < slides.length; i++) {
+            if (slides[i].offsetLeft <= x) active = i
+          }
+          setActive(active)
+        })
+      }
+
+      track.addEventListener('scroll', onScroll, { passive: true })
+      onScroll()
+    })
+  }
+
+  // ---------------------------
+  // Boot
+  // ---------------------------
+  document.addEventListener('DOMContentLoaded', () => {
+    initDropdowns()
+    initMobileNav()
+    initCarousels()
+    initHscrollDots()
   })
 })()

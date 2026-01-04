@@ -1,0 +1,33 @@
+{% comment %}
+  Usage: 
+  {% include "patterns/brand_button.html" with text="Book Now" href="/contact/" %}
+  
+  Note: This uses the "Brand Corner" aesthetic. 
+  The SVG paths draw the 4 corners (Top-Left, Top-Right, Bottom-Right, Bottom-Left).
+{% endcomment %}
+
+<a href="{{ href }}" class="group relative inline-flex items-center justify-center px-8 py-4 overflow-hidden transition-all duration-300">
+    
+    <span class="relative z-10 font-sans text-lg font-semibold tracking-widest uppercase transition-colors duration-300 text-skinmenu-brown group-hover:text-skinmenu-earth">
+        {{ text }}
+    </span>
+
+    <span class="absolute inset-0 bg-skinmenu-cream/0 transition-colors duration-300 group-hover:bg-skinmenu-cream/30"></span>
+
+    <svg class="absolute top-0 left-0 w-4 h-4 text-skinmenu-brown transition-transform duration-300 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+        <path d="M2,22 L2,2 L22,2" stroke-linecap="square" />
+    </svg>
+
+    <svg class="absolute top-0 right-0 w-4 h-4 text-skinmenu-brown transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+        <path d="M22,22 L22,2 L2,2" stroke-linecap="square" />
+    </svg>
+
+    <svg class="absolute bottom-0 right-0 w-4 h-4 text-skinmenu-brown transition-transform duration-300 group-hover:translate-x-0.5 group-hover:translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+        <path d="M22,2 L22,22 L2,22" stroke-linecap="square" />
+    </svg>
+
+    <svg class="absolute bottom-0 left-0 w-4 h-4 text-skinmenu-brown transition-transform duration-300 group-hover:-translate-x-0.5 group-hover:translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+        <path d="M22,22 L2,22 L2,2" stroke-linecap="square" />
+    </svg>
+    
+</a>

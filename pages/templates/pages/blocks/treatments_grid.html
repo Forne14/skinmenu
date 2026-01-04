@@ -1,0 +1,107 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="section">
+  <div class="container-shell">
+
+    <div class="flex items-end justify-between gap-6">
+      <div class="max-w-2xl">
+        {% if block.value.heading %}
+          <h2 class="section-title">
+            {{ block.value.heading }}
+          </h2>
+        {% endif %}
+
+        {% if block.value.intro %}
+          <p class="mt-2 text-muted">
+            {{ block.value.intro }}
+          </p>
+        {% endif %}
+      </div>
+
+      {% if block.value.cta_page %}
+        <div class="hidden md:block">
+          <a class="btn-secondary" href="{% pageurl block.value.cta_page %}">
+            {{ block.value.cta_label|default:"See full menu" }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+  {# FULL-BLEED CAROUSEL RAIL (keeps header in container, rail spans viewport) #}
+  <div class="mt-8 treatments-bleed" data-hscroll="treatments">
+    <div class="hscroll" aria-label="Treatments carousel" data-hscroll-track>
+      {% for item in block.value.items %}
+        {% with p=item.page %}
+          <a class="treatment-tile" href="{% pageurl p %}" data-hscroll-slide>
+            <div class="treatment-media">
+
+              {% if item.image %}
+                {% image item.image fill-900x1200 as timg %}
+                <img
+                  src="{{ timg.url }}"
+                  width="{{ timg.width }}"
+                  height="{{ timg.height }}"
+                  alt="{{ item.image.title }}"
+                  class="treatment-img"
+                  loading="lazy"
+                />
+              {% else %}
+                <div class="treatment-placeholder" aria-hidden="true">
+                  <span class="treatment-initials">
+                    {{ p.title|slice:":2"|upper }}
+                  </span>
+                </div>
+              {% endif %}
+
+              <div class="treatment-overlay">
+                <div class="treatment-title">
+                  {{ p.title }}
+                </div>
+
+                {% if item.blurb %}
+                  <div class="treatment-blurb">
+                    {{ item.blurb }}
+                  </div>
+                {% elif p.search_description %}
+                  <div class="treatment-blurb">
+                    {{ p.search_description }}
+                  </div>
+                {% endif %}
+              </div>
+
+            </div>
+          </a>
+        {% endwith %}
+      {% endfor %}
+    </div>
+
+    {% if block.value.items|length > 1 %}
+      <div class="container-shell">
+        <div class="mt-6 flex items-center justify-center gap-2" data-hscroll-dots aria-label="Treatments slides">
+          {% for _ in block.value.items %}
+            <button
+              type="button"
+              class="carousel-dot"
+              aria-label="Go to treatment {{ forloop.counter }}"
+              data-hscroll-dot="{{ forloop.counter0 }}"
+              {% if forloop.first %}aria-current="true"{% endif %}
+            ></button>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+
+  <div class="container-shell">
+    {% if block.value.cta_page %}
+      <div class="mt-8 md:hidden">
+        <a class="btn-secondary w-full" href="{% pageurl block.value.cta_page %}">
+          {{ block.value.cta_label|default:"See full menu" }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>

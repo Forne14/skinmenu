@@ -2,10 +2,14 @@
   "name": "skinmenu",
   "version": "1.0.0",
   "main": "index.js",
+  "engines": {
+    "node": ">=18 <23"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "css:build": "tailwindcss -i ./src/styles/tailwind.css -o ./config/static/css/app.css --minify",
-    "css:watch": "tailwindcss -i ./src/styles/tailwind.css -o ./config/static/css/app.css --watch"
+    "css:build": "tailwindcss -c ./tailwind.config.js -i ./src/styles/tailwind.css -o ./config/static/css/app.css --minify",
+    "css:watch": "tailwindcss -c ./tailwind.config.js -i ./src/styles/tailwind.css -o ./config/static/css/app.css --watch",
+    "css:dev": "tailwindcss -c ./tailwind.config.js -i ./src/styles/tailwind.css -o ./config/static/css/app.css --watch --sourcemap",
+    "verify:css": "node -v && npm -v && tailwindcss --version && npm run css:build"
   },
   "repository": {
     "type": "git",
@@ -20,9 +24,9 @@
   "homepage": "https://github.com/Forne14/skinmenu#readme",
   "description": "",
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.19",
     "autoprefixer": "^10.4.23",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.18"
+    "tailwindcss": "3.4.17",
+    "@tailwindcss/typography": "^0.5.19"
   }
 }

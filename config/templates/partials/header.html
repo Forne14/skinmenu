@@ -1,27 +1,25 @@
-{% load wagtailcore_tags wagtailsettings_tags %}
+{% load wagtailcore_tags %}
 
-{% get_settings %}
-{% with nav=settings.site_settings.NavigationSettings %}
-<header class="sticky top-0 z-40 border-b border-border/40 bg-bg/85 backdrop-blur">
+{# Expects `settings` passed from base.html #}
+{% with nav=settings.site_settings.NavigationSettings brand=settings.site_settings.BrandAppearanceSettings %}
+<header class="sticky top-0 z-40 border-b border-border/10 bg-bg/95 backdrop-blur-md transition-all duration-300">
   <div class="container-shell">
-    <div class="flex h-16 items-center justify-between">
-      <!-- Brand -->
-      <a href="/" class="flex items-center gap-3 hover:opacity-90 transition">
+    <div class="flex h-24 items-center justify-between">
+      
+      <a href="/" class="flex items-center gap-3 hover:opacity-80 transition duration-300">
         <span class="sr-only">SKINMENU</span>
-        {# Slightly smaller logo per footer/header sizing feedback #}
-        <div class="scale-[0.92] origin-left">
-          {% include "partials/brand/logo.html" %}
+        <div class="w-40 md:w-48 origin-left">
+          {% include "partials/brand/logo.html" with brand=brand only %}
         </div>
       </a>
 
-      <!-- Desktop Nav -->
-      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold" aria-label="Primary">
+      <nav class="hidden md:flex items-center gap-10 text-lg font-display font-light tracking-wide" aria-label="Primary">
         {% for b in nav.primary_links %}
           {% with link=b.value %}
             {% if link.page %}
-              <a href="{% pageurl link.page %}" class="hover:text-accent-2 transition">{{ link.label }}</a>
+              <a href="{% pageurl link.page %}" class="text-heading hover:text-skinmenu-brown transition-colors no-underline">{{ link.label }}</a>
             {% else %}
-              <a href="{{ link.url }}" class="hover:text-accent-2 transition" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+              <a href="{{ link.url }}" class="text-heading hover:text-skinmenu-brown transition-colors no-underline" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
                 {{ link.label }}
               </a>
             {% endif %}
@@ -29,37 +27,37 @@
         {% endfor %}
 
         {% if nav.menu_links %}
-          <div class="relative" data-dropdown>
+          <div class="relative group" data-dropdown>
             <button
-              class="inline-flex items-center gap-2 hover:text-accent-2 transition"
+              class="inline-flex items-center gap-2 text-heading hover:text-skinmenu-brown transition-colors focus:outline-none"
               type="button"
               aria-haspopup="true"
               aria-expanded="false"
               data-dropdown-button
             >
               {{ nav.menu_label|default:"The Menu" }}
-              <span aria-hidden="true" class="text-xs opacity-80">▾</span>
+              <span aria-hidden="true" class="text-xs opacity-60 group-hover:translate-y-0.5 transition-transform">▾</span>
             </button>
 
             <div
-              class="invisible opacity-0 pointer-events-none absolute right-0 mt-3 w-64 rounded-2xl border border-border/40 bg-surface shadow-sm
-                     transition duration-200 ease-out origin-top-right
-                     data-[open=true]:visible data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto"
+              class="invisible opacity-0 pointer-events-none absolute right-0 mt-4 w-72 bg-surface border border-border/20 shadow-xl
+                     transition-all duration-300 ease-out origin-top-right transform translate-y-2
+                     data-[open=true]:visible data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto data-[open=true]:translate-y-0"
               data-dropdown-menu
               role="menu"
             >
-              <div class="p-2">
+              <div class="py-2 px-2 grid gap-1">
                 {% for b in nav.menu_links %}
                   {% with link=b.value %}
                     {% if link.page %}
                       <a href="{% pageurl link.page %}"
-                         class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition"
+                         class="block px-4 py-3 text-base text-fg/80 hover:bg-surface-2 hover:text-skinmenu-brown transition-colors"
                          role="menuitem">
                         {{ link.label }}
                       </a>
                     {% else %}
                       <a href="{{ link.url }}"
-                         class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition"
+                         class="block px-4 py-3 text-base text-fg/80 hover:bg-surface-2 hover:text-skinmenu-brown transition-colors"
                          role="menuitem"
                          {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
                         {{ link.label }}
@@ -74,59 +72,42 @@
 
         {% if nav.header_cta %}
           {% with cta=nav.header_cta.0.value %}
-            {% if cta.page %}
-              <a href="{% pageurl cta.page %}" class="btn-primary ml-2">{{ cta.label }}</a>
-            {% else %}
-              <a href="{{ cta.url }}" class="btn-primary ml-2" {% if cta.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
-                {{ cta.label }}
-              </a>
-            {% endif %}
+            <div class="ml-6">
+              {% if cta.page %}
+                 {% include "patterns/brand_button.html" with text=cta.label href=cta.page.url %}
+              {% else %}
+                 {% include "patterns/brand_button.html" with text=cta.label href=cta.url %}
+              {% endif %}
+            </div>
           {% endwith %}
         {% endif %}
-
-        <!-- Theme toggle -->
-        <button
-          type="button"
-          class="ml-2 inline-flex items-center justify-center rounded-pill border border-border/60 px-4 py-2 text-sm font-semibold
-                 hover:border-accent transition bg-surface"
-          aria-label="Toggle theme"
-          aria-pressed="false"
-          data-theme-toggle
-        >
-          <span class="hidden sm:inline">Theme</span>
-          <span class="sm:hidden" aria-hidden="true">☾</span>
-        </button>
       </nav>
 
-      <!-- Mobile toggle -->
       <button
         type="button"
-        class="md:hidden inline-flex items-center justify-center gap-2 rounded-pill border border-border/60 bg-surface px-4 py-2 text-sm font-semibold
-               hover:border-accent transition"
+        class="md:hidden inline-flex items-center justify-center gap-2 border border-border/30 bg-transparent px-5 py-2 text-sm font-semibold tracking-widest uppercase text-skinmenu-brown hover:bg-skinmenu-brown hover:text-white transition-all"
         aria-controls="mobile-nav"
         aria-expanded="false"
         data-mobile-nav-toggle
       >
-        {% include "partials/brand/mark.html" %}
         <span>Menu</span>
       </button>
     </div>
   </div>
 
-  <!-- Mobile Nav Drawer -->
   <div
     id="mobile-nav"
-    class="md:hidden hidden border-t border-border/40 bg-bg"
+    class="md:hidden hidden border-t border-border/10 bg-bg"
     data-mobile-nav
   >
-    <div class="container-shell py-4">
-      <div class="flex flex-col gap-2 text-base font-semibold">
+    <div class="container-shell py-8 space-y-6">
+      <div class="flex flex-col gap-4 text-xl font-display font-light tracking-wide text-center">
         {% for b in nav.primary_links %}
           {% with link=b.value %}
             {% if link.page %}
-              <a href="{% pageurl link.page %}" class="rounded-xl px-3 py-3 hover:bg-surface-2/70 transition">{{ link.label }}</a>
+              <a href="{% pageurl link.page %}" class="py-2 text-heading hover:text-skinmenu-brown transition">{{ link.label }}</a>
             {% else %}
-              <a href="{{ link.url }}" class="rounded-xl px-3 py-3 hover:bg-surface-2/70 transition" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+              <a href="{{ link.url }}" class="py-2 text-heading hover:text-skinmenu-brown transition" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
                 {{ link.label }}
               </a>
             {% endif %}
@@ -134,55 +115,32 @@
         {% endfor %}
 
         {% if nav.menu_links %}
-          <button
-            type="button"
-            class="flex items-center justify-between rounded-xl px-3 py-3 hover:bg-surface-2/70 transition"
-            aria-expanded="false"
-            data-mobile-subnav-toggle
-          >
-            {{ nav.menu_label|default:"The Menu" }} <span aria-hidden="true" class="text-xs opacity-80">▾</span>
-          </button>
-
-          <div class="hidden pl-3" data-mobile-subnav>
+            <div class="border-t border-border/10 my-2 w-12 mx-auto"></div>
             {% for b in nav.menu_links %}
               {% with link=b.value %}
                 {% if link.page %}
-                  <a href="{% pageurl link.page %}" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition">{{ link.label }}</a>
+                  <a href="{% pageurl link.page %}" class="py-2 text-heading hover:text-skinmenu-brown transition">{{ link.label }}</a>
                 {% else %}
-                  <a href="{{ link.url }}" class="block rounded-xl px-3 py-2 hover:bg-surface-2/70 transition" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                  <a href="{{ link.url }}" class="py-2 text-heading hover:text-skinmenu-brown transition" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
                     {{ link.label }}
                   </a>
                 {% endif %}
               {% endwith %}
             {% endfor %}
-          </div>
         {% endif %}
-
-        <div class="pt-2">
-          {% if nav.header_cta %}
-            {% with cta=nav.header_cta.0.value %}
-              {% if cta.page %}
-                <a href="{% pageurl cta.page %}" class="btn-primary w-full">{{ cta.label }}</a>
-              {% else %}
-                <a href="{{ cta.url }}" class="btn-primary w-full" {% if cta.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
-                  {{ cta.label }}
-                </a>
-              {% endif %}
-            {% endwith %}
-          {% endif %}
-
-          <button
-            type="button"
-            class="mt-2 w-full inline-flex items-center justify-center rounded-pill border border-border/60 bg-surface px-4 py-3 text-sm font-semibold
-                   hover:border-accent transition"
-            aria-label="Toggle theme"
-            aria-pressed="false"
-            data-theme-toggle
-          >
-            Toggle theme
-          </button>
-        </div>
       </div>
+      
+      {% if nav.header_cta %}
+        {% with cta=nav.header_cta.0.value %}
+          <div class="flex justify-center pt-4">
+            {% if cta.page %}
+                {% include "patterns/brand_button.html" with text=cta.label href=cta.page.url %}
+            {% else %}
+                {% include "patterns/brand_button.html" with text=cta.label href=cta.url %}
+            {% endif %}
+          </div>
+        {% endwith %}
+      {% endif %}
     </div>
   </div>
 </header>

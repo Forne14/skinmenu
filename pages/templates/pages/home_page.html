@@ -1,8 +1,29 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags %}
 
 {% block content %}
-  {% for block in page.sections %}
-    {% include "pages/blocks/"|add:block.block_type|add:".html" with block=block %}
-  {% endfor %}
+  {% if page.sections %}
+    {% for block in page.sections %}
+      {# Renders using the block's own Meta.template (Wagtail-native) #}
+      {% include_block block %}
+    {% endfor %}
+  {% else %}
+    <section class="section">
+      <div class="container-shell">
+        <div class="card p-8 md:p-10">
+          <h1 class="font-display text-3xl md:text-5xl tracking-tightish text-heading">
+            SKINMENU
+          </h1>
+          <p class="mt-3 max-w-2xl text-muted">
+            Your homepage sections haven’t been added yet. Open the Home page in Wagtail and add a Hero, Treatments, Reviews, and a CTA.
+          </p>
+          <div class="mt-6">
+            <a class="btn btn-primary" href="/admin/pages/">
+              Edit homepage
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}

@@ -4,69 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* =========================
-   SKINMENU — Self-hosted Fonts
-   ========================= */
-
-@font-face {
-  font-family: 'Work Sans';
-  src: url('/static/fonts/WorkSans-VariableFont_wght.woff2') format('woff2');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Work Sans';
-  src: url('/static/fonts/WorkSans-Italic-VariableFont_wght.woff2') format('woff2');
-  font-weight: 100 900;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Koh Santepheap';
-  src: url('/static/fonts/KohSantepheap-Thin.woff2') format('woff2');
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Koh Santepheap';
-  src: url('/static/fonts/KohSantepheap-Light.woff2') format('woff2');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Koh Santepheap';
-  src: url('/static/fonts/KohSantepheap-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Koh Santepheap';
-  src: url('/static/fonts/KohSantepheap-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Koh Santepheap';
-  src: url('/static/fonts/KohSantepheap-Black.woff2') format('woff2');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* =========================
-   Base
-   ========================= */
-
 @layer base {
   html {
     font-family: 'Work Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-    letter-spacing: -0.025em; /* guidelines kerning -25 */
+    letter-spacing: -0.025em;
     text-rendering: geometricPrecision;
   }
 
@@ -79,109 +20,227 @@
   h3,
   h4 {
     font-family: 'Koh Santepheap', 'Work Sans', serif;
-    font-weight: 300; /* Light */
+    font-weight: 300;
     letter-spacing: -0.01em;
     @apply text-heading;
   }
 
-  /* Default links: subtle luxury underline */
   a {
     @apply underline underline-offset-4 decoration-border hover:decoration-accent;
   }
 
-  /* Make focus visible & elegant */
   :focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px rgb(var(--border) / 0.6);
-    border-radius: 10px;
-  }
-
-  /* Reduce motion support */
-  @media (prefers-reduced-motion: reduce) {
-    * {
-      scroll-behavior: auto !important;
-      transition-duration: 0.001ms !important;
-      animation-duration: 0.001ms !important;
-      animation-iteration-count: 1 !important;
-    }
+    box-shadow: 0 0 0 3px rgb(var(--border) / 0.55);
   }
 }
 
-/* =========================
-   Components (reusable primitives)
-   ========================= */
-
 @layer components {
-  /* Layout */
   .container-shell {
     @apply mx-auto max-w-6xl px-5 sm:px-8;
   }
 
-  /* Surfaces */
+  .section {
+    @apply py-12 sm:py-20;
+  }
+
+  .divider {
+    @apply h-px bg-border/20;
+  }
+
+  /* Editorial section headings - CLEANED */
+  .section-title {
+    font-family: 'Koh Santepheap', serif;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    @apply text-3xl md:text-4xl text-heading;
+    position: relative;
+    padding-bottom: 1rem;
+  }
+  .section-title::after {
+    /* Simple clean underline */
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 60px;
+    bottom: 0;
+    height: 1px;
+    background: rgb(var(--heading) / 0.5);
+  }
+
+  /* Small header labels / eyebrow text */
+  .label-display {
+    font-family: 'Koh Santepheap', serif;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    @apply text-sm md:text-base text-muted no-underline;
+  }
+
+  /* Cards - CLEANED (No ornaments) */
   .card {
-    @apply rounded-2xl border border-border/40 bg-surface shadow-sm;
+    @apply border border-border/20 bg-surface;
+    border-radius: 4px; /* Sharp clean corners */
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgb(0 0 0 / 0.02);
   }
 
-  /* Links */
-  .link {
-    @apply underline underline-offset-4 decoration-border hover:decoration-accent;
+  .testimonial-card {
+    @apply card;
+    padding: 2rem;
   }
-
-  .link-muted {
-    @apply no-underline text-fg/75 hover:text-fg transition;
-  }
-
-  /* Buttons: consistent across site */
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-pill px-5 py-2 text-sm font-semibold
-      border border-transparent transition
-      focus:outline-none focus-visible:ring-0;
-  }
-
-  /* Primary = accent surface, readable in both themes */
-  .btn-primary {
-    @apply btn bg-accent text-bg hover:bg-accent-2 active:translate-y-[1px];
-  }
-
-  /* Secondary = outlined, subtle */
-  .btn-secondary {
-    @apply btn bg-transparent border-border/70 text-heading hover:border-accent hover:bg-surface-2/60 active:translate-y-[1px];
-  }
-
-  /* Tertiary = text button */
-  .btn-ghost {
-    @apply btn bg-transparent text-heading hover:bg-surface-2/60 active:translate-y-[1px];
-  }
-
-  /* Disabled */
-  .btn[disabled],
-  .btn:disabled {
-    @apply opacity-60 cursor-not-allowed;
-  }
-
-  /* Small / Large variants */
-  .btn-sm {
-    @apply px-4 py-1.5 text-sm;
-  }
-
-  .btn-lg {
-    @apply px-6 py-3 text-base;
+  .testimonial-card::before {
+    content: '“';
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-family: 'Koh Santepheap', serif;
+    font-size: 64px;
+    line-height: 1;
+    opacity: 0.1;
+    color: rgb(var(--heading) / 1);
   }
 
   /* Inputs */
   .input {
-    @apply w-full rounded-2xl border border-border/50 bg-surface px-4 py-3 text-sm
-      placeholder:text-fg/50
-      focus:border-border focus:outline-none;
+    @apply w-full border-b border-border/50 bg-transparent px-4 py-3 text-base
+      placeholder:text-fg/40 focus:border-skinmenu-brown focus:outline-none transition-colors;
+    border-radius: 0;
   }
 
-  /* Section rhythm helper */
-  .section {
-    @apply py-12 sm:py-16;
+  /* Standard Buttons (Form submits etc) - CLEANED */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+      text-base font-medium border transition-all duration-300
+      focus:outline-none no-underline;
+    font-family: 'Koh Santepheap', serif;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 0;
+    background: transparent;
+    border-color: rgb(var(--heading) / 0.3);
+    color: rgb(var(--heading) / 1);
   }
 
-  /* Subtle divider */
-  .divider {
-    @apply h-px bg-border/35;
+  .btn:hover {
+    border-color: rgb(var(--heading) / 1);
+    background: rgb(var(--heading) / 0.03);
+  }
+
+  /* Primary Button Fallback */
+  .btn-primary {
+    @apply btn;
+    background: rgb(var(--heading) / 1);
+    color: rgb(var(--bg) / 1);
+    border-color: rgb(var(--heading) / 1);
+  }
+  .btn-primary:hover {
+    background: rgb(var(--heading) / 0.9);
+    color: rgb(var(--bg) / 1);
+  }
+
+  .btn-secondary {
+    @apply btn;
+  }
+
+  /* Theme toggle - Minimalist */
+  .theme-toggle {
+    @apply inline-flex items-center justify-center transition;
+  }
+  .theme-icon {
+    transition: transform 300ms ease, opacity 300ms ease;
+  }
+  .theme-icon-moon {
+    position: absolute;
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+  }
+  .theme-icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+  :root[data-theme='dark'] .theme-icon-sun {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+  }
+  :root[data-theme='dark'] .theme-icon-moon {
+    position: static;
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+
+  /* Carousel */
+  .carousel-dot {
+    @apply h-2 w-2 rounded-full border transition-all;
+    border-color: rgb(var(--border) / 0.4);
+    background: transparent;
+  }
+  .carousel-dot[aria-current='true'] {
+    background: rgb(var(--heading) / 1);
+    border-color: rgb(var(--heading) / 1);
+    transform: scale(1.2);
+  }
+
+  /* Treatments Scroll - CLEANED */
+  .treatments-bleed {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
+
+  .hscroll {
+    @apply flex gap-6 overflow-x-auto pb-6 pt-2;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hscroll::-webkit-scrollbar {
+    display: none;
+  }
+  .hscroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .treatment-tile {
+    @apply no-underline block shrink-0;
+    width: 280px;
+    scroll-snap-align: start;
+    transition: transform 300ms ease;
+  }
+  @media (min-width: 768px) {
+    .treatment-tile {
+      width: 340px;
+    }
+  }
+
+  .treatment-media {
+    @apply relative overflow-hidden border-0 bg-surface;
+    height: 480px;
+  }
+
+  .treatment-img {
+    @apply block w-full h-full object-cover;
+    transition: transform 700ms ease;
+  }
+
+  /* Overlay - CLEANED (No ornaments) */
+  .treatment-overlay {
+    @apply absolute inset-x-0 bottom-0 px-6 pb-8 pt-20;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  }
+
+  .treatment-title {
+    font-family: 'Koh Santepheap', serif;
+    font-weight: 300;
+    @apply text-white text-3xl leading-none;
+  }
+
+  .treatment-tile:hover .treatment-img {
+    transform: scale(1.05);
   }
 }

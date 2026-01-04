@@ -1,52 +1,99 @@
 {% load wagtailimages_tags %}
 
-<section class="border-b border-border/40">
-  <div class="container-shell py-14 md:py-20">
-    <div class="grid gap-10 md:grid-cols-2 md:items-center">
-      <div class="space-y-6">
-        <h1 class="text-3xl md:text-5xl leading-[1.05]">
-          {{ block.value.headline }}
-        </h1>
-
-        {% if block.value.subheadline %}
-          <p class="text-base md:text-lg text-fg/85 max-w-prose">
-            {{ block.value.subheadline }}
-          </p>
-        {% endif %}
-
-        <div class="flex flex-col sm:flex-row gap-3 pt-2">
-          {% if block.value.primary_cta %}
-            <a class="btn-primary" href="{{ block.value.primary_cta.url }}">
-              {{ block.value.primary_cta.label }}
-            </a>
-          {% endif %}
-          {% if block.value.secondary_cta %}
-            <a class="btn-secondary" href="{{ block.value.secondary_cta.url }}">
-              {{ block.value.secondary_cta.label }}
-            </a>
-          {% endif %}
-        </div>
-      </div>
-
-      <div>
-        {% if block.value.image %}
-          {% image block.value.image fill-900x700 as img %}
-          <div class="overflow-hidden rounded-2xl border border-border/40 bg-surface">
+<section class="relative">
+  <div
+    class="relative w-full overflow-hidden border-b border-border/30 bg-surface"
+    data-carousel="hero"
+    {% if block.value.hero_images|length > 1 %}data-autoplay="true" data-interval="6500"{% endif %}
+  >
+    <div class="relative h-[62vh] min-h-[520px] w-full md:h-[76vh]" data-carousel-track>
+      {% if block.value.hero_images %}
+        {% for img_obj in block.value.hero_images %}
+          {% image img_obj fill-2600x1600 as hero_img %}
+          <div
+            class="absolute inset-0 transition-opacity duration-700 ease-out will-change-[opacity]
+                   {% if forloop.first %}opacity-100{% else %}opacity-0{% endif %}"
+            data-carousel-slide
+            {% if forloop.first %}data-active="true"{% endif %}
+          >
             <img
-              src="{{ img.url }}"
-              width="{{ img.width }}"
-              height="{{ img.height }}"
-              alt="{{ block.value.image.title }}"
-              class="h-[360px] w-full object-cover md:h-[480px]"
-              loading="lazy"
+              src="{{ hero_img.url }}"
+              width="{{ hero_img.width }}"
+              height="{{ hero_img.height }}"
+              alt="{{ img_obj.title }}"
+              class="h-full w-full object-cover"
+              {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
             />
+            <div class="absolute inset-0 bg-bg/15"></div>
           </div>
+        {% endfor %}
+      {% else %}
+        <div class="absolute inset-0 flex items-center justify-center bg-surface-2 text-fg/70">
+          Add hero images in Wagtail → HomePage → Hero
+        </div>
+      {% endif %}
+    </div>
+
+    {# Overlay content with position variants #}
+    <div class="pointer-events-none absolute inset-0">
+      <div class="container-shell h-full">
+
+        {% if block.value.cta_position == "bottom_left" %}
+          <div class="flex h-full items-end justify-start pb-10 md:pb-14">
+            <div class="pointer-events-auto max-w-2xl">
+        {% elif block.value.cta_position == "bottom_right" %}
+          <div class="flex h-full items-end justify-end pb-10 md:pb-14">
+            <div class="pointer-events-auto max-w-2xl text-right">
+        {% elif block.value.cta_position == "top_left" %}
+          <div class="flex h-full items-start justify-start pt-10 md:pt-14">
+            <div class="pointer-events-auto max-w-2xl">
+        {% elif block.value.cta_position == "top_right" %}
+          <div class="flex h-full items-start justify-end pt-10 md:pt-14">
+            <div class="pointer-events-auto max-w-2xl text-right">
         {% else %}
-          <div class="h-[360px] md:h-[480px] rounded-2xl border border-border/40 bg-surface flex items-center justify-center text-fg/60 text-sm">
-            Optional hero image
-          </div>
+          <div class="flex h-full items-center justify-center py-10">
+            <div class="pointer-events-auto max-w-2xl text-center">
         {% endif %}
+
+              <h1 class="text-4xl leading-[1.02] md:text-6xl">
+                {{ block.value.headline }}
+              </h1>
+
+              {% if block.value.subheadline %}
+                <p class="mt-4 max-w-prose text-base text-fg/85 md:text-lg">
+                  {{ block.value.subheadline }}
+                </p>
+              {% endif %}
+
+              {% if block.value.primary_cta %}
+                <div class="mt-6">
+                  <a class="btn-primary btn-lg" href="{{ block.value.primary_cta.url }}">
+                    {{ block.value.primary_cta.label }}
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
       </div>
     </div>
+
+    {% if block.value.hero_images|length > 1 %}
+      <div class="absolute bottom-6 left-0 right-0">
+        <div class="container-shell">
+          <div class="flex items-center gap-2" data-carousel-dots aria-label="Hero slides">
+            {% for _ in block.value.hero_images %}
+              <button
+                type="button"
+                class="carousel-dot"
+                aria-label="Go to slide {{ forloop.counter }}"
+                data-carousel-dot="{{ forloop.counter0 }}"
+                {% if forloop.first %}aria-current="true"{% endif %}
+              ></button>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
   </div>
 </section>

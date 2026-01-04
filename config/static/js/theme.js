@@ -11,11 +11,11 @@
 
   function applyTheme(theme) {
     document.documentElement.dataset.theme = theme
-    const btn = document.querySelector('[data-theme-toggle]')
-    if (btn) {
+    const btns = document.querySelectorAll('[data-theme-toggle]')
+    btns.forEach((btn) => {
       btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false')
       btn.setAttribute('data-theme', theme)
-    }
+    })
   }
 
   function toggleTheme() {

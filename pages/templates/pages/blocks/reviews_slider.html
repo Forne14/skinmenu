@@ -1,24 +1,54 @@
-<section class="border-y border-border/40 bg-surface/40">
-  <div class="container-shell py-14 md:py-18">
+<section class="section">
+  <div class="container-shell">
     {% if block.value.heading %}
-      <h2 class="text-2xl md:text-3xl">{{ block.value.heading }}</h2>
+      <div class="flex items-end justify-between gap-6">
+        <h2 class="text-2xl md:text-3xl">{{ block.value.heading }}</h2>
+        <div class="hidden md:block text-xs text-fg/60">Swipe / drag to browse</div>
+      </div>
     {% endif %}
 
-    <div class="mt-8 overflow-hidden" data-reviews>
-      <div class="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4" data-reviews-track>
-        {% for r in block.value.reviews %}
-          <figure class="min-w-[280px] max-w-[420px] snap-start rounded-2xl border border-border/40 bg-bg p-6">
-            <blockquote class="text-sm md:text-base text-fg/90 leading-relaxed">
-              “{{ r.quote }}”
-            </blockquote>
-            <figcaption class="mt-4 text-sm font-semibold text-heading">
-              {{ r.author }}
-              {% if r.source %}<span class="text-fg/60 font-normal"> · {{ r.source }}</span>{% endif %}
-            </figcaption>
-          </figure>
-        {% endfor %}
+    <div
+      class="mt-8"
+      data-carousel="reviews"
+      {% if block.value.reviews|length > 1 %}data-autoplay="true" data-interval="9000"{% endif %}
+    >
+      <div class="relative overflow-hidden">
+        <div class="flex gap-5 transition-transform duration-500 ease-out will-change-transform"
+             data-carousel-track>
+          {% for r in block.value.reviews %}
+            <article class="testimonial-card w-[86%] shrink-0 md:w-[48%] lg:w-[36%]"
+                     data-carousel-slide
+                     {% if forloop.first %}data-active="true"{% endif %}>
+              <p class="text-sm md:text-base text-fg/85 leading-relaxed">
+                “{{ r.quote }}”
+              </p>
+              <div class="mt-5 text-sm font-semibold text-heading">
+                {{ r.author }}
+                {% if r.source %}
+                  <span class="font-normal text-fg/60"> · {{ r.source }}</span>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
       </div>
-      <div class="text-xs text-fg/60">Swipe to read more</div>
+
+      {% if block.value.reviews|length > 1 %}
+        <div class="mt-5 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-2" data-carousel-dots aria-label="Review slides">
+            {% for _ in block.value.reviews %}
+              <button
+                type="button"
+                class="carousel-dot"
+                aria-label="Go to review {{ forloop.counter }}"
+                data-carousel-dot="{{ forloop.counter0 }}"
+                {% if forloop.first %}aria-current="true"{% endif %}
+              ></button>
+            {% endfor %}
+          </div>
+          <div class="md:hidden text-xs text-fg/60">Swipe</div>
+        </div>
+      {% endif %}
     </div>
   </div>
 </section>
