@@ -8,6 +8,9 @@ from wagtail.fields import StreamField
 from .blocks import NavLinkBlock
 
 
+# ---------------------------------------------------------------------
+# Global settings
+# ---------------------------------------------------------------------
 @register_setting
 class GlobalSiteSettings(BaseSiteSetting):
     clinic_name = models.CharField(max_length=120, default="SKINMENU")
@@ -24,7 +27,15 @@ class GlobalSiteSettings(BaseSiteSetting):
 
     google_maps_url = models.URLField(
         blank=True,
-        help_text="Optional: link to Google Maps location (for footer + contact).",
+        help_text="Optional: link to Google Maps location (normal URL).",
+    )
+
+    # New canonical embed SRC for footer/contact iframe rendering.
+    # Editors paste only the iframe src URL (not the full <iframe> HTML).
+    google_maps_embed_url = models.URLField(
+        blank=True,
+        max_length=2000,
+        help_text="Paste the Google Maps iframe *src* URL (not the full iframe tag). Used to render an embed iframe.",
     )
 
     # Newsletter (simple, editor-friendly)
@@ -41,6 +52,7 @@ class GlobalSiteSettings(BaseSiteSetting):
             [
                 FieldPanel("clinic_name"),
                 FieldPanel("address"),
+                FieldPanel("phone"),
                 FieldPanel("email"),
                 FieldPanel("google_maps_url"),
             ],
@@ -52,7 +64,14 @@ class GlobalSiteSettings(BaseSiteSetting):
                 FieldPanel("tiktok_url"),
                 FieldPanel("facebook_url"),
             ],
-            heading="Social links",
+            heading="Social",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("google_maps_url"),
+                FieldPanel("google_maps_embed_url"),
+            ],
+            heading="Google Maps",
         ),
         MultiFieldPanel(
             [
@@ -63,81 +82,72 @@ class GlobalSiteSettings(BaseSiteSetting):
             ],
             heading="Newsletter",
         ),
-        MultiFieldPanel(
-            [
-                FieldPanel("opening_hours"),
-                FieldPanel("phone"),
-            ],
-            heading="Legacy fields (not used on site)",
-            help_text="Client preference is to avoid showing phone/opening hours. Keep for reference only.",
-        ),
     ]
 
+    class Meta:
+        verbose_name = "Global"
 
+
+# ---------------------------------------------------------------------
+# Navigation settings
+# ---------------------------------------------------------------------
 @register_setting
 class NavigationSettings(BaseSiteSetting):
     primary_links = StreamField(
         [("link", NavLinkBlock())],
-        use_json_field=True,
         blank=True,
+        use_json_field=True,
         help_text="Top-level navigation links.",
     )
 
-    menu_label = models.CharField(max_length=30, default="The Menu", blank=True)
+    menu_label = models.CharField(max_length=30, blank=True, default="The Menu")
+
     menu_links = StreamField(
         [("link", NavLinkBlock())],
-        use_json_field=True,
         blank=True,
+        use_json_field=True,
         help_text="Dropdown links under 'The Menu'.",
     )
 
     header_cta = StreamField(
         [("link", NavLinkBlock())],
-        use_json_field=True,
         blank=True,
-        max_num=1,
+        use_json_field=True,
         help_text="Optional single CTA button in header (e.g. Enquire).",
     )
 
     footer_links = StreamField(
         [("link", NavLinkBlock())],
-        use_json_field=True,
         blank=True,
+        use_json_field=True,
         help_text="Footer links column (e.g. About, Journal, Contact, Privacy).",
     )
 
     panels = [
-        MultiFieldPanel([FieldPanel("primary_links")], heading="Primary navigation"),
         MultiFieldPanel(
-            [FieldPanel("menu_label"), FieldPanel("menu_links")],
-            heading="Dropdown: The Menu",
+            [
+                FieldPanel("primary_links"),
+                FieldPanel("menu_label"),
+                FieldPanel("menu_links"),
+                FieldPanel("header_cta"),
+            ],
+            heading="Header navigation",
         ),
-        MultiFieldPanel([FieldPanel("header_cta")], heading="Header CTA"),
-        MultiFieldPanel([FieldPanel("footer_links")], heading="Footer links"),
+        MultiFieldPanel(
+            [
+                FieldPanel("footer_links"),
+            ],
+            heading="Footer navigation",
+        ),
     ]
 
     class Meta:
         verbose_name = "Navigation"
 
 
-LOGO_CHOICES = [
-    ("brand/primary/Logo-07.svg", "Primary Logo 07"),
-    ("brand/primary/Logo-08.svg", "Primary Logo 08"),
-    ("brand/primary/Logo-09.svg", "Primary Logo 09"),
-    ("brand/primary/Logo-10.svg", "Primary Logo 10"),
-    ("brand/primary/Logo-11.svg", "Primary Logo 11"),
-    ("brand/primary/Logo-12.svg", "Primary Logo 12"),
-]
-
-MARK_CHOICES = [
-    ("brand/brand_mark/Logo-01.svg", "Mark 01"),
-    ("brand/brand_mark/Logo-02.svg", "Mark 02"),
-    ("brand/brand_mark/Logo-03.svg", "Mark 03"),
-    ("brand/brand_mark/Logo-04.svg", "Mark 04"),
-    ("brand/brand_mark/Logo-05.svg", "Mark 05"),
-    ("brand/brand_mark/Logo-06.svg", "Mark 06"),
-]
-
+# ---------------------------------------------------------------------
+# Analytics settings (used by cookie-consent logic + bootstrap_dev)
+# ---------------------------------------------------------------------
 @register_setting
 class AnalyticsSettings(BaseSiteSetting):
     ga4_measurement_id = models.CharField(
@@ -159,6 +169,21 @@ class AnalyticsSettings(BaseSiteSetting):
     class Meta:
         verbose_name = "Analytics"
 
+
+# ---------------------------------------------------------------------
+# Brand appearance (used by tokens + base templates + bootstrap_dev)
+# ---------------------------------------------------------------------
+LOGO_CHOICES = [
+    ("brand/primary/Logo-07.svg", "Primary Logo 07"),
+    ("brand/primary/Logo-08.svg", "Primary Logo 08"),
+    ("brand/primary/Logo-09.svg", "Primary Logo 09"),
+]
+
+MARK_CHOICES = [
+    ("brand/brand_mark/Logo-01.svg", "Brand Mark 01"),
+    ("brand/brand_mark/Logo-02.svg", "Brand Mark 02"),
+    ("brand/brand_mark/Logo-03.svg", "Brand Mark 03"),
+]
 
 
 @register_setting

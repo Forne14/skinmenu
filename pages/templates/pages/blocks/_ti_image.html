@@ -1,20 +1,51 @@
 {% load wagtailimages_tags %}
 <div>
-  {% if block.value.image %}
-    {% image block.value.image fill-1200x900 as img %}
-    <div class="overflow-hidden border border-border/35 bg-surface">
-      <img
-        src="{{ img.url }}"
-        width="{{ img.width }}"
-        height="{{ img.height }}"
-        alt="{{ block.value.image.title }}"
-        class="h-[380px] w-full object-cover md:h-[560px]"
-        loading="lazy"
-      />
-    </div>
-  {% else %}
-    <div class="h-[380px] md:h-[560px] border border-border/35 bg-surface flex items-center justify-center text-fg/60 text-sm">
-      Optional image
-    </div>
-  {% endif %}
+  {# Normalize media: prefer new media struct, fallback to legacy image #}
+  {% with m=block.value.media %}
+    {% if m and m.video %}
+      <div class="overflow-hidden border border-border/35 bg-surface">
+        <video
+          class="h-[380px] w-full object-cover md:h-[560px]"
+          src="{{ m.video.file.url }}"
+          autoplay
+          muted
+          playsinline
+          preload="metadata"
+          {% if m.loop %}loop{% endif %}
+          data-playback-rate="{{ m.playback_rate|default:'1.0' }}"
+        ></video>
+      </div>
+
+    {% elif m and m.image %}
+      {% image m.image fill-1200x900 as img %}
+      <div class="overflow-hidden border border-border/35 bg-surface">
+        <img
+          src="{{ img.url }}"
+          width="{{ img.width }}"
+          height="{{ img.height }}"
+          alt="{{ m.image.title }}"
+          class="h-[380px] w-full object-cover md:h-[560px]"
+          loading="lazy"
+        />
+      </div>
+
+    {% elif block.value.image %}
+      {% image block.value.image fill-1200x900 as img %}
+      <div class="overflow-hidden border border-border/35 bg-surface">
+        <img
+          src="{{ img.url }}"
+          width="{{ img.width }}"
+          height="{{ img.height }}"
+          alt="{{ block.value.image.title }}"
+          class="h-[380px] w-full object-cover md:h-[560px]"
+          loading="lazy"
+        />
+      </div>
+
+    {% else %}
+      <div class="h-[380px] md:h-[560px] border border-border/35 bg-surface flex items-center justify-center text-fg/60 text-sm">
+        Optional image / video
+      </div>
+    {% endif %}
+  {% endwith %}
 </div>

@@ -2,9 +2,30 @@
 
 <section class="section">
   <div class="container-shell">
-    {% image value.image fill-2000x1200 as img %}
     <figure class="card p-2">
-      <img class="w-full rounded-2xl object-cover" src="{{ img.url }}" alt="{{ img.alt }}" />
+
+      {% if value.media and value.media.video %}
+        <video
+          class="w-full rounded-2xl object-cover"
+          src="{{ value.media.video.file.url }}"
+          autoplay
+          muted
+          playsinline
+          preload="metadata"
+          {% if value.media.loop %}loop{% endif %}
+          data-playback-rate="{{ value.media.playback_rate|default:'1.0' }}"
+        ></video>
+
+      {% elif value.media and value.media.image %}
+        {% image value.media.image fill-2000x1200 as img %}
+        <img class="w-full rounded-2xl object-cover" src="{{ img.url }}" alt="{{ value.media.image.title }}" />
+
+      {% else %}
+        {# Legacy fallback #}
+        {% image value.image fill-2000x1200 as img %}
+        <img class="w-full rounded-2xl object-cover" src="{{ img.url }}" alt="{{ img.alt }}" />
+      {% endif %}
+
       {% if value.caption %}
         <figcaption class="px-5 pb-5 pt-3 text-sm text-muted">
           {{ value.caption }}

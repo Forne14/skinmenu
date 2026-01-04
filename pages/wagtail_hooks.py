@@ -1,0 +1,11 @@
+from wagtail import hooks
+from django.utils.html import format_html
+from django.templatetags.static import static
+
+@hooks.register("insert_global_admin_js")
+def media_picker_admin_js():
+    return format_html('<script src="{}"></script>', static("js/wagtail_position_picker.js"))
+
+@hooks.register("insert_global_admin_css")
+def media_picker_admin_css():
+    return format_html('<link rel="stylesheet" href="{}">', static("js/wagtail_position_picker.css"))

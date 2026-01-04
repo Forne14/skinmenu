@@ -1,0 +1,23 @@
+{% load wagtailadmin_tags %}
+
+<div class="media-picker-block" data-media-picker-block>
+  <div class="media-picker-fields">
+    {{ children.image.render_form }}
+    {{ children.video.render_form }}
+    {{ children.loop.render_form }}
+    {{ children.playback_rate.render_form }}
+
+    {# hidden-ish but still editable fallback #}
+    <div class="media-picker-xy">
+      {{ children.pos_x.render_form }}
+      {{ children.pos_y.render_form }}
+    </div>
+  </div>
+
+  <div class="media-picker-preview" data-media-picker-preview aria-label="Media preview">
+    <div class="media-picker-stage" data-media-picker-stage>
+      <div class="media-picker-target" data-media-picker-target title="Drag to set focus"></div>
+      <div class="media-picker-hint">Drag the dot to remind the crop framing.</div>
+    </div>
+  </div>
+</div>

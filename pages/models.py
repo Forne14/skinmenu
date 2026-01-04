@@ -16,7 +16,13 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.images import get_image_model_string
 from wagtail.models import Page
 
-from .blocks import ContactLinks, HomeSections, ModularSections, BlogBody
+from .blocks import (
+    ContactLinks,
+    HomeSections,
+    ModularSections,
+    BlogBody,
+    AboutSections,
+)
 
 
 def _richtext_to_plain_text(html: str) -> str:
@@ -191,68 +197,6 @@ class TreatmentPage(Page):
 
     class Meta:
         verbose_name = "Treatment page"
-
-
-# ---------------------------
-# About
-# ---------------------------
-
-class AboutPage(Page):
-    intro = RichTextField(blank=True, help_text="Optional intro shown under the title.")
-    featured_image = models.ForeignKey(
-        get_image_model_string(),
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
-    )
-
-    sections = StreamField(
-        ModularSections(),
-        use_json_field=True,
-        blank=True,
-    )
-
-    content_panels = Page.content_panels + [
-        FieldPanel("intro"),
-        FieldPanel("featured_image"),
-        FieldPanel("sections"),
-        InlinePanel("team_members", label="Team members"),
-    ]
-
-    parent_page_types = ["HomePage"]
-    subpage_types: List[str] = []
-
-    template = "pages/about_page.html"
-
-    class Meta:
-        verbose_name = "About page"
-
-
-class AboutTeamMember(models.Model):
-    page = ParentalKey(AboutPage, on_delete=models.CASCADE, related_name="team_members")
-    name = models.CharField(max_length=80)
-    role = models.CharField(max_length=80, blank=True)
-    experience = models.CharField(max_length=80, blank=True)
-    bio = models.TextField(blank=True)
-    image = models.ForeignKey(
-        get_image_model_string(),
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
-    )
-
-    panels = [
-        FieldPanel("name"),
-        FieldPanel("role"),
-        FieldPanel("experience"),
-        FieldPanel("bio"),
-        FieldPanel("image"),
-    ]
-
-    def __str__(self) -> str:
-        return self.name
 
 
 # ---------------------------
@@ -455,3 +399,54 @@ class ContactPage(AbstractEmailForm):
 
     class Meta:
         verbose_name = "Contact page"
+
+class AboutPage(Page):
+    intro = RichTextField(blank=True, help_text="Optional intro shown under the title.")
+
+    sections = StreamField(
+        AboutSections(),
+        use_json_field=True,
+        blank=True,
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+        FieldPanel("sections"),
+        InlinePanel("team_members", label="Team members"),
+    ]
+
+    parent_page_types = ["HomePage"]
+    subpage_types: List[str] = []
+
+    template = "pages/about_page.html"
+
+    class Meta:
+        verbose_name = "About page"
+
+class AboutTeamMember(models.Model):
+    page = ParentalKey(AboutPage, on_delete=models.CASCADE, related_name="team_members")
+    name = models.CharField(max_length=80)
+    role = models.CharField(max_length=80, blank=True)
+    experience = models.CharField(max_length=80, blank=True)
+    bio = models.TextField(blank=True)
+    image = models.ForeignKey(
+        get_image_model_string(),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("role"),
+        FieldPanel("experience"),
+        FieldPanel("bio"),
+        FieldPanel("image"),
+    ]
+
+    def __str__(self) -> str:
+        return self.name
+
+
+

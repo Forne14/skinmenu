@@ -1,0 +1,33 @@
+{# pages/templates/pages/blocks/media_chooser.html #}
+{% load wagtailimages_tags wagtailcore_tags %}
+
+{% with img=value.image vid=value.video %}
+  {% if vid %}
+    <video
+      class="absolute inset-0 h-full w-full object-cover"
+      {% if value.loop %} loop {% endif %}
+      muted
+      playsinline
+      autoplay
+      preload="metadata"
+      data-playback-rate="{{ value.playback_rate|default:'1.0' }}"
+      style="object-position: {{ value.pos_x|default:50 }}% {{ value.pos_y|default:50 }}%;"
+      {% if img %}
+        {% image img fill-1600x1200 as poster %}
+        poster="{{ poster.url }}"
+      {% endif %}
+    >
+      <source src="{{ vid.url }}" type="video/mp4" />
+    </video>
+
+  {% elif img %}
+    {% image img fill-1600x1200 as rendition %}
+    <img
+      class="absolute inset-0 h-full w-full object-cover"
+      src="{{ rendition.url }}"
+      alt="{{ rendition.alt|default:'' }}"
+      style="object-position: {{ value.pos_x|default:50 }}% {{ value.pos_y|default:50 }}%;"
+      loading="lazy"
+    />
+  {% endif %}
+{% endwith %}

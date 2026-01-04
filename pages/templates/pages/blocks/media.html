@@ -1,0 +1,24 @@
+{% load wagtailcore_tags %}
+
+<div class="w-full h-full">
+  {% if value.image %}
+    {% image value.image original as img %}
+    <img
+      src="{{ img.url }}"
+      alt="{{ img.alt|default:'' }}"
+      class="w-full h-full object-cover"
+    />
+  {% elif value.video %}
+<video
+  class="w-full h-full object-cover"
+  autoplay
+  muted
+  loop
+  playsinline
+  preload="metadata"
+>
+
+      <source src="{{ value.video.url }}" type="video/mp4">
+    </video>
+  {% endif %}
+</div>

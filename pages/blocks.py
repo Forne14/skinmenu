@@ -1,7 +1,14 @@
 from wagtail import blocks
-from wagtail.blocks import PageChooserBlock
+from django.core.exceptions import ValidationError
+from wagtail.blocks import PageChooserBlock, RichTextBlock
+from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 
+
+
+# ---------------------------
+# Shared link blocks
+# ---------------------------
 
 class LinkBlock(blocks.StructBlock):
     label = blocks.CharBlock(required=True, max_length=40)
@@ -30,6 +37,106 @@ class ContactLinks(blocks.StreamBlock):
         icon = "link"
 
 
+# ---------------------------
+# Media chooser (Image OR Video file via Documents)
+# ---------------------------
+
+PLAYBACK_RATE_CHOICES = [
+    ("0.75", "0.75× (slow)"),
+    ("1.0", "1.0× (normal)"),
+    ("1.25", "1.25× (fast)"),
+    ("1.5", "1.5× (fast)"),
+]
+
+class TreatmentCarouselItem(blocks.StructBlock):
+    title = blocks.CharBlock(required=True)
+    subtitle = blocks.CharBlock(
+        required=False,
+        help_text="Optional price, tagline, or short descriptor",
+    )
+
+    image = ImageChooserBlock(required=False)
+    video = DocumentChooserBlock(
+        required=False,
+        help_text="Optional MP4/WebM video. If set, video is used instead of image.",
+    )
+
+    link = blocks.URLBlock(
+        required=False,
+        help_text="Optional booking or detail link",
+    )
+
+    class Meta:
+        icon = "image"
+        label = "Carousel item"
+
+
+class TreatmentCarouselBlock(blocks.StructBlock):
+    heading = blocks.CharBlock(
+        required=False,
+        help_text="Optional section heading shown above the carousel",
+    )
+
+    items = blocks.ListBlock(
+        TreatmentCarouselItem(),
+        min_num=1,
+        label="Carousel items",
+    )
+
+    class Meta:
+        icon = "placeholder"
+        label = "Treatment carousel"
+        template = "pages/blocks/treatment_carousel.html"
+
+
+class MediaChooserBlock(blocks.StructBlock):
+    image = ImageChooserBlock(required=False, help_text="Optional image (used as poster / fallback; can be used together with video).")
+    video = DocumentChooserBlock(
+        required=False,
+        help_text="Optional video file (upload an .mp4 to Documents, then select it here).",
+    )
+
+    loop = blocks.BooleanBlock(required=False, default=True, help_text="Loop video playback.")
+    playback_rate = blocks.ChoiceBlock(
+        required=False,
+        default="1.0",
+        choices=PLAYBACK_RATE_CHOICES,
+        help_text="Playback speed (applied via JS).",
+    )
+
+    pos_x = blocks.IntegerBlock(required=False, default=50, min_value=0, max_value=100, help_text="Horizontal focus (0-100).")
+    pos_y = blocks.IntegerBlock(required=False, default=50, min_value=0, max_value=100, help_text="Vertical focus (0-100).")
+
+
+    def clean(self, value):
+        value = super().clean(value)
+        img = value.get("image")
+        vid = value.get("video")
+
+        # Allow empty (parent may be optional)
+        if not img and not vid:
+            return value
+
+        # Optional: enforce mp4 for video uploads
+        if vid and getattr(vid, "file", None):
+            name = (vid.file.name or "").lower()
+            if not name.endswith(".mp4"):
+                raise blocks.StructBlockValidationError(block_errors={
+                    "video": ValidationError("Video must be an .mp4 file."),
+                })
+
+        return value
+
+    class Meta:
+        icon = "media"
+        label = "Media (image or video)"
+        form_template = "wagtailadmin/blocks/media_chooser_with_picker.html"
+        template = "pages/blocks/media_chooser.html"
+
+# ---------------------------
+# Homepage blocks
+# ---------------------------
+
 class HeroBlock(blocks.StructBlock):
     headline = blocks.CharBlock(required=True, max_length=80, default="Your best skin, on the menu")
     subheadline = blocks.TextBlock(required=False, max_length=240)
@@ -48,17 +155,24 @@ class HeroBlock(blocks.StructBlock):
         help_text="Where the hero text + CTA sits on the image.",
     )
 
+    # New: preferred media list (image or video)
+    hero_media = blocks.ListBlock(
+        MediaChooserBlock(),
+        required=False,
+        help_text="Add 1 item for a static hero. Add 2+ for a carousel. Each slide can be an image or a video file.",
+    )
+
+    # Legacy: images-only list retained so existing DB content still renders
     hero_images = blocks.ListBlock(
         ImageChooserBlock(required=True),
         required=False,
-        help_text="Add 1 image for a static hero. Add 2+ for a carousel.",
+        help_text="Legacy images-only hero. Prefer using 'Hero media' above for video support.",
     )
 
     class Meta:
         icon = "image"
         label = "Hero"
         template = "pages/blocks/hero.html"
-
 
 # ---------------------------
 # Legacy homepage block (back-compat)
@@ -147,7 +261,13 @@ class TextImageBlock(blocks.StructBlock):
     eyebrow = blocks.CharBlock(required=False, max_length=40)
     heading = blocks.CharBlock(required=True, max_length=80)
     body = blocks.RichTextBlock(required=True, features=["bold", "italic", "link", "ul", "ol"])
-    image = ImageChooserBlock(required=False)
+
+    # New: video-capable media field
+    media = MediaChooserBlock(required=False)
+
+    # Legacy: image-only field retained
+    image = ImageChooserBlock(required=False, help_text="Legacy image. Prefer using the Media field above for video support.")
+
     image_position = blocks.ChoiceBlock(choices=[("left", "Left"), ("right", "Right")], default="right", required=True)
 
     class Meta:
@@ -160,6 +280,11 @@ class ReviewItemBlock(blocks.StructBlock):
     quote = blocks.TextBlock(required=True, max_length=420)
     author = blocks.CharBlock(required=True, max_length=60)
     source = blocks.CharBlock(required=False, max_length=60)
+
+    link = blocks.URLBlock(
+        required=False,
+        help_text="Optional link to Google Reviews or a specific review."
+    )
 
     class Meta:
         icon = "openquote"
@@ -316,12 +441,34 @@ class PullQuoteBlock(blocks.StructBlock):
 
 
 class BlogImageBlock(blocks.StructBlock):
-    image = ImageChooserBlock(required=True)
+    # New: video-capable media field
+    media = MediaChooserBlock(required=False)
+
+    # Legacy: required image kept but made optional for forward use
+    image = ImageChooserBlock(required=False, help_text="Legacy image. Prefer Media for video support.")
     caption = blocks.CharBlock(required=False, max_length=120)
 
+    def clean(self, value):
+        value = super().clean(value)
+        img = value.get("image")
+        vid = value.get("video")
+
+        # Allow empty (parent blocks can decide if they require media)
+        if not img and not vid:
+            return value
+
+        # Optional: enforce mp4 for video uploads
+        if vid and getattr(vid, "file", None):
+            name = (vid.file.name or "").lower()
+            if not name.endswith(".mp4"):
+                raise blocks.StructBlockValidationError(block_errors={
+                    "video": ValidationError("Video must be an .mp4 file."),
+                })
+
+        return value
     class Meta:
         icon = "image"
-        label = "Image"
+        label = "Image / Video"
         template = "pages/blocks/blog_image.html"
 
 
@@ -335,3 +482,93 @@ class BlogBody(blocks.StreamBlock):
     class Meta:
         label = "Blog body"
         icon = "doc-full"
+
+# ---------------------------
+# About page blocks
+# ---------------------------
+
+class AboutButtonBlock(blocks.StructBlock):
+    label = blocks.CharBlock(required=True, max_length=40)
+    page = PageChooserBlock(required=False)
+    url = blocks.URLBlock(required=False)
+
+    def clean(self, value):
+        value = super().clean(value)
+        if not value.get("page") and not value.get("url"):
+            raise ValidationError("Select a page or provide a URL.")
+        return value
+
+    class Meta:
+        icon = "link"
+        label = "Button"
+
+
+class AboutWhoBlock(blocks.StructBlock):
+    eyebrow = blocks.CharBlock(required=False, max_length=40, default="About")
+    heading = blocks.CharBlock(required=True, max_length=80)
+    body = blocks.RichTextBlock(
+        required=True,
+        features=["bold", "italic", "link", "ul", "ol"],
+    )
+
+    media = MediaChooserBlock(required=False)
+    buttons = blocks.ListBlock(AboutButtonBlock(), required=False, max_num=2)
+
+    class Meta:
+        icon = "doc-full"
+        label = "Who we are"
+        template = "pages/blocks/about_who.html"
+
+
+class AboutValueItemBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=True, max_length=60)
+    text = blocks.TextBlock(required=True, max_length=220)
+
+    class Meta:
+        icon = "pick"
+        label = "Value"
+
+
+class AboutValuesBlock(blocks.StructBlock):
+    eyebrow = blocks.CharBlock(required=False, max_length=40, default="Principles")
+    heading = blocks.CharBlock(required=True, max_length=80, default="Our values")
+    values = blocks.ListBlock(AboutValueItemBlock(), min_num=2, max_num=12)
+
+    class Meta:
+        icon = "list-ul"
+        label = "Values grid"
+        template = "pages/blocks/about_values.html"
+
+
+class AboutFounderBlock(blocks.StructBlock):
+    eyebrow = blocks.CharBlock(required=False, max_length=40, default="Founder")
+    heading = blocks.CharBlock(required=True, max_length=80)
+    body = blocks.RichTextBlock(
+        required=True,
+        features=["bold", "italic", "link", "ul", "ol"],
+    )
+
+    media = MediaChooserBlock(required=False)
+    buttons = blocks.ListBlock(AboutButtonBlock(), required=False, max_num=2)
+
+    class Meta:
+        icon = "user"
+        label = "Founder"
+        template = "pages/blocks/about_founder.html"
+
+
+class AboutSections(blocks.StreamBlock):
+    hero = HeroBlock()
+    who = AboutWhoBlock()
+    values = AboutValuesBlock()
+    founder = AboutFounderBlock()
+
+    # Legacy support — old content still renders
+    rich_text_section = RichTextSectionBlock()
+    text_image = TextImageBlock()
+    cta = CTABlock()
+
+    class Meta:
+        label = "About sections"
+        icon = "list-ul"
+

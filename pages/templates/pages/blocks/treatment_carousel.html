@@ -1,0 +1,62 @@
+{% load wagtailimages_tags wagtailcore_tags %}
+
+<section class="section treatments-bleed">
+  <div class="container-shell">
+    {% if value.heading %}
+      <h2 class="section-title mb-6">{{ value.heading }}</h2>
+    {% endif %}
+
+    <div class="hscroll">
+      {% for item in value.items %}
+        <div class="treatment-tile">
+          <div class="treatment-media">
+
+            {% if item.video %}
+              <video
+                class="treatment-img"
+                autoplay
+                muted
+                loop
+                playsinline
+              >
+                <source src="{{ item.video.url }}">
+              </video>
+
+            {% elif item.image %}
+              {% image item.image fill-800x1100 as img %}
+              <img
+                src="{{ img.url }}"
+                alt="{{ img.alt|default:item.title }}"
+                class="treatment-img"
+              />
+            {% endif %}
+
+            <div class="treatment-overlay">
+              <div class="treatment-overlay-inner">
+                <div class="treatment-title">
+                  {{ item.title }}
+                </div>
+
+                {% if item.subtitle %}
+                  <div class="mt-2 text-sm text-white/80">
+                    {{ item.subtitle }}
+                  </div>
+                {% endif %}
+
+                {% if item.link %}
+                  <a
+                    href="{{ item.link }}"
+                    class="btn btn-primary mt-4 inline-block"
+                  >
+                    Book now
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

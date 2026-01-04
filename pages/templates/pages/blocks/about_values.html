@@ -1,0 +1,22 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+<section class="section reviews-bleed">
+  <div class="reviews-surface py-14">
+    <div class="container-shell">
+      {% if value.eyebrow %}
+        <div class="label-display mb-3">{{ value.eyebrow }}</div>
+      {% endif %}
+      <h2 class="section-title mb-10">{{ value.heading }}</h2>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for v in value.values %}
+          <div class="card p-6">
+            <div class="text-lg font-medium">{{ v.title }}</div>
+            <p class="mt-2 text-sm text-fg/75 leading-relaxed">
+              {{ v.text }}
+            </p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>

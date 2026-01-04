@@ -1,60 +1,60 @@
+{% load wagtailcore_tags %}
+
 <section class="section reviews-bleed">
-  <div class="reviews-surface">
-    <div class="container-shell py-10 sm:py-12">
-      {% if block.value.heading %}
-        <div class="flex items-end justify-between gap-6">
-          <h2 class="section-title">{{ block.value.heading }}</h2>
-          <div class="hidden md:block text-xs text-fg/60">Swipe / drag to browse</div>
-        </div>
+  <div class="reviews-surface py-14">
+    <div class="container-shell">
+      {% if value.heading %}
+        <h2 class="section-title mb-8">
+          {{ value.heading }}
+        </h2>
       {% endif %}
 
-      <div
-        class="mt-6"
-        data-carousel="reviews"
-        {% if block.value.reviews|length > 1 %}data-autoplay="true" data-interval="9000"{% endif %}
-      >
-        <div class="relative overflow-hidden">
+      {% if value.reviews %}
+        <div class="relative">
           <div
-            class="flex gap-5 transition-transform duration-500 ease-out will-change-transform"
+            class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2"
             data-carousel-track
           >
-            {% for r in block.value.reviews %}
-              <article
-                class="testimonial-card w-[86%] shrink-0 md:w-[48%] lg:w-[36%]"
-                data-carousel-slide
-                {% if forloop.first %}data-active="true"{% endif %}
-              >
-                <p class="text-sm md:text-base text-fg/85 leading-relaxed">
-                  “{{ r.quote }}”
-                </p>
-                <div class="mt-5 text-sm font-semibold text-heading">
-                  {{ r.author }}
-                  {% if r.source %}
-                    <span class="font-normal text-fg/60"> · {{ r.source }}</span>
+            {% for review in value.reviews %}
+              {% if review.link %}
+                <a
+                  href="{{ review.link }}"
+                  target="_blank"
+                  rel="noopener"
+                  class="testimonial-card min-w-[280px] md:min-w-[360px] snap-start no-underline hover:border-accent transition"
+                >
+              {% else %}
+                <div class="testimonial-card min-w-[280px] md:min-w-[360px] snap-start">
+              {% endif %}
+
+                  <blockquote class="text-lg leading-relaxed text-fg/85">
+                    {{ review.quote }}
+                  </blockquote>
+
+                  <div class="mt-5 text-sm text-muted">
+                    <span class="font-medium text-heading">
+                      {{ review.author }}
+                    </span>
+                    {% if review.source %}
+                      <span class="mx-1">·</span>{{ review.source }}
+                    {% endif %}
+                  </div>
+
+                  {% if review.link %}
+                    <div class="mt-4 text-xs uppercase tracking-wide text-accent-2">
+                      Read on Google →
+                    </div>
                   {% endif %}
+
+              {% if review.link %}
+                </a>
+              {% else %}
                 </div>
-              </article>
+              {% endif %}
             {% endfor %}
           </div>
         </div>
-
-        {% if block.value.reviews|length > 1 %}
-          <div class="mt-5 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-2" data-carousel-dots aria-label="Review slides">
-              {% for _ in block.value.reviews %}
-                <button
-                  type="button"
-                  class="carousel-dot"
-                  aria-label="Go to review {{ forloop.counter }}"
-                  data-carousel-dot="{{ forloop.counter0 }}"
-                  {% if forloop.first %}aria-current="true"{% endif %}
-                ></button>
-              {% endfor %}
-            </div>
-            <div class="md:hidden text-xs text-fg/60">Swipe</div>
-          </div>
-        {% endif %}
-      </div>
+      {% endif %}
     </div>
   </div>
 </section>

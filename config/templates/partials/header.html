@@ -101,77 +101,76 @@
       <!-- Mobile Toggle -->
       <button
         type="button"
-        class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-full border border-border/40 hover:border-border transition"
-        aria-label="Open menu"
+        class="md:hidden inline-flex items-center justify-center gap-2 border border-border/60 bg-surface px-4 py-2 text-base
+               hover:border-accent transition no-underline"
         aria-controls="mobile-nav"
         aria-expanded="false"
-        data-mobile-nav-button
+        data-mobile-nav-toggle
       >
-        <span aria-hidden="true" class="text-lg leading-none">≡</span>
+        {% include "partials/brand/mark.html" with brand=brand only %}
+        <span class="nav-primary">Menu</span>
       </button>
     </div>
   </div>
 
   <!-- Mobile Nav -->
-  <div
+<div
     id="mobile-nav"
     class="md:hidden hidden border-t border-border/40 bg-bg"
     data-mobile-nav
   >
     <div class="container-shell py-4">
       <div class="flex flex-col gap-2 text-base nav-primary">
-
-        {# Menu section FIRST (simple list; no accordion needed) #}
-        {% if nav.menu_links %}
-          <div class="px-3 pt-1 pb-2">
-            <div class="text-xs uppercase tracking-widest text-fg/50 mb-2">
-              {{ nav.menu_label|default:"The Menu" }}
-            </div>
-            <div class="flex flex-col">
-              {% for b in nav.menu_links %}
-                {% with link=b.value %}
-                  {% if link.page %}
-                    <a href="{% pageurl link.page %}" class="px-2 py-2 rounded-md hover:bg-surface-2/70 transition no-underline text-heading">
-                      {{ link.label }}
-                    </a>
-                  {% else %}
-                    <a href="{{ link.url }}" class="px-2 py-2 rounded-md hover:bg-surface-2/70 transition no-underline text-heading"
-                      {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}
-                    >
-                      {{ link.label }}
-                    </a>
-                  {% endif %}
-                {% endwith %}
-              {% endfor %}
-            </div>
-          </div>
-          <div class="border-t border-border/20 my-2"></div>
-        {% endif %}
-
-        {# Remaining primary links (skip menu label) #}
         {% for b in nav.primary_links %}
           {% with link=b.value %}
-            {% with label_lower=link.label|default:""|lower menu_lower=nav.menu_label|default:"the menu"|lower %}
-              {% if label_lower != menu_lower and label_lower != "the menu" %}
+            {% if link.page %}
+              <a href="{% pageurl link.page %}" class="px-3 py-3 hover:bg-surface-2/70 transition no-underline text-heading">{{ link.label }}</a>
+            {% else %}
+              <a href="{{ link.url }}" class="px-3 py-3 hover:bg-surface-2/70 transition no-underline text-heading" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                {{ link.label }}
+              </a>
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
+
+        {% if nav.menu_links %}
+          <button
+            type="button"
+            class="flex items-center justify-between px-3 py-3 hover:bg-surface-2/70 transition text-heading"
+            aria-expanded="false"
+            data-mobile-subnav-toggle
+          >
+            {{ nav.menu_label|default:"The Menu" }} <span aria-hidden="true" class="text-xs opacity-80">▾</span>
+          </button>
+
+          <div class="hidden pl-3" data-mobile-subnav>
+            {% for b in nav.menu_links %}
+              {% with link=b.value %}
                 {% if link.page %}
-                  <a href="{% pageurl link.page %}" class="px-3 py-3 rounded-md hover:bg-surface-2/70 transition no-underline text-heading">
+                  <a
+                    href="{% pageurl link.page %}"
+                    class="block px-3 py-2 hover:bg-surface-2/70 transition no-underline
+                           {% if link.label|lower == 'full menu' %}text-accent-2{% else %}text-heading{% endif %}"
+                  >
                     {{ link.label }}
                   </a>
                 {% else %}
-                  <a href="{{ link.url }}" class="px-3 py-3 rounded-md hover:bg-surface-2/70 transition no-underline text-heading"
+                  <a
+                    href="{{ link.url }}"
+                    class="block px-3 py-2 hover:bg-surface-2/70 transition no-underline
+                           {% if link.label|lower == 'full menu' %}text-accent-2{% else %}text-heading{% endif %}"
                     {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}
                   >
                     {{ link.label }}
                   </a>
                 {% endif %}
-              {% endif %}
-            {% endwith %}
-          {% endwith %}
-        {% endfor %}
+              {% endwith %}
+            {% endfor %}
+          </div>
+        {% endif %}
 
-        {# CTA on mobile (full width) #}
-        {% if nav.header_cta %}
-          <div class="pt-2">
+        <div class="pt-2">
+          {% if nav.header_cta %}
             {% with cta=nav.header_cta.0.value %}
               {% if cta.page %}
                 <a href="{% pageurl cta.page %}" class="btn-primary w-full">{{ cta.label }}</a>
@@ -181,8 +180,8 @@
                 </a>
               {% endif %}
             {% endwith %}
-          </div>
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>

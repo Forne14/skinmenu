@@ -2,12 +2,12 @@
 
 {# Expects `brand` passed in: {% include "partials/brand/logo.html" with brand=brand only %} #}
 <img
-  src="{% static brand.logo_light_path %}"
+  src="{% static brand.mark_light_path %}"
   alt="SKINMENU"
   class="h-6 w-auto block [html[data-theme='dark']_&]:hidden"
 />
 <img
-  src="{% static brand.logo_dark_path %}"
+  src="{% static brand.mark_dark_path %}"
   alt="SKINMENU"
   class="h-6 w-auto hidden [html[data-theme='dark']_&]:block"
 />

@@ -313,85 +313,75 @@ class Command(BaseCommand):
     # ---------------------------
 
     def _seed_about_from_csv(self, about, AboutTeamMember) -> None:
-        if getattr(about, "intro", "") or (getattr(about, "sections", None) and len(about.sections)):
-            intro = getattr(about, "intro", "")
-        else:
-            intro = ""
+        if about.sections and len(about.sections):
+            return
 
         about_csv_path = first_existing(CSV_ABOUT)
         rows = read_csv_rows(about_csv_path) if about_csv_path else []
 
-        def find_change_contains(keyword: str) -> str:
-            keyword_l = keyword.lower()
+        def find(keyword: str) -> str:
+            k = keyword.lower()
             for r in rows:
-                feat = (r.get("Feature ") or r.get("Feature") or "").strip()
+                feat = (r.get("Feature") or r.get("Feature ") or "").lower()
                 change = (r.get("Change") or "").strip()
-                if keyword_l in feat.lower() and change:
+                if k in feat and change:
                     return change
             return ""
 
-        who = find_change_contains("who are we") or find_change_contains("skin menu") or ""
-        values = find_change_contains("our values") or ""
-        founder = find_change_contains("our founder") or ""
+        who = find("who") or "A curated, clinician-led approach to modern skin health."
+        founder = find("founder") or "Founded with a belief in subtle, evidence-led outcomes."
+        values_raw = find("values")
 
-        if not intro:
-            intro = who or "SKINMENU is a curated space for modern skin health — editorial, evidence-led, and quietly luxurious."
-            about.intro = intro
+        value_items = []
+        if values_raw:
+            for line in values_raw.split("\n"):
+                line = line.strip()
+                if line:
+                    value_items.append({"title": line[:60], "text": line})
+        else:
+            value_items = [
+                {"title": "Subtle results", "text": "Enhancing, never overcorrecting."},
+                {"title": "Evidence-led", "text": "Treatments grounded in medical science."},
+                {"title": "Clinician-first", "text": "Every plan begins with consultation."},
+            ]
 
-        if not about.sections:
-            sections = []
-            sections.append(
-                {
-                    "type": "rich_text_section",
-                    "value": {
-                        "eyebrow": "About",
-                        "heading": "SKIN MENU",
-                        "body": f"<p>{who or 'A premium, minimal approach to skin health — curated like a menu.'}</p>",
-                    },
-                }
-            )
-
-            if values:
-                parts = [p.strip() for p in values.split("\n") if p.strip()]
-                body_html = "".join([f"<p>{p}</p>" for p in parts])
-            else:
-                body_html = "<ul><li>Subtle, natural outcomes</li><li>Evidence-led treatments</li><li>Quiet luxury care</li></ul>"
-
-            sections.append(
-                {
-                    "type": "rich_text_section",
-                    "value": {
-                        "eyebrow": "Principles",
-                        "heading": "OUR VALUES",
-                        "body": body_html,
-                    },
-                }
-            )
-
-            founder_html = f"<p>{founder}</p>" if founder else "<p>Add founder bio and credentials here.</p>"
-            sections.append(
-                {
-                    "type": "rich_text_section",
-                    "value": {
-                        "eyebrow": "Clinician-led",
-                        "heading": "OUR FOUNDER",
-                        "body": founder_html,
-                    },
-                }
-            )
-
-            sections.append(
-                {
-                    "type": "rich_text_section",
-                    "value": {
-                        "eyebrow": "Team",
-                        "heading": "YOUR TEAM (FUTURE)",
-                        "body": "<p>As the clinic grows, introduce additional clinicians here.</p>",
-                    },
-                }
-            )
-
-            about.sections = sections
+        about.sections = [
+            {
+                "type": "hero",
+                "value": {
+                    "headline": "About SKINMENU",
+                    "subheadline": "A modern, clinician-led skin destination.",
+                    "cta_position": "bottom_left",
+                    "hero_images": [],
+                },
+            },
+            {
+                "type": "who",
+                "value": {
+                    "eyebrow": "About",
+                    "heading": "Who we are",
+                    "body": f"<p>{who}</p>",
+                    "buttons": [],
+                },
+            },
+            {
+                "type": "values",
+                "value": {
+                    "eyebrow": "Principles",
+                    "heading": "Our values",
+                    "values": value_items,
+                },
+            },
+            {
+                "type": "founder",
+                "value": {
+                    "eyebrow": "Founder",
+                    "heading": "Our founder",
+                    "body": f"<p>{founder}</p>",
+                    "buttons": [],
+                },
+            },
+        ]
 
         about.save_revision().publish()
 
@@ -401,21 +391,7 @@ class Command(BaseCommand):
                 name="Dr Tego Kirnon-Jackman",
                 role="Founder / Medical Director",
                 experience="Aesthetic medicine",
-                bio=(find_change_contains("our founder") or "Add a short founder bio here."),
-            )
-            AboutTeamMember.objects.create(
-                page=about,
-                name="Senior Therapist (Placeholder)",
-                role="Skin Specialist",
-                experience="Skin health",
-                bio="Add a short bio once the team is confirmed.",
-            )
-            AboutTeamMember.objects.create(
-                page=about,
-                name="Clinic Coordinator (Placeholder)",
-                role="Client care",
-                experience="Operations",
-                bio="Add a short bio once the team is confirmed.",
+                bio=founder,
             )
 
     # ---------------------------

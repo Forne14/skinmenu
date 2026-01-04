@@ -5,6 +5,8 @@
    - Scroll-snap rails (treatments)
    - Generic prev/next scrollers (team/offering carousels)
    - Optional single-open accordions for <details data-accordion>
+   - Media videos: playbackRate control via data-playback-rate
+   - Hero videos: only active plays; inactive pause + reset
 */
 
 ;(function () {
@@ -75,6 +77,31 @@
   }
 
   // ---------------------------
+  // Media videos: playback rate from data-playback-rate
+  // ---------------------------
+  function initMediaPlaybackRates() {
+    const videos = document.querySelectorAll('video[data-playback-rate]')
+    if (!videos.length) return
+
+    videos.forEach((v) => {
+      const raw = v.getAttribute('data-playback-rate') || '1.0'
+      const rate = parseFloat(raw)
+      if (!rate || Number.isNaN(rate)) return
+
+      const apply = () => {
+        try {
+          v.playbackRate = rate
+        } catch (e) {
+          /* no-op */
+        }
+      }
+
+      if (v.readyState >= 1) apply()
+      else v.addEventListener('loadedmetadata', apply, { once: true })
+    })
+  }
+
+  // ---------------------------
   // Carousels (hero + reviews)
   // ---------------------------
   function initCarousels() {
@@ -88,10 +115,13 @@
       const dotsWrap = root.querySelector('[data-carousel-dots]')
       const dots = dotsWrap ? Array.from(dotsWrap.querySelectorAll('[data-carousel-dot]')) : []
 
+      const mode = root.dataset.carousel === 'hero' ? 'hero' : 'track'
+
+      // If not a real carousel (0/1 slides), still ensure slide 0 is visible.
       if (!track || slides.length <= 1) {
-        // Still ensure first slide is visible if we're using fade layers (hero)
-        slides.forEach((s, i) => {
-          if (s.style && root.dataset.carousel === 'hero') {
+        if (mode === 'hero') {
+          slides.forEach((s, i) => {
+            if (!s.style) return
             if (i === 0) {
               s.style.opacity = '1'
               s.dataset.active = 'true'
@@ -99,14 +129,25 @@
               s.style.opacity = '0'
               s.dataset.active = 'false'
             }
-          }
+          })
+        }
+        // Keep dots correct if present
+        dots.forEach((d, i) => {
+          if (i === 0) d.setAttribute('aria-current', 'true')
+          else d.removeAttribute('aria-current')
         })
         return
       }
 
-      const mode = root.dataset.carousel === 'hero' ? 'hero' : 'track'
       let index = 0
       let timer = null
+
+      function setDots(i) {
+        dots.forEach((d, idx) => {
+          if (idx === i) d.setAttribute('aria-current', 'true')
+          else d.removeAttribute('aria-current')
+        })
+      }
 
       function apply(indexNext) {
         index = Math.max(0, Math.min(slides.length - 1, indexNext))
@@ -115,7 +156,34 @@
           slides.forEach((s, i) => {
             const active = i === index
             s.dataset.active = active ? 'true' : 'false'
-            s.style.opacity = active ? '1' : '0'
+            if (s.style) s.style.opacity = active ? '1' : '0'
+
+            // Hero videos: only active plays; inactive pause + reset
+            const vids = s.querySelectorAll('video')
+            vids.forEach((v) => {
+              if (active) {
+                // Apply playback rate here too (slide may become visible after init)
+                const raw = v.getAttribute('data-playback-rate') || '1.0'
+                const rate = parseFloat(raw)
+                if (rate && !Number.isNaN(rate)) {
+                  try {
+                    v.playbackRate = rate
+                  } catch (e) {}
+                }
+
+                const p = v.play && v.play()
+                if (p && typeof p.catch === 'function') p.catch(() => {})
+              } else {
+                try {
+                  if (v.pause) v.pause()
+                  v.currentTime = 0
+                } catch (e) {
+                  try {
+                    if (v.pause) v.pause()
+                  } catch (e2) {}
+                }
+              }
+            })
           })
         } else {
           const slide = slides[index]
@@ -124,10 +192,7 @@
           slides.forEach((s, i) => (s.dataset.active = i === index ? 'true' : 'false'))
         }
 
-        dots.forEach((d, i) => {
-          if (i === index) d.setAttribute('aria-current', 'true')
-          else d.removeAttribute('aria-current')
-        })
+        setDots(index)
       }
 
       function next() {
@@ -147,16 +212,16 @@
         timer = null
       }
 
-      // Dots
+      // Dots click
       dots.forEach((btn) => {
         btn.addEventListener('click', () => {
-          const i = parseInt(btn.getAttribute('data-carousel-dot'), 10)
+          const i = parseInt(btn.getAttribute('data-carousel-dot') || '0', 10)
           apply(i)
           startAutoplay()
         })
       })
 
-      // Swipe/drag
+      // Swipe/drag (mouse + touch via Pointer Events)
       let pointerDown = false
       let startX = 0
       let lastX = 0
@@ -183,8 +248,8 @@
 
         const dx = lastX - startX
         if (moved && Math.abs(dx) > 40) {
-          if (dx < 0) apply(index + 1)
-          else apply(index - 1)
+          if (dx < 0) apply((index + 1) % slides.length)
+          else apply((index - 1 + slides.length) % slides.length)
         }
 
         startAutoplay()
@@ -200,6 +265,20 @@
       root.addEventListener('mouseleave', startAutoplay)
       root.addEventListener('focusin', stopAutoplay)
       root.addEventListener('focusout', startAutoplay)
+
+      // Tab hidden: pause/reset videos so they don't desync
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) return
+        if (mode !== 'hero') return
+        slides.forEach((s) => {
+          s.querySelectorAll('video').forEach((v) => {
+            try {
+              v.pause()
+              v.currentTime = 0
+            } catch (e) {}
+          })
+        })
+      })
 
       apply(0)
       startAutoplay()
@@ -263,10 +342,6 @@
 
   // ---------------------------
   // Generic prev/next scrollers
-  // Used by templates with:
-  //   data-carousel-track="team"
-  //   data-carousel-prev="team"
-  //   data-carousel-next="team"
   // ---------------------------
   function initNamedCarousels() {
     function scrollTrack(key, dir) {
@@ -276,7 +351,6 @@
       )
       if (!track) return
 
-      // Determine step size: prefer first child width + gap
       const child = track.querySelector(':scope > *')
       const gap = 16
       const step = child ? child.getBoundingClientRect().width + gap : track.clientWidth * 0.8
@@ -293,9 +367,7 @@
   }
 
   // ---------------------------
-  // Accessible <details> accordion:
-  // If you add data-accordion to <details>, opening one closes siblings
-  // Optionally scope by wrapping in an element with data-accordion-scope
+  // Accessible <details> accordion
   // ---------------------------
   function initAccordions() {
     document.addEventListener(
@@ -324,9 +396,8 @@
     initMobileNav()
     initCarousels()
     initHscrollDots()
-
-    // New behavior (does not touch existing ones unless you add the attributes)
     initNamedCarousels()
     initAccordions()
+    initMediaPlaybackRates()
   })
 })()
