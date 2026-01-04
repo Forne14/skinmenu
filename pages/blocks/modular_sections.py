@@ -1,1 +1,0 @@
-("treatment_carousel", TreatmentCarouselBlock()),

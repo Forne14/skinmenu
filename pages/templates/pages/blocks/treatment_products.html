@@ -1,0 +1,67 @@
+<section class="section">
+  <div class="container-shell">
+    {% if value.heading %}
+      <header class="max-w-3xl">
+        <h2 class="font-display text-3xl md:text-4xl leading-[1.05] text-heading">
+          {{ value.heading }}
+        </h2>
+      </header>
+    {% endif %}
+  </div>
+
+  {# Count products once #}
+  {% with n=value.products|length %}
+
+    {% if n == 1 %}
+      <div class="container-shell mt-10">
+        {% for product in value.products %}
+          <div class="flex justify-center">
+            <article
+              class="card p-10 xl:p-12 min-h-[520px] flex flex-col w-full max-w-[760px]"
+              aria-label="{{ product.title }}"
+            >
+              {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
+            </article>
+          </div>
+        {% endfor %}
+      </div>
+
+
+    {% elif n == 2 %}
+      <div class="container-shell mt-10">
+        <div class="grid gap-10 lg:grid-cols-2 justify-items-center">
+          {% for product in value.products %}
+            <article
+              class="card p-10 xl:p-12 min-h-[520px] flex flex-col w-full max-w-[640px]"
+              aria-label="{{ product.title }}"
+            >
+              {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+
+    {% else %}
+      <div class="mt-10 treatments-bleed" data-hscroll-root>
+        <div class="hscroll" aria-label="{{ value.heading|default:'Products' }}" data-hscroll>
+          {% for product in value.products %}
+            <article
+              class="card p-10 xl:p-12 snap-start shrink-0 min-h-[520px] flex flex-col"
+              style="width: clamp(520px, 75vw, 820px);"
+              aria-label="{{ product.title }}"
+            >
+              {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="container-shell">
+        <div class="mt-6 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-2" data-hscroll-dots aria-label="Product slides"></div>
+          <div class="hidden md:block text-xs text-fg/60">Swipe / scroll</div>
+        </div>
+      </div>
+    {% endif %}
+  {% endwith %}
+</section>

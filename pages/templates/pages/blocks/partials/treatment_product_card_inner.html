@@ -1,0 +1,56 @@
+{# Header #}
+<div>
+  <div class="font-display text-xl md:text-2xl leading-tight text-heading">
+    {{ product.title }}
+  </div>
+
+  {% if product.price %}
+    <div class="mt-6">
+      <div class="font-display text-4xl md:text-5xl leading-none text-heading">
+        {{ product.price }}
+      </div>
+      <div class="mt-6 h-px w-16 bg-border/40"></div>
+    </div>
+  {% else %}
+    <div class="mt-6 h-16"></div>
+  {% endif %}
+
+  {% if product.description %}
+    <p class="mt-6 text-base md:text-lg text-muted leading-relaxed max-w-prose">
+      {{ product.description }}
+    </p>
+  {% else %}
+    <div class="mt-6 h-10"></div>
+  {% endif %}
+</div>
+
+{# Targets #}
+<div class="mt-10">
+  {% if product.targets %}
+    <div class="text-sm text-muted mb-4">What it targets:</div>
+
+    <ul class="grid grid-cols-2 gap-x-10 gap-y-3 text-sm md:text-base">
+      {% for t in product.targets %}
+        <li class="flex items-start gap-2">
+          <span class="mt-[0.55rem] h-[2px] w-[10px] bg-border/60 shrink-0"></span>
+          <span>{{ t }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="h-12"></div>
+  {% endif %}
+</div>
+
+{# Footer pinned to bottom #}
+<div class="mt-auto pt-12">
+  {% if product.cta_url %}
+    <a href="{{ product.cta_url }}" class="btn-primary inline-flex items-center justify-center w-full md:w-auto px-10">
+      {{ product.cta_label|default:"Book now" }}
+    </a>
+  {% else %}
+    <div class="inline-flex items-center justify-center w-full md:w-auto px-10 py-3 rounded-full border border-border/40 text-sm text-muted">
+      {{ product.cta_label|default:"Book now" }}
+    </div>
+  {% endif %}
+</div>

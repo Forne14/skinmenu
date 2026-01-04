@@ -438,6 +438,26 @@
     }
   }
 
+  .richtext {
+    @apply text-fg/85 leading-relaxed;
+  }
+  .richtext p + p {
+    margin-top: 0.9rem;
+  }
+  .richtext ul {
+    margin-top: 0.9rem;
+    padding-left: 1.25rem;
+    list-style: disc;
+  }
+  .richtext ol {
+    margin-top: 0.9rem;
+    padding-left: 1.25rem;
+    list-style: decimal;
+  }
+  .richtext a {
+    @apply underline underline-offset-4 decoration-border hover:decoration-accent;
+  }
+
   .treatment-media {
     @apply relative overflow-hidden border-0 bg-surface;
     height: 480px;
@@ -464,7 +484,7 @@
   .treatment-title {
     font-family: 'Koh Santepheap', serif;
     font-weight: 300;
-    @apply text-white text-3xl leading-none;
+    @apply text-white text-3xl leading-none text-center;
   }
 
   .treatment-tile:hover .treatment-img {

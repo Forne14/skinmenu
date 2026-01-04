@@ -1,1 +1,0 @@
-from .treatment_carousel import TreatmentCarouselBlock

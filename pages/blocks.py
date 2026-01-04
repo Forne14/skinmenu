@@ -337,6 +337,38 @@ class HomeSections(blocks.StreamBlock):
         label = "Homepage sections"
         icon = "list-ul"
 
+# ---------------------------
+# Treatment product / pricing block (NEW)
+# ---------------------------
+
+class TreatmentProductItemBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=True, max_length=80)
+    price = blocks.CharBlock(required=False, max_length=40, help_text="e.g. $360 Members")
+    description = blocks.TextBlock(required=False, max_length=280)
+
+    targets = blocks.ListBlock(
+        blocks.CharBlock(max_length=40),
+        required=False,
+        help_text="What this treatment targets (shown as a list)",
+    )
+
+    cta_label = blocks.CharBlock(required=False, max_length=40, default="Book now")
+    cta_url = blocks.URLBlock(required=False)
+
+    class Meta:
+        icon = "doc-full"
+        label = "Treatment product"
+
+
+class TreatmentProductsBlock(blocks.StructBlock):
+    heading = blocks.CharBlock(required=False, max_length=80, default="Pricing")
+    products = blocks.ListBlock(TreatmentProductItemBlock(), min_num=1)
+
+    class Meta:
+        icon = "list-ul"
+        label = "Treatment products"
+        template = "pages/blocks/treatment_products.html"
+
 
 # ---------------------------
 # Modular blocks for inner pages
@@ -414,6 +446,7 @@ class FAQBlock(blocks.StructBlock):
 
 
 class ModularSections(blocks.StreamBlock):
+    treatment_products = TreatmentProductsBlock()  # ← NEW
     rich_text_section = RichTextSectionBlock()
     text_image = TextImageBlock()
     key_facts = KeyFactsBlock()
