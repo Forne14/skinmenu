@@ -1,7 +1,7 @@
 {% load wagtailimages_tags wagtailcore_tags %}
 
-<section>
-  <div class="container-shell py-14 md:py-18">
+<section class="section">
+  <div class="container-shell">
     <div class="grid gap-10 md:grid-cols-2 md:items-start">
       {% if block.value.image_position == "left" %}
         {% include "pages/blocks/_ti_image.html" with block=block %}

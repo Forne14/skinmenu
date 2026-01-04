@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+  <section class="section">
+    <div class="container-shell">
+      <div class="grid gap-8 lg:grid-cols-12 lg:gap-10">
+        <div class="lg:col-span-7">
+          <div class="text-xs tracking-wide uppercase text-muted">
+            {{ page.get_category_display }}
+          </div>
+
+          <h1 class="mt-2 text-3xl md:text-5xl leading-[1.05]">{{ page.title }}</h1>
+
+          {% if page.summary %}
+            <p class="mt-5 text-lg text-muted max-w-prose">
+              {{ page.summary }}
+            </p>
+          {% endif %}
+
+          <div class="mt-7 flex flex-wrap gap-2 text-sm text-muted">
+            {% if page.duration %}<span class="pill">Duration: {{ page.duration }}</span>{% endif %}
+            {% if page.downtime %}<span class="pill">Downtime: {{ page.downtime }}</span>{% endif %}
+            {% if page.price_from %}<span class="pill">{{ page.price_from }}</span>{% endif %}
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          {% if page.featured_image %}
+            {% image page.featured_image fill-1100x900 as img %}
+            <div class="card overflow-hidden p-2">
+              <img class="w-full rounded-2xl object-cover" src="{{ img.url }}" alt="{{ img.alt|default:page.title }}" />
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% if page.sections %}
+    {% for block in page.sections %}
+      {% include_block block %}
+    {% endfor %}
+  {% endif %}
+
+  {% if faq_schema_json %}
+    <script type="application/ld+json">{{ faq_schema_json|safe }}</script>
+  {% endif %}
+{% endblock %}

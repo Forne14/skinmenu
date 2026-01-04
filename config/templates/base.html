@@ -1,4 +1,4 @@
-{% load static wagtailcore_tags wagtailuserbar wagtailsettings_tags brand_tokens %}
+{% load static wagtailcore_tags wagtailuserbar wagtailsettings_tags brand_tokens schema %}
 
 <!doctype html>
 <html lang="en" class="h-full">
@@ -17,11 +17,38 @@
       {% endblock %}
     </title>
 
+    {# --- Meta description fallback (NO meta_description_fallback var needed) --- #}
+    {% firstof page.search_description page.summary page.excerpt page.intro "" as meta_desc %}
+
     {% block meta %}
-      {% if page.search_description %}
-        <meta name="description" content="{{ page.search_description }}" />
+      {% if meta_desc %}
+        <meta name="description" content="{{ meta_desc|striptags|truncatechars:160 }}" />
       {% endif %}
     {% endblock %}
+
+    {# --- Canonical + OG basics --- #}
+    {% canonical_url as canon %}
+    {% if canon %}
+      <link rel="canonical" href="{{ canon }}" />
+      <meta property="og:url" content="{{ canon }}" />
+    {% endif %}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{% if page.seo_title %}{{ page.seo_title }}{% elif page.title %}{{ page.title }}{% else %}SKINMENU{% endif %}" />
+    {% if meta_desc %}
+      <meta property="og:description" content="{{ meta_desc|striptags|truncatechars:200 }}" />
+    {% endif %}
+
+    {% og_image_url as og_img %}
+    {% if og_img %}
+      <meta property="og:image" content="{{ og_img }}" />
+    {% endif %}
+
+    {# Optional twitter cards (safe defaults) #}
+    <meta name="twitter:card" content="summary_large_image" />
+    {% if og_img %}<meta name="twitter:image" content="{{ og_img }}" />{% endif %}
+    <meta name="twitter:title" content="{% if page.seo_title %}{{ page.seo_title }}{% elif page.title %}{{ page.title }}{% else %}SKINMENU{% endif %}" />
+    {% if meta_desc %}<meta name="twitter:description" content="{{ meta_desc|striptags|truncatechars:200 }}" />{% endif %}
 
     {# Prevent theme flash: set data-theme before CSS loads #}
     <script>
@@ -92,8 +119,6 @@
 
             function loadGA4(measurementId) {
               if (!measurementId) return;
-
-              // Prevent double-init
               if (window.__skinmenu_ga4_loaded) return;
               window.__skinmenu_ga4_loaded = true;
 
@@ -112,8 +137,6 @@
 
             function loadMetaPixel(pixelId) {
               if (!pixelId) return;
-
-              // Prevent double-init
               if (window.__skinmenu_meta_loaded) return;
               window.__skinmenu_meta_loaded = true;
 
@@ -139,13 +162,15 @@
               if (c.marketing) loadMetaPixel('{{ a.meta_pixel_id|escapejs }}');
             }
 
-            // Run once after parse, and again whenever banner updates consent
             document.addEventListener('DOMContentLoaded', applyConsent);
             window.addEventListener('skinmenu:consent-updated', applyConsent);
           })();
         </script>
       {% endif %}
     {% endwith %}
+
+    {# --- Site-wide structured data (Organization/LocalBusiness + BreadcrumbList + page-specific schemas) --- #}
+    {% schema_json_ld %}
 
     {% block extra_head %}{% endblock %}
   </head>

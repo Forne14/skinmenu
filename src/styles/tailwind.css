@@ -12,7 +12,34 @@
   }
 
   body {
-    @apply bg-bg text-fg antialiased;
+    @apply text-fg antialiased;
+
+    /* Base background color */
+    background-color: rgb(var(--bg) / 1);
+
+    /* Paper grain simulation (blended into bg) */
+    background-image: radial-gradient(circle at 20% 30%, rgb(0 0 0 / 0.025) 1px, transparent 1px),
+      radial-gradient(circle at 80% 70%, rgb(0 0 0 / 0.02) 1px, transparent 1px),
+      radial-gradient(circle at 55% 10%, rgb(0 0 0 / 0.015) 1px, transparent 1px),
+      linear-gradient(0deg, rgb(255 255 255 / 0.02), rgb(0 0 0 / 0.02));
+
+    background-size: 120px 120px, 160px 160px, 220px 220px, 100% 100%;
+    background-attachment: fixed;
+    background-blend-mode: multiply;
+  }
+
+  :root[data-theme='dark'] body {
+    /* Grain should be subtler in dark mode */
+    background-image: radial-gradient(
+        circle at 20% 30%,
+        rgb(255 255 255 / 0.02) 1px,
+        transparent 1px
+      ),
+      radial-gradient(circle at 80% 70%, rgb(255 255 255 / 0.015) 1px, transparent 1px),
+      radial-gradient(circle at 55% 10%, rgb(255 255 255 / 0.012) 1px, transparent 1px),
+      linear-gradient(0deg, rgb(255 255 255 / 0.01), rgb(0 0 0 / 0.02));
+
+    background-blend-mode: screen;
   }
 
   h1,
@@ -33,22 +60,124 @@
     outline: none;
     box-shadow: 0 0 0 3px rgb(var(--border) / 0.55);
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      scroll-behavior: auto !important;
+      transition-duration: 0.001ms !important;
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
 }
 
 @layer components {
+  /* -----------------------------------
+     Global layout utilities
+  ----------------------------------- */
   .container-shell {
     @apply mx-auto max-w-6xl px-5 sm:px-8;
   }
 
+  /* Base section spacing (smaller than before) */
   .section {
-    @apply py-12 sm:py-20;
+    @apply py-8 sm:py-10;
+  }
+
+  /*
+    Reduce “double padding” between consecutive sections:
+    keep the previous section’s bottom padding, but shrink the next one’s top padding.
+  */
+  main > section.section + section.section {
+    padding-top: 1.75rem;
+  }
+  @media (min-width: 640px) {
+    main > section.section + section.section {
+      padding-top: 2.25rem;
+    }
   }
 
   .divider {
     @apply h-px bg-border/20;
   }
 
-  /* Editorial section headings - CLEANED */
+  /* -----------------------------------
+     Navigation typography (bigger + Koh)
+  ----------------------------------- */
+  .nav-primary {
+    font-family: 'Koh Santepheap', serif;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    @apply text-[16px] lg:text-[17px] text-heading;
+  }
+
+  .nav-link {
+    @apply no-underline transition-colors;
+    color: rgb(var(--heading) / 0.92);
+  }
+  .nav-link:hover {
+    color: rgb(var(--accent-2) / 1);
+  }
+
+  /* -----------------------------------
+     Ornament system (mask-based)
+  ----------------------------------- */
+  :root {
+    --ornament-url: url('/static/img/ornaments/brand-corner-stamp.svg');
+    --ornament-size: 18px;
+    --ornament-inset: 10px;
+    --ornament-opacity: 0.18;
+    --ornament-color: rgb(var(--heading) / 1);
+  }
+
+  :root[data-theme='dark'] {
+    --ornament-opacity: 0.14;
+    --ornament-color: rgb(var(--bg) / 1);
+  }
+
+  html.ornament-filigree {
+    --ornament-url: url('/static/img/ornaments/brand-corner-filigree.svg');
+    --ornament-size: 20px;
+    --ornament-opacity: 0.12;
+  }
+
+  .ornament-frame {
+    position: relative;
+  }
+
+  .ornament-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: var(--ornament-opacity);
+    background: var(--ornament-color);
+
+    -webkit-mask-image: var(--ornament-url), var(--ornament-url), var(--ornament-url),
+      var(--ornament-url);
+    mask-image: var(--ornament-url), var(--ornament-url), var(--ornament-url), var(--ornament-url);
+
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    -webkit-mask-size: var(--ornament-size) var(--ornament-size);
+    mask-size: var(--ornament-size) var(--ornament-size);
+
+    -webkit-mask-position: var(--ornament-inset) var(--ornament-inset),
+      calc(100% - var(--ornament-inset) - var(--ornament-size)) var(--ornament-inset),
+      var(--ornament-inset) calc(100% - var(--ornament-inset) - var(--ornament-size)),
+      calc(100% - var(--ornament-inset) - var(--ornament-size))
+        calc(100% - var(--ornament-inset) - var(--ornament-size));
+    mask-position: var(--ornament-inset) var(--ornament-inset),
+      calc(100% - var(--ornament-inset) - var(--ornament-size)) var(--ornament-inset),
+      var(--ornament-inset) calc(100% - var(--ornament-inset) - var(--ornament-size)),
+      calc(100% - var(--ornament-inset) - var(--ornament-size))
+        calc(100% - var(--ornament-inset) - var(--ornament-size));
+  }
+
+  /* -----------------------------------
+     Section headings + terminal ornament
+  ----------------------------------- */
   .section-title {
     font-family: 'Koh Santepheap', serif;
     font-weight: 300;
@@ -57,30 +186,52 @@
     position: relative;
     padding-bottom: 1rem;
   }
+
   .section-title::after {
-    /* Simple clean underline */
     content: '';
     position: absolute;
     left: 0;
-    width: 60px;
+    width: 78px;
     bottom: 0;
     height: 1px;
-    background: rgb(var(--heading) / 0.5);
+    background: rgb(var(--heading) / 0.45);
   }
 
-  /* Small header labels / eyebrow text */
+  .section-title::before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 66px;
+    width: 22px;
+    height: 22px;
+    background: rgb(var(--heading) / 0.9);
+    opacity: 0.22;
+    pointer-events: none;
+
+    -webkit-mask-image: var(--ornament-url);
+    mask-image: var(--ornament-url);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 22px 22px;
+    mask-size: 22px 22px;
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
+
   .label-display {
     font-family: 'Koh Santepheap', serif;
     font-weight: 300;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     @apply text-sm md:text-base text-muted no-underline;
   }
 
-  /* Cards - CLEANED (No ornaments) */
+  /* -----------------------------------
+     Cards + testimonials
+  ----------------------------------- */
   .card {
     @apply border border-border/20 bg-surface;
-    border-radius: 4px; /* Sharp clean corners */
+    border-radius: 4px;
     position: relative;
     overflow: hidden;
     box-shadow: 0 4px 20px rgb(0 0 0 / 0.02);
@@ -90,6 +241,7 @@
     @apply card;
     padding: 2rem;
   }
+
   .testimonial-card::before {
     content: '“';
     position: absolute;
@@ -98,28 +250,33 @@
     font-family: 'Koh Santepheap', serif;
     font-size: 64px;
     line-height: 1;
-    opacity: 0.1;
+    opacity: 0.08;
     color: rgb(var(--heading) / 1);
+    pointer-events: none;
   }
 
-  /* Inputs */
+  /* -----------------------------------
+     Inputs
+  ----------------------------------- */
   .input {
     @apply w-full border-b border-border/50 bg-transparent px-4 py-3 text-base
       placeholder:text-fg/40 focus:border-skinmenu-brown focus:outline-none transition-colors;
     border-radius: 0;
   }
 
-  /* Standard Buttons (Form submits etc) - CLEANED */
+  /* -----------------------------------
+     Buttons
+  ----------------------------------- */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3
-      text-base font-medium border transition-all duration-300
+    @apply inline-flex items-center justify-center gap-2 px-5 py-1.5
+      text-[15px] md:text-[16px] font-medium border transition-all duration-300
       focus:outline-none no-underline;
     font-family: 'Koh Santepheap', serif;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     border-radius: 0;
     background: transparent;
-    border-color: rgb(var(--heading) / 0.3);
+    border-color: rgb(var(--heading) / 0.32);
     color: rgb(var(--heading) / 1);
   }
 
@@ -128,7 +285,6 @@
     background: rgb(var(--heading) / 0.03);
   }
 
-  /* Primary Button Fallback */
   .btn-primary {
     @apply btn;
     background: rgb(var(--heading) / 1);
@@ -144,7 +300,67 @@
     @apply btn;
   }
 
-  /* Theme toggle - Minimalist */
+  /* -----------------------------------
+     Full-bleed CTA styling
+  ----------------------------------- */
+  .cta-bleed {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
+
+  .cta-surface {
+    background: rgb(var(--surface) / 1);
+    border-top: 1px solid rgb(var(--border) / 0.18);
+    border-bottom: 1px solid rgb(var(--border) / 0.18);
+    box-shadow: inset 0 18px 40px rgb(0 0 0 / 0.06), inset 0 -18px 40px rgb(0 0 0 / 0.04);
+  }
+
+  :root[data-theme='dark'] .cta-surface {
+    box-shadow: inset 0 18px 40px rgb(0 0 0 / 0.28), inset 0 -18px 40px rgb(0 0 0 / 0.22);
+  }
+
+  .cta-inner {
+    border: 1px solid rgb(var(--border) / 0.22);
+    background: rgb(var(--bg) / 0.35);
+    padding: 2.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .cta-inner {
+      padding: 3rem;
+    }
+  }
+
+  /* -----------------------------------
+     Reviews full-bleed “inset” surface (CTA-like)
+  ----------------------------------- */
+  .reviews-bleed {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
+
+  .reviews-surface {
+    background: rgb(var(--surface) / 1);
+    border-top: 1px solid rgb(var(--border) / 0.14);
+    border-bottom: 1px solid rgb(var(--border) / 0.14);
+    box-shadow: inset 0 14px 34px rgb(0 0 0 / 0.045), inset 0 -14px 34px rgb(0 0 0 / 0.035);
+  }
+
+  :root[data-theme='dark'] .reviews-surface {
+    box-shadow: inset 0 14px 34px rgb(0 0 0 / 0.22), inset 0 -14px 34px rgb(0 0 0 / 0.18);
+  }
+
+  /* -----------------------------------
+     Theme toggle
+  ----------------------------------- */
   .theme-toggle {
     @apply inline-flex items-center justify-center transition;
   }
@@ -165,12 +381,14 @@
     transform: rotate(90deg) scale(0.5);
   }
   :root[data-theme='dark'] .theme-icon-moon {
-    position: static;
+    position: absolute;
     opacity: 1;
     transform: rotate(0deg) scale(1);
   }
 
-  /* Carousel */
+  /* -----------------------------------
+     Carousel dots
+  ----------------------------------- */
   .carousel-dot {
     @apply h-2 w-2 rounded-full border transition-all;
     border-color: rgb(var(--border) / 0.4);
@@ -182,7 +400,9 @@
     transform: scale(1.2);
   }
 
-  /* Treatments Scroll - CLEANED */
+  /* -----------------------------------
+     Treatments rail
+  ----------------------------------- */
   .treatments-bleed {
     width: 100vw;
     position: relative;
@@ -228,10 +448,17 @@
     transition: transform 700ms ease;
   }
 
-  /* Overlay - CLEANED (No ornaments) */
   .treatment-overlay {
     @apply absolute inset-x-0 bottom-0 px-6 pb-8 pt-20;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.82), transparent);
+  }
+
+  .treatment-overlay-inner {
+    position: relative;
+    padding: 14px 14px;
+    border: 1px solid rgb(255 255 255 / 0.18);
+    background: rgb(0 0 0 / 0.12);
+    overflow: hidden;
   }
 
   .treatment-title {

@@ -1,91 +1,141 @@
 {% load wagtailcore_tags %}
 
 {% with gs=settings.site_settings.GlobalSiteSettings nav=settings.site_settings.NavigationSettings %}
-<footer class="border-t border-border/20 bg-surface pt-20 pb-10">
+<footer class="border-t border-border/20 bg-surface pt-10 md:pt-12 pb-8">
   <div class="container-shell">
-    
-    <div class="grid gap-12 lg:grid-cols-12 mb-20">
-      
-      <div class="lg:col-span-4 space-y-8">
+
+    {# Top grid (tighter) #}
+    <div class="grid gap-10 lg:grid-cols-12 mb-10 md:mb-12">
+
+      {# Brand / address / socials / map #}
+      <div class="lg:col-span-5 space-y-6">
         <div>
-           <div class="text-2xl font-display font-light text-heading tracking-wide mb-4">
+          <div class="text-2xl font-display font-light text-heading tracking-wide mb-3">
             {{ gs.clinic_name|default:"SKINMENU" }}
           </div>
-          <p class="text-base text-fg/70 leading-relaxed max-w-sm">
-            Bespoke treatment plans composed with restraint, precision, and intelligence.
-          </p>
+
+          {% if gs.address %}
+            <div class="text-sm text-fg/60 whitespace-pre-line leading-relaxed font-sans">
+              {{ gs.address }}
+            </div>
+          {% endif %}
         </div>
 
-        {% if gs.address %}
-          <div class="text-sm text-fg/60 whitespace-pre-line leading-relaxed font-sans">{{ gs.address }}</div>
+        <div class="flex gap-6 pt-1">
+          {% if gs.instagram_url %}
+            <a href="{{ gs.instagram_url }}" class="text-fg/50 hover:text-skinmenu-brown transition no-underline" target="_blank" rel="noopener">IG</a>
+          {% endif %}
+          {% if gs.tiktok_url %}
+            <a href="{{ gs.tiktok_url }}" class="text-fg/50 hover:text-skinmenu-brown transition no-underline" target="_blank" rel="noopener">TT</a>
+          {% endif %}
+          {% if gs.facebook_url %}
+            <a href="{{ gs.facebook_url }}" class="text-fg/50 hover:text-skinmenu-brown transition no-underline" target="_blank" rel="noopener">FB</a>
+          {% endif %}
+        </div>
+
+        {% if gs.google_maps_embed_url %}
+          <div class="pt-2">
+            <div class="rounded-2xl overflow-hidden border border-border/20 bg-bg">
+              <iframe
+                title="Google Maps"
+                src="{{ gs.google_maps_embed_url }}"
+                class="w-full aspect-[4/3]"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen
+              ></iframe>
+            </div>
+
+            {% if gs.google_maps_url %}
+              <div class="pt-2">
+                <a href="{{ gs.google_maps_url }}" class="text-xs text-fg/50 hover:text-skinmenu-brown transition no-underline" target="_blank" rel="noopener">
+                  Open in Google Maps →
+                </a>
+              </div>
+            {% endif %}
+          </div>
         {% endif %}
-
-        <div class="flex gap-6 pt-2">
-            {% if gs.instagram_url %}<a href="{{ gs.instagram_url }}" class="text-fg/50 hover:text-skinmenu-brown transition" target="_blank">IG</a>{% endif %}
-            {% if gs.tiktok_url %}<a href="{{ gs.tiktok_url }}" class="text-fg/50 hover:text-skinmenu-brown transition" target="_blank">TT</a>{% endif %}
-            {% if gs.facebook_url %}<a href="{{ gs.facebook_url }}" class="text-fg/50 hover:text-skinmenu-brown transition" target="_blank">FB</a>{% endif %}
-        </div>
       </div>
 
-      <div class="lg:col-span-3 lg:col-start-6">
-        <h3 class="text-sm font-semibold uppercase tracking-widest text-skinmenu-brown mb-6">Menu</h3>
-        <nav class="flex flex-col gap-3 text-base text-fg/80">
+      {# Footer links #}
+      <div class="lg:col-span-3">
+        <h3 class="text-sm font-semibold uppercase tracking-widest text-skinmenu-brown mb-4">
+          Links
+        </h3>
+
+        <nav class="flex flex-col gap-2 text-sm text-fg/70">
           {% for b in nav.footer_links %}
             {% with link=b.value %}
               {% if link.page %}
-                <a class="hover:text-skinmenu-brown transition-colors" href="{% pageurl link.page %}">{{ link.label }}</a>
+                <a class="hover:text-skinmenu-brown transition-colors no-underline" href="{% pageurl link.page %}">{{ link.label }}</a>
               {% else %}
-                <a class="hover:text-skinmenu-brown transition-colors" href="{{ link.url }}" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
-                  {{ link.label }}
-                </a>
+                <a class="hover:text-skinmenu-brown transition-colors no-underline" href="{{ link.url }}"
+                  {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}
+                >{{ link.label }}</a>
               {% endif %}
             {% endwith %}
-          {% empty %}
-            <a class="hover:text-skinmenu-brown transition-colors" href="/contact/">Contact</a>
-            <a class="hover:text-skinmenu-brown transition-colors" href="/about/">About</a>
-            <a class="hover:text-skinmenu-brown transition-colors" href="/privacy/">Privacy</a>
           {% endfor %}
         </nav>
       </div>
 
+      {# Newsletter ONLY (removed Enquire block) #}
       <div class="lg:col-span-4">
-        {% if gs.newsletter_form_action %}
-            <h3 class="text-sm font-semibold uppercase tracking-widest text-skinmenu-brown mb-6">
-              {{ gs.newsletter_heading|default:"The Digest" }}
-            </h3>
-            <form action="{{ gs.newsletter_form_action }}" method="post" target="_blank" class="space-y-4">
-              <input 
-                type="email" 
-                name="email" 
-                placeholder="Email Address" 
-                class="w-full bg-transparent border-b border-skinmenu-brown/30 py-3 text-lg focus:outline-none focus:border-skinmenu-brown transition-colors placeholder:text-fg/40"
-                required
-              >
-              <button type="submit" class="text-sm font-semibold uppercase tracking-widest text-fg/60 hover:text-skinmenu-brown transition-colors">
-                Subscribe
-              </button>
-            </form>
-        {% else %}
-             <h3 class="text-sm font-semibold uppercase tracking-widest text-skinmenu-brown mb-6">Enquire</h3>
-             <a href="/contact/" class="text-2xl font-display font-light text-heading hover:text-skinmenu-brown transition-colors">
-                Book a consultation &rarr;
-             </a>
-        {% endif %}
+        <h3 class="text-sm font-semibold uppercase tracking-widest text-skinmenu-brown mb-4">
+          {{ gs.newsletter_heading|default:"Stay in the know" }}
+        </h3>
+
+        <form
+          {% if gs.newsletter_form_action %}
+            action="{{ gs.newsletter_form_action }}"
+            method="post"
+            target="_blank"
+          {% else %}
+            action="#"
+            method="post"
+            onsubmit="return false;"
+          {% endif %}
+          class="space-y-4"
+        >
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            class="w-full bg-transparent border-b border-skinmenu-brown/20 py-2 text-sm text-heading outline-none focus:border-skinmenu-brown transition-colors placeholder:text-fg/40"
+            required
+            {% if not gs.newsletter_form_action %}disabled{% endif %}
+          >
+
+          <button
+            type="submit"
+            class="text-xs font-semibold uppercase tracking-widest text-fg/60 hover:text-skinmenu-brown transition-colors no-underline"
+            {% if not gs.newsletter_form_action %}disabled aria-disabled="true"{% endif %}
+          >
+            {{ gs.newsletter_button_label|default:"Subscribe" }}
+          </button>
+
+          {% if not gs.newsletter_form_action %}
+            <p class="text-sm text-fg/50 font-sans">
+              Newsletter signup will be available shortly.
+            </p>
+          {% endif %}
+        </form>
       </div>
+
     </div>
 
-    <div class="border-t border-border/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
-      
+    {# Bottom bar (tighter) #}
+    <div class="border-t border-border/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-5">
       <div class="text-xs text-fg/40 font-sans">
         &copy; {% now "Y" %} {{ gs.clinic_name|default:"SKINMENU" }}. All rights reserved.
       </div>
 
       <div class="flex items-center gap-8">
         <div class="flex gap-4 text-xs text-fg/40">
-           <a href="/privacy/" class="hover:text-fg transition">Privacy</a>
-           <a href="/terms/" class="hover:text-fg transition">Terms</a>
+          <a href="/privacy/" class="hover:text-fg transition no-underline">Privacy</a>
+          <a href="/terms/" class="hover:text-fg transition no-underline">Terms</a>
         </div>
 
+        {# Keep your preferred theme toggle #}
         <button
           type="button"
           class="theme-toggle flex items-center justify-center text-fg/60 hover:text-skinmenu-brown transition-colors p-2 rounded-full border border-transparent hover:border-skinmenu-brown/10"
@@ -103,7 +153,6 @@
             </svg>
           </div>
         </button>
-
       </div>
     </div>
 

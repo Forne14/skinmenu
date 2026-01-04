@@ -9,6 +9,7 @@
             {{ block.value.heading }}
           </h2>
         {% endif %}
+
         {% if block.value.intro %}
           <p class="mt-2 text-muted">
             {{ block.value.intro }}
@@ -26,22 +27,31 @@
     </div>
 
     <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {# Legacy: featured_pages may contain missing references after dev reseeds #}
       {% for p in block.value.featured_pages %}
-        <a href="{% pageurl p %}" class="card p-6 hover:border-border/70 transition">
-          <div class="flex items-center justify-between gap-4">
-            <h3 class="font-display text-xl text-heading">{{ p.title }}</h3>
-            <span class="text-muted">→</span>
-          </div>
-          {% if p.search_description %}
-            <p class="mt-3 text-sm text-muted">{{ p.search_description }}</p>
-          {% endif %}
-        </a>
+        {% if p %}
+          <a href="{% pageurl p %}" class="card p-6 hover:border-border/70 transition">
+            <div class="flex items-center justify-between gap-4">
+              <h3 class="font-display text-xl text-heading">{{ p.title }}</h3>
+              <span class="text-muted">→</span>
+            </div>
+            {% if p.search_description %}
+              <p class="mt-2 text-muted">{{ p.search_description }}</p>
+            {% endif %}
+          </a>
+        {% endif %}
+      {% empty %}
+        <div class="card p-6">
+          <p class="text-muted">
+            No featured pages selected yet. Edit the homepage and choose pages to feature.
+          </p>
+        </div>
       {% endfor %}
     </div>
 
     {% if block.value.cta_page %}
       <div class="mt-8 md:hidden">
-        <a href="{% pageurl block.value.cta_page %}" class="btn btn-secondary w-full">
+        <a href="{% pageurl block.value.cta_page %}" class="btn btn-ghost w-full">
           {{ block.value.cta_label|default:"See full menu" }}
         </a>
       </div>

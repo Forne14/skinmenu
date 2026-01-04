@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+  <section class="section">
+    <div class="container-shell">
+      <article class="max-w-3xl">
+        <div class="text-xs tracking-wide uppercase text-muted">
+          {{ page.date|date:"j M Y" }}
+          {% if page.tags.all %}
+            <span class="mx-2">·</span>
+            {% for tag in page.tags.all %}
+              <span class="inline-block">{{ tag }}</span>{% if not forloop.last %}<span class="mx-1">/</span>{% endif %}
+            {% endfor %}
+          {% endif %}
+        </div>
+
+        <h1 class="mt-2 text-3xl md:text-5xl leading-[1.05]">{{ page.title }}</h1>
+
+        {% if page.featured_image %}
+          {% image page.featured_image fill-1600x900 as img %}
+          <img class="mt-8 w-full rounded-2xl border border-border/30 object-cover" src="{{ img.url }}" alt="{{ img.alt|default:page.title }}" />
+        {% endif %}
+
+        {% if page.excerpt %}
+          <p class="mt-6 text-lg text-muted">
+            {{ page.excerpt }}
+          </p>
+        {% endif %}
+
+        <div class="mt-8 prose max-w-none">
+          {% for block in page.body %}
+            {% include_block block %}
+          {% endfor %}
+        </div>
+      </article>
+    </div>
+  </section>
+{% endblock %}

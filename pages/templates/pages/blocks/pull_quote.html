@@ -1,0 +1,14 @@
+<section class="section">
+  <div class="container-shell">
+    <figure class="card p-8 md:p-10">
+      <blockquote class="text-xl md:text-2xl leading-snug text-heading">
+        “{{ value.quote }}”
+      </blockquote>
+      {% if value.attribution %}
+        <figcaption class="mt-4 text-sm text-muted">
+          — {{ value.attribution }}
+        </figcaption>
+      {% endif %}
+    </figure>
+  </div>
+</section>

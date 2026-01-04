@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+  <section class="section">
+    <div class="container-shell">
+      <h1 class="text-3xl md:text-5xl leading-[1.05]">{{ page.title }}</h1>
+
+      {% if page.intro %}
+        <div class="mt-6 prose max-w-none">
+          {{ page.intro|richtext }}
+        </div>
+      {% endif %}
+
+      {% if page.team_members.all %}
+        <div class="mt-12">
+          <div class="flex items-end justify-between gap-6">
+            <h2 class="text-xl md:text-2xl">Team</h2>
+            <div class="hidden md:flex gap-2">
+              <button class="btn-secondary" type="button" data-carousel-prev="team">Prev</button>
+              <button class="btn-secondary" type="button" data-carousel-next="team">Next</button>
+            </div>
+          </div>
+
+          <div class="mt-5 overflow-hidden">
+            <div
+              class="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2"
+              data-carousel-track="team"
+            >
+              {% for m in page.team_members.all %}
+                <div class="min-w-[280px] md:min-w-[360px] snap-start">
+                  <div class="card p-4 md:p-5 h-full">
+                    {% if m.image %}
+                      {% image m.image fill-900x900 as img %}
+                      <img class="w-full aspect-square rounded-2xl object-cover border border-border/30" src="{{ img.url }}" alt="{{ img.alt|default:m.name }}" />
+                    {% else %}
+                      <div class="w-full aspect-square rounded-2xl bg-surface-2 border border-border/30"></div>
+                    {% endif %}
+
+                    <div class="mt-4">
+                      <div class="text-lg">{{ m.name }}</div>
+                      {% if m.role %}<div class="text-sm text-muted mt-1">{{ m.role }}</div>{% endif %}
+                      {% if m.experience %}<div class="text-xs text-muted mt-2">{{ m.experience }}</div>{% endif %}
+                      {% if m.bio %}<p class="text-sm text-fg/75 leading-relaxed mt-3">{{ m.bio }}</p>{% endif %}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  {% if page.sections %}
+    {% for block in page.sections %}
+      {% include_block block %}
+    {% endfor %}
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+  <section class="section">
+    <div class="container-shell">
+      <div class="max-w-2xl card p-8">
+        <h1 class="text-2xl md:text-4xl leading-[1.05]">Thank you</h1>
+        <div class="mt-4 prose max-w-none">
+          {{ page.thank_you_text|richtext }}
+        </div>
+        <div class="mt-6">
+          <a class="btn-secondary" href="/">Back to home</a>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

@@ -2,6 +2,9 @@
    - Header dropdown
    - Mobile drawer + subnav
    - Lightweight carousels (hero + reviews)
+   - Scroll-snap rails (treatments)
+   - Generic prev/next scrollers (team/offering carousels)
+   - Optional single-open accordions for <details data-accordion>
 */
 
 ;(function () {
@@ -105,7 +108,6 @@
       let index = 0
       let timer = null
 
-      // For hero we fade between absolute slides; for reviews we translate the track.
       function apply(indexNext) {
         index = Math.max(0, Math.min(slides.length - 1, indexNext))
 
@@ -116,7 +118,6 @@
             s.style.opacity = active ? '1' : '0'
           })
         } else {
-          // reviews: translate track so slide aligns left
           const slide = slides[index]
           const left = slide.offsetLeft
           track.style.transform = `translateX(${-left}px)`
@@ -200,14 +201,13 @@
       root.addEventListener('focusin', stopAutoplay)
       root.addEventListener('focusout', startAutoplay)
 
-      // Init
       apply(0)
       startAutoplay()
     })
   }
 
   // ---------------------------
-  // Scroll-snap rails (treatments)
+  // Scroll-snap rails (treatments grid)
   // ---------------------------
   function initHscrollDots() {
     const rails = document.querySelectorAll('[data-hscroll]')
@@ -235,7 +235,6 @@
         setActive(i)
       }
 
-      // Click dots
       dots.forEach((btn) => {
         btn.addEventListener('click', () => {
           const i = parseInt(btn.getAttribute('data-hscroll-dot') || '0', 10)
@@ -243,7 +242,6 @@
         })
       })
 
-      // Track active slide on scroll (rAF throttled)
       let raf = null
       function onScroll() {
         if (raf) return
@@ -264,6 +262,61 @@
   }
 
   // ---------------------------
+  // Generic prev/next scrollers
+  // Used by templates with:
+  //   data-carousel-track="team"
+  //   data-carousel-prev="team"
+  //   data-carousel-next="team"
+  // ---------------------------
+  function initNamedCarousels() {
+    function scrollTrack(key, dir) {
+      if (!key) return
+      const track = document.querySelector(
+        `[data-carousel-track="${CSS && CSS.escape ? CSS.escape(key) : key}"]`
+      )
+      if (!track) return
+
+      // Determine step size: prefer first child width + gap
+      const child = track.querySelector(':scope > *')
+      const gap = 16
+      const step = child ? child.getBoundingClientRect().width + gap : track.clientWidth * 0.8
+
+      track.scrollBy({ left: dir * step, behavior: 'smooth' })
+    }
+
+    document.addEventListener('click', (e) => {
+      const prev = e.target.closest('[data-carousel-prev]')
+      const next = e.target.closest('[data-carousel-next]')
+      if (prev) scrollTrack(prev.getAttribute('data-carousel-prev'), -1)
+      if (next) scrollTrack(next.getAttribute('data-carousel-next'), 1)
+    })
+  }
+
+  // ---------------------------
+  // Accessible <details> accordion:
+  // If you add data-accordion to <details>, opening one closes siblings
+  // Optionally scope by wrapping in an element with data-accordion-scope
+  // ---------------------------
+  function initAccordions() {
+    document.addEventListener(
+      'toggle',
+      (e) => {
+        const el = e.target
+        if (!(el instanceof HTMLDetailsElement)) return
+        if (!el.hasAttribute('data-accordion')) return
+        if (!el.open) return
+
+        const scope = el.closest('[data-accordion-scope]') || document
+        const all = scope.querySelectorAll('details[data-accordion]')
+        all.forEach((d) => {
+          if (d !== el) d.open = false
+        })
+      },
+      true
+    )
+  }
+
+  // ---------------------------
   // Boot
   // ---------------------------
   document.addEventListener('DOMContentLoaded', () => {
@@ -271,5 +324,9 @@
     initMobileNav()
     initCarousels()
     initHscrollDots()
+
+    // New behavior (does not touch existing ones unless you add the attributes)
+    initNamedCarousels()
+    initAccordions()
   })
 })()

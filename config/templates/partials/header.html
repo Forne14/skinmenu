@@ -1,146 +1,189 @@
 {% load wagtailcore_tags %}
 
-{# Expects `settings` passed from base.html #}
+{# Expects `settings` passed from base.html: {% include ... with settings=site_settings only %} #}
 {% with nav=settings.site_settings.NavigationSettings brand=settings.site_settings.BrandAppearanceSettings %}
-<header class="sticky top-0 z-40 border-b border-border/10 bg-bg/95 backdrop-blur-md transition-all duration-300">
+<header class="sticky top-0 z-40 border-b border-border/40 bg-bg/85 backdrop-blur">
   <div class="container-shell">
-    <div class="flex h-24 items-center justify-between">
-      
-      <a href="/" class="flex items-center gap-3 hover:opacity-80 transition duration-300">
+    <div class="flex h-16 items-center justify-between">
+      <!-- Brand -->
+      <a href="/" class="flex items-center gap-3 hover:opacity-90 transition no-underline">
         <span class="sr-only">SKINMENU</span>
-        <div class="w-40 md:w-48 origin-left">
+        <div class="scale-[0.92] origin-left">
           {% include "partials/brand/logo.html" with brand=brand only %}
         </div>
       </a>
 
-      <nav class="hidden md:flex items-center gap-10 text-lg font-display font-light tracking-wide" aria-label="Primary">
-        {% for b in nav.primary_links %}
-          {% with link=b.value %}
-            {% if link.page %}
-              <a href="{% pageurl link.page %}" class="text-heading hover:text-skinmenu-brown transition-colors no-underline">{{ link.label }}</a>
-            {% else %}
-              <a href="{{ link.url }}" class="text-heading hover:text-skinmenu-brown transition-colors no-underline" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
-                {{ link.label }}
-              </a>
-            {% endif %}
-          {% endwith %}
-        {% endfor %}
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8">
+        <div class="flex items-center gap-6">
 
-        {% if nav.menu_links %}
-          <div class="relative group" data-dropdown>
-            <button
-              class="inline-flex items-center gap-2 text-heading hover:text-skinmenu-brown transition-colors focus:outline-none"
-              type="button"
-              aria-haspopup="true"
-              aria-expanded="false"
-              data-dropdown-button
-            >
-              {{ nav.menu_label|default:"The Menu" }}
-              <span aria-hidden="true" class="text-xs opacity-60 group-hover:translate-y-0.5 transition-transform">▾</span>
-            </button>
+          {# Menu dropdown FIRST (site requirement) #}
+          {% if nav.menu_links %}
+            <div class="relative" data-dropdown>
+              <button
+                class="inline-flex items-center gap-2 nav-link"
+                type="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                data-dropdown-button
+              >
+                {{ nav.menu_label|default:"The Menu" }}
+                <span aria-hidden="true" class="text-xs opacity-80">▾</span>
+              </button>
 
-            <div
-              class="invisible opacity-0 pointer-events-none absolute right-0 mt-4 w-72 bg-surface border border-border/20 shadow-xl
-                     transition-all duration-300 ease-out origin-top-right transform translate-y-2
-                     data-[open=true]:visible data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto data-[open=true]:translate-y-0"
-              data-dropdown-menu
-              role="menu"
-            >
-              <div class="py-2 px-2 grid gap-1">
-                {% for b in nav.menu_links %}
-                  {% with link=b.value %}
-                    {% if link.page %}
-                      <a href="{% pageurl link.page %}"
-                         class="block px-4 py-3 text-base text-fg/80 hover:bg-surface-2 hover:text-skinmenu-brown transition-colors"
-                         role="menuitem">
-                        {{ link.label }}
-                      </a>
-                    {% else %}
-                      <a href="{{ link.url }}"
-                         class="block px-4 py-3 text-base text-fg/80 hover:bg-surface-2 hover:text-skinmenu-brown transition-colors"
-                         role="menuitem"
-                         {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
-                        {{ link.label }}
-                      </a>
-                    {% endif %}
-                  {% endwith %}
-                {% endfor %}
+              <div
+                class="invisible opacity-0 pointer-events-none absolute right-0 mt-3 w-72 border border-border/35 bg-surface shadow-md
+                       transition duration-200 ease-out origin-top-right
+                       data-[open=true]:visible data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto"
+                data-dropdown-menu
+                role="menu"
+              >
+                <div class="p-2">
+                  {% for b in nav.menu_links %}
+                    {% with link=b.value %}
+                      {% if link.page %}
+                        <a
+                          href="{% pageurl link.page %}"
+                          role="menuitem"
+                          class="block rounded-md px-3 py-2 text-sm text-heading hover:bg-surface-2 transition no-underline"
+                        >
+                          {{ link.label }}
+                        </a>
+                      {% else %}
+                        <a
+                          href="{{ link.url }}"
+                          role="menuitem"
+                          class="block rounded-md px-3 py-2 text-sm text-heading hover:bg-surface-2 transition no-underline"
+                          {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}
+                        >
+                          {{ link.label }}
+                        </a>
+                      {% endif %}
+                    {% endwith %}
+                  {% endfor %}
+                </div>
               </div>
             </div>
-          </div>
-        {% endif %}
+          {% endif %}
 
+          {# Remaining primary links, preserving admin order, but skip "The Menu" link to avoid duplication #}
+          {% for b in nav.primary_links %}
+            {% with link=b.value %}
+              {% with label_lower=link.label|default:""|lower menu_lower=nav.menu_label|default:"the menu"|lower %}
+                {% if label_lower != menu_lower and label_lower != "the menu" %}
+                  {% if link.page %}
+                    <a href="{% pageurl link.page %}" class="nav-link">{{ link.label }}</a>
+                  {% else %}
+                    <a href="{{ link.url }}" class="nav-link" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                      {{ link.label }}
+                    </a>
+                  {% endif %}
+                {% endif %}
+              {% endwith %}
+            {% endwith %}
+          {% endfor %}
+        </div>
+
+        {# Header CTA (max 1) #}
         {% if nav.header_cta %}
           {% with cta=nav.header_cta.0.value %}
-            <div class="ml-6">
-              {% if cta.page %}
-                 {% include "patterns/brand_button.html" with text=cta.label href=cta.page.url %}
-              {% else %}
-                 {% include "patterns/brand_button.html" with text=cta.label href=cta.url %}
-              {% endif %}
-            </div>
+            {% if cta.page %}
+              <a href="{% pageurl cta.page %}" class="btn-primary">{{ cta.label }}</a>
+            {% else %}
+              <a href="{{ cta.url }}" class="btn-primary" {% if cta.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                {{ cta.label }}
+              </a>
+            {% endif %}
           {% endwith %}
         {% endif %}
       </nav>
 
+      <!-- Mobile Toggle -->
       <button
         type="button"
-        class="md:hidden inline-flex items-center justify-center gap-2 border border-border/30 bg-transparent px-5 py-2 text-sm font-semibold tracking-widest uppercase text-skinmenu-brown hover:bg-skinmenu-brown hover:text-white transition-all"
+        class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-full border border-border/40 hover:border-border transition"
+        aria-label="Open menu"
         aria-controls="mobile-nav"
         aria-expanded="false"
-        data-mobile-nav-toggle
+        data-mobile-nav-button
       >
-        <span>Menu</span>
+        <span aria-hidden="true" class="text-lg leading-none">≡</span>
       </button>
     </div>
   </div>
 
+  <!-- Mobile Nav -->
   <div
     id="mobile-nav"
-    class="md:hidden hidden border-t border-border/10 bg-bg"
+    class="md:hidden hidden border-t border-border/40 bg-bg"
     data-mobile-nav
   >
-    <div class="container-shell py-8 space-y-6">
-      <div class="flex flex-col gap-4 text-xl font-display font-light tracking-wide text-center">
+    <div class="container-shell py-4">
+      <div class="flex flex-col gap-2 text-base nav-primary">
+
+        {# Menu section FIRST (simple list; no accordion needed) #}
+        {% if nav.menu_links %}
+          <div class="px-3 pt-1 pb-2">
+            <div class="text-xs uppercase tracking-widest text-fg/50 mb-2">
+              {{ nav.menu_label|default:"The Menu" }}
+            </div>
+            <div class="flex flex-col">
+              {% for b in nav.menu_links %}
+                {% with link=b.value %}
+                  {% if link.page %}
+                    <a href="{% pageurl link.page %}" class="px-2 py-2 rounded-md hover:bg-surface-2/70 transition no-underline text-heading">
+                      {{ link.label }}
+                    </a>
+                  {% else %}
+                    <a href="{{ link.url }}" class="px-2 py-2 rounded-md hover:bg-surface-2/70 transition no-underline text-heading"
+                      {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}
+                    >
+                      {{ link.label }}
+                    </a>
+                  {% endif %}
+                {% endwith %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="border-t border-border/20 my-2"></div>
+        {% endif %}
+
+        {# Remaining primary links (skip menu label) #}
         {% for b in nav.primary_links %}
           {% with link=b.value %}
-            {% if link.page %}
-              <a href="{% pageurl link.page %}" class="py-2 text-heading hover:text-skinmenu-brown transition">{{ link.label }}</a>
-            {% else %}
-              <a href="{{ link.url }}" class="py-2 text-heading hover:text-skinmenu-brown transition" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
-                {{ link.label }}
-              </a>
-            {% endif %}
-          {% endwith %}
-        {% endfor %}
-
-        {% if nav.menu_links %}
-            <div class="border-t border-border/10 my-2 w-12 mx-auto"></div>
-            {% for b in nav.menu_links %}
-              {% with link=b.value %}
+            {% with label_lower=link.label|default:""|lower menu_lower=nav.menu_label|default:"the menu"|lower %}
+              {% if label_lower != menu_lower and label_lower != "the menu" %}
                 {% if link.page %}
-                  <a href="{% pageurl link.page %}" class="py-2 text-heading hover:text-skinmenu-brown transition">{{ link.label }}</a>
+                  <a href="{% pageurl link.page %}" class="px-3 py-3 rounded-md hover:bg-surface-2/70 transition no-underline text-heading">
+                    {{ link.label }}
+                  </a>
                 {% else %}
-                  <a href="{{ link.url }}" class="py-2 text-heading hover:text-skinmenu-brown transition" {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                  <a href="{{ link.url }}" class="px-3 py-3 rounded-md hover:bg-surface-2/70 transition no-underline text-heading"
+                    {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}
+                  >
                     {{ link.label }}
                   </a>
                 {% endif %}
-              {% endwith %}
-            {% endfor %}
+              {% endif %}
+            {% endwith %}
+          {% endwith %}
+        {% endfor %}
+
+        {# CTA on mobile (full width) #}
+        {% if nav.header_cta %}
+          <div class="pt-2">
+            {% with cta=nav.header_cta.0.value %}
+              {% if cta.page %}
+                <a href="{% pageurl cta.page %}" class="btn-primary w-full">{{ cta.label }}</a>
+              {% else %}
+                <a href="{{ cta.url }}" class="btn-primary w-full" {% if cta.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                  {{ cta.label }}
+                </a>
+              {% endif %}
+            {% endwith %}
+          </div>
         {% endif %}
       </div>
-      
-      {% if nav.header_cta %}
-        {% with cta=nav.header_cta.0.value %}
-          <div class="flex justify-center pt-4">
-            {% if cta.page %}
-                {% include "patterns/brand_button.html" with text=cta.label href=cta.page.url %}
-            {% else %}
-                {% include "patterns/brand_button.html" with text=cta.label href=cta.url %}
-            {% endif %}
-          </div>
-        {% endwith %}
-      {% endif %}
     </div>
   </div>
 </header>

@@ -1,0 +1,15 @@
+{% load wagtailimages_tags %}
+
+<section class="section">
+  <div class="container-shell">
+    {% image value.image fill-2000x1200 as img %}
+    <figure class="card p-2">
+      <img class="w-full rounded-2xl object-cover" src="{{ img.url }}" alt="{{ img.alt }}" />
+      {% if value.caption %}
+        <figcaption class="px-5 pb-5 pt-3 text-sm text-muted">
+          {{ value.caption }}
+        </figcaption>
+      {% endif %}
+    </figure>
+  </div>
+</section>

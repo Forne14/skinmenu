@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import csv
+import re
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional
 
 from django.contrib.auth import get_user_model
@@ -16,6 +19,49 @@ class SeedPage:
     slug: str
 
 
+BASE_DIR = Path(__file__).resolve().parents[4]
+DATA_DIR = Path("/mnt/data")  # works in ChatGPT sandbox; local dev falls back below.
+
+CSV_CONTACT = [
+    DATA_DIR / "WEBSITE REVAMP - Contact Us(1).csv",
+    BASE_DIR / "WEBSITE REVAMP - Contact Us(1).csv",
+    BASE_DIR / "data" / "WEBSITE REVAMP - Contact Us(1).csv",
+]
+CSV_ABOUT = [
+    DATA_DIR / "WEBSITE REVAMP - About Us(1).csv",
+    BASE_DIR / "WEBSITE REVAMP - About Us(1).csv",
+    BASE_DIR / "data" / "WEBSITE REVAMP - About Us(1).csv",
+]
+CSV_TREATMENTS = [
+    DATA_DIR / "WEBSITE REVAMP - Treatments(1).csv",
+    BASE_DIR / "WEBSITE REVAMP - Treatments(1).csv",
+    BASE_DIR / "data" / "WEBSITE REVAMP - Treatments(1).csv",
+]
+
+
+def slugify_basic(s: str) -> str:
+    s = (s or "").strip().lower()
+    s = re.sub(r"[^\w\s-]", "", s)
+    s = re.sub(r"[\s_-]+", "-", s).strip("-")
+    return s or "item"
+
+
+def first_existing(paths: list[Path]) -> Optional[Path]:
+    for p in paths:
+        if p.exists():
+            return p
+    return None
+
+
+def read_csv_rows(path: Path) -> list[dict]:
+    rows: list[dict] = []
+    with path.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        for r in reader:
+            rows.append(r)
+    return rows
+
+
 class Command(BaseCommand):
     help = "Bootstrap local dev DB: superuser, site root, essential pages, and Wagtail settings."
 
@@ -24,6 +70,12 @@ class Command(BaseCommand):
         parser.add_argument("--password", default="devpassword123")
         parser.add_argument("--domain", default="localhost")
         parser.add_argument("--port", default=8000, type=int)
+        parser.add_argument(
+            "--force-replace-wrong-types",
+            action="store_true",
+            default=False,  # IMPORTANT: safe by default
+            help="If a slug exists but is the wrong Page type, delete + recreate (DEV ONLY). Default: False.",
+        )
 
     @transaction.atomic
     def handle(self, *args, **opts):
@@ -31,6 +83,7 @@ class Command(BaseCommand):
         password = opts["password"]
         domain = opts["domain"]
         port = opts["port"]
+        force_replace = opts["force_replace_wrong_types"]
 
         self._ensure_superuser(email=email, password=password)
 
@@ -39,77 +92,67 @@ class Command(BaseCommand):
 
         site = self._ensure_default_site(domain=domain, port=port, root_page=home)
 
-        # Pages (structure derived from revamp spreadsheet)
-        menu = self._ensure_standard_child(home, SeedPage("The Menu", "menu"))
-        about = self._ensure_standard_child(home, SeedPage("About", "about"))
-        contact = self._ensure_standard_child(home, SeedPage("Contact", "contact"))
+        # Import models inside handle (after Django setup)
+        from pages.models import (
+            AboutTeamMember,
+            AboutPage,
+            BlogIndexPage,
+            ContactPage,
+            MenuSectionPage,
+            StandardPage,
+            TreatmentPage,
+            TreatmentsIndexPage,
+        )
 
-        # Optional placeholder (handy if spreadsheet expects it later)
-        blog = self._ensure_standard_child(home, SeedPage("Blog", "blog"))
+        # Ensure core pages with correct types
+        menu = self._ensure_typed_child(
+            home, TreatmentsIndexPage, SeedPage("The Menu", "menu"), force_replace=force_replace
+        )
+        about = self._ensure_typed_child(
+            home, AboutPage, SeedPage("About", "about"), force_replace=force_replace
+        )
+        contact = self._ensure_typed_child(
+            home, ContactPage, SeedPage("Contact", "contact"), force_replace=force_replace
+        )
+        blog = self._ensure_typed_child(
+            home, BlogIndexPage, SeedPage("Blog", "blog"), force_replace=force_replace
+        )
 
-        # Menu categories (placeholders)
-        categories = [
-            SeedPage("Lasers", "lasers"),
-            SeedPage("Filler", "filler"),
-            SeedPage("Botox", "botox"),
-            SeedPage("Skin Boosters", "skin-boosters"),
-            SeedPage("Biostimulators", "biostimulators"),
-            SeedPage("Polynucleotides", "polynucleotides"),
-            SeedPage("Hair", "hair"),
-        ]
+        # Policies as StandardPage
+        privacy = self._ensure_typed_child(home, StandardPage, SeedPage("Privacy Policy", "privacy"), force_replace=False)
+        cookies = self._ensure_typed_child(home, StandardPage, SeedPage("Cookies", "cookies"), force_replace=False)
+        terms = self._ensure_typed_child(home, StandardPage, SeedPage("Terms", "terms"), force_replace=False)
 
-        category_pages: list[Page] = []
-        category_by_slug: dict[str, Page] = {}
-        for c in categories:
-            p = self._ensure_standard_child(menu, c)
-            category_pages.append(p)
-            category_by_slug[c.slug] = p
+        # Seed content (only if empty)
+        self._seed_about_from_csv(about=about, AboutTeamMember=AboutTeamMember)
+        self._seed_contact_basics(contact=contact)
+        self._seed_menu_from_csv(menu=menu, MenuSectionPage=MenuSectionPage, TreatmentPage=TreatmentPage)
 
-        # Lasers sub-items (spreadsheet implies deeper IA under Lasers)
-        lasers = category_by_slug.get("lasers")
-        if lasers:
-            laser_items = [
-                SeedPage("PicoGenesis", "picogenesis"),
-                SeedPage("PicoGenesis FX", "picogenesis-fx"),
-                SeedPage("Laser Genesis", "laser-genesis"),
-                SeedPage("Lipo-Laser", "lipo-laser"),
-                SeedPage("PicoGlow", "picoglow"),
-                SeedPage("Fractional CO2", "fractional-co2"),
-                SeedPage("Laser Hair Removal", "laser-hair-removal"),
-            ]
-            for item in laser_items:
-                self._ensure_standard_child(lasers, item)
+        # Repair homepage references if pages were replaced (or if DB has stale refs)
+        self._repair_homepage_sections(home=home, menu=menu)
 
-        # Policies (placeholders)
-        privacy = self._ensure_standard_child(home, SeedPage("Privacy Policy", "privacy"))
-        cookies = self._ensure_standard_child(home, SeedPage("Cookies", "cookies"))
-        terms = self._ensure_standard_child(home, SeedPage("Terms", "terms"))
-
-        # Seed About / Contact with minimal structure (StreamField JSON; safe & editable)
-        self._seed_standard_page_bodies(about=about, contact=contact)
-
-        # Seed settings (safe defaults + nav links)
+        # Seed settings + nav links
         self._seed_settings(
             site=site,
             home=home,
             menu=menu,
             about=about,
             contact=contact,
+            blog=blog,
             privacy=privacy,
             cookies=cookies,
             terms=terms,
-            category_pages=category_pages,
         )
 
         self.stdout.write(self.style.SUCCESS("bootstrap_dev complete."))
         self.stdout.write(self.style.WARNING(f"Superuser: {email} / {password}"))
         self.stdout.write("Log into /admin/ and tweak settings as needed.")
 
+    # ---------------------------
+    # Core ensure helpers
+    # ---------------------------
+
     def _ensure_superuser(self, email: str, password: str) -> None:
-        """
-        Creates or updates a superuser for local development.
-        Wagtail uses Django auth; this ensures you can always log in after nuking db.sqlite3.
-        """
         User = get_user_model()
         user = User.objects.filter(email=email).first()
         if user and user.is_superuser:
@@ -123,10 +166,6 @@ class Command(BaseCommand):
         user.save()
 
     def _ensure_default_site(self, domain: str, port: int, root_page: Page) -> Site:
-        """
-        Ensures Wagtail has a default Site object pointing at our HomePage.
-        Without this, routing / settings.for_site can behave unexpectedly.
-        """
         site = Site.objects.filter(is_default_site=True).first()
         if site:
             changed = False
@@ -152,10 +191,6 @@ class Command(BaseCommand):
         )
 
     def _ensure_homepage(self, root: Page) -> Page:
-        """
-        Ensures a HomePage exists under the root.
-        Uses pages.models.HomePage so editors can manage sections via StreamField.
-        """
         from pages.models import HomePage
 
         existing = root.get_children().type(HomePage).first()
@@ -167,58 +202,408 @@ class Command(BaseCommand):
         home.save_revision().publish()
         return home
 
-    def _ensure_standard_child(self, parent: Page, p: SeedPage) -> Page:
+    def _ensure_typed_child(self, parent: Page, model_cls, p: SeedPage, force_replace: bool) -> Page:
         """
-        Idempotently creates StandardPage children, so re-running bootstrap_dev is safe.
+        Ensures a specific child slug exists under parent with the correct page model type.
+        If the slug exists but wrong type, optionally delete and recreate (DEV ONLY).
         """
-        from pages.models import StandardPage
-
         existing = parent.get_children().filter(slug=p.slug).first()
         if existing:
-            return existing.specific
+            specific = existing.specific
+            if isinstance(specific, model_cls):
+                return specific
 
-        page = StandardPage(title=p.title, slug=p.slug)
+            if force_replace:
+                existing.delete()
+            else:
+                return specific  # best-effort fallback
+
+        page = model_cls(title=p.title, slug=p.slug)
         parent.add_child(instance=page)
         page.save_revision().publish()
-        return page
+        return page.specific
 
-    def _seed_standard_page_bodies(self, about: Page, contact: Page) -> None:
+    # ---------------------------
+    # Homepage repair (critical futureproofing)
+    # ---------------------------
+
+    def _repair_homepage_sections(self, home: Page, menu: Page) -> None:
         """
-        Seeds minimal content into About/Contact if empty.
-        Uses StreamField JSON (list of {"type": "...", "value": ...} dicts).
+        Repairs stale page references inside HomePage.sections after dev reseeds.
+        - Ensures treatments/featured_menu blocks have valid CTA page
+        - Removes tiles that point at missing pages
+        - If a treatments block ends up too empty, repopulates from /menu children
         """
-        from pages.models import StandardPage
+        from wagtail.models import Page as WagtailPage
 
-        if isinstance(about.specific, StandardPage) and not about.specific.body:
-            about.specific.body = [
-                {"type": "heading", "value": "SKIN MENU"},
-                {
-                    "type": "rich_text",
-                    "value": "<p>A premium, minimal approach to skin health — curated like a menu.</p>",
-                },
-                {"type": "heading", "value": "OUR VALUES"},
-                {
-                    "type": "rich_text",
-                    "value": "<ul><li>Subtle, natural outcomes</li><li>Evidence-led treatments</li><li>Quiet luxury care</li></ul>",
-                },
-                {"type": "heading", "value": "OUR FOUNDER"},
-                {"type": "rich_text", "value": "<p>Add founder bio and credentials here.</p>"},
-                {"type": "heading", "value": "YOUR TEAM (FUTURE)"},
-                {"type": "rich_text", "value": "<p>Optional: introduce additional clinicians as the team grows.</p>"},
-            ]
-            about.specific.save_revision().publish()
+        if not hasattr(home, "sections"):
+            return
 
-        if isinstance(contact.specific, StandardPage) and not contact.specific.body:
-            contact.specific.body = [
-                {"type": "heading", "value": "ENQUIRE"},
+        # Build a stable pool for homepage tiles (first-level under /menu)
+        menu_children = list(menu.get_children().live().public())
+        menu_child_ids = [p.id for p in menu_children]
+
+        def page_exists(page_id: int) -> bool:
+            return WagtailPage.objects.filter(id=page_id).exists()
+
+        changed = False
+        data = list(getattr(home.sections, "stream_data", []) or [])
+
+        if not data:
+            # If empty homepage, don't invent editorial copy, but do give it a working scaffold.
+            # Editors can refine in Wagtail, but site won't be broken.
+            items = [{"page": pid, "image": None, "blurb": ""} for pid in menu_child_ids[:7]]
+            if len(items) >= 3:
+                data = [
+                    {"type": "hero", "value": {"headline": "Your best skin, on the menu", "subheadline": "", "primary_cta": {"label": "Book", "url": "/contact/"}, "cta_position": "bottom_left", "hero_images": []}},
+                    {"type": "treatments", "value": {"heading": "Treatments", "intro": "", "items": items, "cta_label": "See full menu", "cta_page": menu.id}},
+                ]
+                changed = True
+
+        # Repair existing
+        for block in data:
+            btype = block.get("type")
+            val = block.get("value") or {}
+
+            # Ensure CTA page points somewhere real
+            if btype in {"treatments", "featured_menu"}:
+                cta_page = val.get("cta_page")
+                if isinstance(cta_page, int) and not page_exists(cta_page):
+                    val["cta_page"] = menu.id
+                    changed = True
+
+            # Legacy featured_menu: featured_pages is a list of ints (page ids)
+            if btype == "featured_menu":
+                fp = val.get("featured_pages") or []
+                if isinstance(fp, list):
+                    new_fp = [pid for pid in fp if isinstance(pid, int) and page_exists(pid)]
+                    if new_fp != fp:
+                        val["featured_pages"] = new_fp
+                        changed = True
+                block["value"] = val
+
+            # New treatments block: items list contains dicts with "page" ids
+            if btype == "treatments":
+                items = val.get("items") or []
+                if isinstance(items, list):
+                    cleaned = []
+                    for it in items:
+                        if not isinstance(it, dict):
+                            continue
+                        pid = it.get("page")
+                        if isinstance(pid, int) and page_exists(pid):
+                            cleaned.append(it)
+                    if cleaned != items:
+                        val["items"] = cleaned
+                        changed = True
+
+                    # Ensure minimum viable tiles; repopulate from /menu if needed
+                    if len(val.get("items") or []) < 3 and menu_child_ids:
+                        val["items"] = [{"page": pid, "image": None, "blurb": ""} for pid in menu_child_ids[:7]]
+                        changed = True
+
+                block["value"] = val
+
+        if changed:
+            home.sections = data
+            home.save_revision().publish()
+
+    # ---------------------------
+    # About seeding
+    # ---------------------------
+
+    def _seed_about_from_csv(self, about, AboutTeamMember) -> None:
+        if getattr(about, "intro", "") or (getattr(about, "sections", None) and len(about.sections)):
+            intro = getattr(about, "intro", "")
+        else:
+            intro = ""
+
+        about_csv_path = first_existing(CSV_ABOUT)
+        rows = read_csv_rows(about_csv_path) if about_csv_path else []
+
+        def find_change_contains(keyword: str) -> str:
+            keyword_l = keyword.lower()
+            for r in rows:
+                feat = (r.get("Feature ") or r.get("Feature") or "").strip()
+                change = (r.get("Change") or "").strip()
+                if keyword_l in feat.lower() and change:
+                    return change
+            return ""
+
+        who = find_change_contains("who are we") or find_change_contains("skin menu") or ""
+        values = find_change_contains("our values") or ""
+        founder = find_change_contains("our founder") or ""
+
+        if not intro:
+            intro = who or "SKINMENU is a curated space for modern skin health — editorial, evidence-led, and quietly luxurious."
+            about.intro = intro
+
+        if not about.sections:
+            sections = []
+            sections.append(
                 {
-                    "type": "rich_text",
-                    "value": "<p>Email us at <a href='mailto:hello@skinmenu.co.uk'>hello@skinmenu.co.uk</a>.</p>",
-                },
-                {"type": "heading", "value": "VISIT"},
-                {"type": "rich_text", "value": "<p>Add your clinic address here, plus a Google Maps link.</p>"},
-            ]
-            contact.specific.save_revision().publish()
+                    "type": "rich_text_section",
+                    "value": {
+                        "eyebrow": "About",
+                        "heading": "SKIN MENU",
+                        "body": f"<p>{who or 'A premium, minimal approach to skin health — curated like a menu.'}</p>",
+                    },
+                }
+            )
+
+            if values:
+                parts = [p.strip() for p in values.split("\n") if p.strip()]
+                body_html = "".join([f"<p>{p}</p>" for p in parts])
+            else:
+                body_html = "<ul><li>Subtle, natural outcomes</li><li>Evidence-led treatments</li><li>Quiet luxury care</li></ul>"
+
+            sections.append(
+                {
+                    "type": "rich_text_section",
+                    "value": {
+                        "eyebrow": "Principles",
+                        "heading": "OUR VALUES",
+                        "body": body_html,
+                    },
+                }
+            )
+
+            founder_html = f"<p>{founder}</p>" if founder else "<p>Add founder bio and credentials here.</p>"
+            sections.append(
+                {
+                    "type": "rich_text_section",
+                    "value": {
+                        "eyebrow": "Clinician-led",
+                        "heading": "OUR FOUNDER",
+                        "body": founder_html,
+                    },
+                }
+            )
+
+            sections.append(
+                {
+                    "type": "rich_text_section",
+                    "value": {
+                        "eyebrow": "Team",
+                        "heading": "YOUR TEAM (FUTURE)",
+                        "body": "<p>As the clinic grows, introduce additional clinicians here.</p>",
+                    },
+                }
+            )
+
+            about.sections = sections
+
+        about.save_revision().publish()
+
+        if about.team_members.count() == 0:
+            AboutTeamMember.objects.create(
+                page=about,
+                name="Dr Tego Kirnon-Jackman",
+                role="Founder / Medical Director",
+                experience="Aesthetic medicine",
+                bio=(find_change_contains("our founder") or "Add a short founder bio here."),
+            )
+            AboutTeamMember.objects.create(
+                page=about,
+                name="Senior Therapist (Placeholder)",
+                role="Skin Specialist",
+                experience="Skin health",
+                bio="Add a short bio once the team is confirmed.",
+            )
+            AboutTeamMember.objects.create(
+                page=about,
+                name="Clinic Coordinator (Placeholder)",
+                role="Client care",
+                experience="Operations",
+                bio="Add a short bio once the team is confirmed.",
+            )
+
+    # ---------------------------
+    # Contact seeding
+    # ---------------------------
+
+    def _seed_contact_basics(self, contact) -> None:
+        changed = False
+
+        if not getattr(contact, "intro", ""):
+            contact.intro = "<p>Email us and we’ll respond with consultation availability.</p>"
+            changed = True
+
+        if not getattr(contact, "thank_you_text", ""):
+            contact.thank_you_text = "<p>Thank you — we’ve received your message and will respond shortly.</p>"
+            changed = True
+
+        if not getattr(contact, "to_address", ""):
+            contact.to_address = "hello@skinmenu.co.uk"
+            changed = True
+        if not getattr(contact, "from_address", ""):
+            contact.from_address = "no-reply@skinmenu.local"
+            changed = True
+        if not getattr(contact, "subject", ""):
+            contact.subject = "New enquiry — SKINMENU"
+            changed = True
+
+        if contact.form_fields.count() == 0:
+            from pages.models import ContactPageFormField
+
+            ContactPageFormField.objects.create(
+                page=contact,
+                label="Name",
+                field_type="singleline",
+                required=True,
+                sort_order=0,
+            )
+            ContactPageFormField.objects.create(
+                page=contact,
+                label="Email",
+                field_type="email",
+                required=True,
+                sort_order=1,
+            )
+            ContactPageFormField.objects.create(
+                page=contact,
+                label="Message",
+                field_type="multiline",
+                required=True,
+                sort_order=2,
+            )
+
+        if changed:
+            contact.save_revision().publish()
+
+    # ---------------------------
+    # Menu / treatments seeding
+    # ---------------------------
+
+    def _seed_menu_from_csv(self, menu, MenuSectionPage, TreatmentPage) -> None:
+        path = first_existing(CSV_TREATMENTS)
+        rows = read_csv_rows(path) if path else []
+
+        main_sections: dict[str, list[str]] = {}
+        for r in rows:
+            feat = (r.get("Feature") or r.get("Feature ") or "").strip()
+            change = (r.get("Change") or "").strip()
+            if not feat:
+                continue
+
+            if feat.lower() in ["lasers", "filler", "botox", "skin-boosters", "biostimulators", "polynucleotides", "hair"]:
+                subitems = [s.strip() for s in change.split("\n") if s.strip()] if change else []
+                main_sections[feat] = subitems
+
+        if not main_sections:
+            main_sections = {
+                "Lasers": ["PicoGenesis", "PicoGenesis FX", "Laser Genesis", "Lipo-Laser", "PicoGlow", "Fractional CO2", "Laser Hair Removal"],
+                "Filler": [],
+                "Botox": [],
+                "Skin Boosters": [],
+                "Biostimulators": [],
+                "Polynucleotides": [],
+                "Hair": [],
+            }
+
+        if hasattr(menu, "intro") and not (menu.intro or "").strip():
+            menu.intro = "<p>Explore the menu by category. Each treatment page includes key facts, what to expect, and FAQs.</p>"
+            menu.save_revision().publish()
+
+        for section_title, subitems in main_sections.items():
+            section_slug = slugify_basic(section_title)
+            section_page = menu.get_children().filter(slug=section_slug).first()
+            if section_page:
+                section_specific = section_page.specific
+                if not isinstance(section_specific, MenuSectionPage):
+                    section_page.delete()
+                    section_specific = None
+            else:
+                section_specific = None
+
+            if section_specific is None:
+                section_specific = MenuSectionPage(title=section_title, slug=section_slug)
+                menu.add_child(instance=section_specific)
+                section_specific.save_revision().publish()
+
+            if not (getattr(section_specific, "intro", "") or "").strip():
+                section_specific.intro = "<p>Add a short editorial introduction for this section.</p>"
+                section_specific.save_revision().publish()
+
+            for name in subitems:
+                if name.lower() in {"overview", "areas treated", "skinboosters offered", "hair treatments offered", "sub-sections"}:
+                    continue
+
+                t_slug = slugify_basic(name)
+                existing = section_specific.get_children().filter(slug=t_slug).first()
+                if existing:
+                    tp = existing.specific
+                    if not isinstance(tp, TreatmentPage):
+                        existing.delete()
+                        tp = None
+                else:
+                    tp = None
+
+                if tp is None:
+                    tp = TreatmentPage(title=name, slug=t_slug)
+                    section_specific.add_child(instance=tp)
+                    tp.save_revision().publish()
+
+                changed = False
+                if hasattr(tp, "summary") and not (tp.summary or "").strip():
+                    tp.summary = "Add a one-paragraph summary explaining outcomes, suitability, and approach."
+                    changed = True
+
+                if not tp.sections:
+                    tp.sections = [
+                        {
+                            "type": "key_facts",
+                            "value": {
+                                "eyebrow": "",
+                                "heading": "Key facts",
+                                "facts": [
+                                    {"label": "Duration", "value": "TBC"},
+                                    {"label": "Downtime", "value": "TBC"},
+                                    {"label": "From", "value": "TBC"},
+                                ],
+                            },
+                        },
+                        {
+                            "type": "steps",
+                            "value": {
+                                "eyebrow": "",
+                                "heading": "What to expect",
+                                "steps": [
+                                    {"title": "Consultation", "text": "<p>We discuss goals, suitability, and a personalised plan.</p>"},
+                                    {"title": "Treatment", "text": "<p>The procedure is performed with a focus on comfort and precision.</p>"},
+                                    {"title": "Aftercare", "text": "<p>Clear guidance and follow-up recommendations are provided.</p>"},
+                                ],
+                            },
+                        },
+                        {
+                            "type": "faq",
+                            "value": {
+                                "eyebrow": "",
+                                "heading": "Frequently asked questions",
+                                "items": [
+                                    {"question": "Is this treatment suitable for me?", "answer": "<p>Suitability is confirmed during consultation.</p>"},
+                                    {"question": "When will I see results?", "answer": "<p>Timelines vary—your clinician will advise based on the treatment.</p>"},
+                                ],
+                            },
+                        },
+                        {
+                            "type": "cta",
+                            "value": {
+                                "heading": "Book a consultation",
+                                "body": "Discuss the right option for your skin with a clinician-led consultation.",
+                                "primary_cta": {"label": "Enquire", "url": "/contact/"},
+                                "secondary_cta": {"label": "Explore the menu", "url": "/menu/"},
+                            },
+                        },
+                    ]
+                    changed = True
+
+                if changed:
+                    tp.save_revision().publish()
+
+    # ---------------------------
+    # Settings seeding
+    # ---------------------------
 
     def _seed_settings(
         self,
@@ -227,18 +612,11 @@ class Command(BaseCommand):
         menu: Page,
         about: Page,
         contact: Page,
+        blog: Page,
         privacy: Page,
         cookies: Page,
         terms: Page,
-        category_pages: list[Page],
     ) -> None:
-        """
-        Seeds Wagtail "Settings" models with sensible defaults.
-
-        Important detail:
-        - StreamField JSON must be serializable.
-        - PageChooserBlock stores *page IDs* (ints), not Page objects.
-        """
         from site_settings.models import (
             AnalyticsSettings,
             BrandAppearanceSettings,
@@ -246,30 +624,17 @@ class Command(BaseCommand):
             NavigationSettings,
         )
 
-        # Ensure settings rows exist
         gs = GlobalSiteSettings.for_site(site)
         nav = NavigationSettings.for_site(site)
         AnalyticsSettings.for_site(site)
         BrandAppearanceSettings.for_site(site)
 
-        # GlobalSiteSettings (client preference: no phone/hours in UI; keep fields blank)
-        self._set_if_exists(gs, "clinic_name", "SKINMENU")
-        self._set_if_exists(gs, "email", "hello@skinmenu.co.uk")
-        self._set_if_exists(gs, "address", "London, United Kingdom")
-        self._set_if_exists(gs, "opening_hours", "")
-        self._set_if_exists(gs, "phone", "")
+        self._set_if_empty(gs, "clinic_name", "SKINMENU")
+        self._set_if_empty(gs, "email", "hello@skinmenu.co.uk")
+        self._set_if_empty(gs, "address", "London, United Kingdom")
         gs.save()
 
-        def link(
-            label: str,
-            page: Optional[Page] = None,
-            url: Optional[str] = None,
-            new_tab: bool = False,
-        ):
-            """
-            Builds a NavLinkBlock JSON value.
-            Exactly one of page or url should be provided (block clean() enforces this).
-            """
+        def nav_link(label: str, page: Optional[Page] = None, url: Optional[str] = None, new_tab: bool = False):
             data = {"label": label, "open_in_new_tab": new_tab}
             if page is not None:
                 data["page"] = page.id
@@ -277,36 +642,33 @@ class Command(BaseCommand):
                 data["url"] = url
             return data
 
-        self._set_if_exists(nav, "menu_label", "The Menu")
-
-        primary = [
-            {"type": "link", "value": link("The Menu", page=menu)},
-            {"type": "link", "value": link("About", page=about)},
-            {"type": "link", "value": link("Contact", page=contact)},
+        # Always ensure core nav links are valid (ids can change in dev)
+        nav.primary_links = [
+            {"type": "link", "value": nav_link("The Menu", page=menu)},
+            {"type": "link", "value": nav_link("About", page=about)},
+            {"type": "link", "value": nav_link("Blog", page=blog)},
+            {"type": "link", "value": nav_link("Contact", page=contact)},
         ]
-        self._set_if_exists(nav, "primary_links", primary)
 
-        menu_links = [{"type": "link", "value": link(p.title, page=p)} for p in category_pages]
-        self._set_if_exists(nav, "menu_links", menu_links)
+        children = menu.get_children().live().public()
+        nav.menu_links = [{"type": "link", "value": nav_link(c.title, page=c)} for c in children]
 
-        header_cta = [{"type": "link", "value": link("Book a consultation", page=contact)}]
-        self._set_if_exists(nav, "header_cta", header_cta)
+        nav.header_cta = [{"type": "link", "value": nav_link("Book a consultation", page=contact)}]
 
-        footer_links = [
-            {"type": "link", "value": link("The Menu", page=menu)},
-            {"type": "link", "value": link("About", page=about)},
-            {"type": "link", "value": link("Contact", page=contact)},
-            {"type": "link", "value": link("Privacy", page=privacy)},
-            {"type": "link", "value": link("Cookies", page=cookies)},
-            {"type": "link", "value": link("Terms", page=terms)},
+        nav.footer_links = [
+            {"type": "link", "value": nav_link("The Menu", page=menu)},
+            {"type": "link", "value": nav_link("About", page=about)},
+            {"type": "link", "value": nav_link("Blog", page=blog)},
+            {"type": "link", "value": nav_link("Contact", page=contact)},
+            {"type": "link", "value": nav_link("Privacy", page=privacy)},
+            {"type": "link", "value": nav_link("Cookies", page=cookies)},
+            {"type": "link", "value": nav_link("Terms", page=terms)},
         ]
-        self._set_if_exists(nav, "footer_links", footer_links)
 
         nav.save()
 
-    def _set_if_exists(self, obj, field: str, value) -> None:
-        """
-        Defensive helper: lets bootstrap_dev run even if some fields change names later.
-        """
+    def _set_if_empty(self, obj, field: str, value) -> None:
         if hasattr(obj, field):
-            setattr(obj, field, value)
+            current = getattr(obj, field)
+            if current is None or (isinstance(current, str) and not current.strip()):
+                setattr(obj, field, value)
