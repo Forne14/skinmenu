@@ -5,7 +5,7 @@ from django.templatetags.static import static
 @hooks.register("insert_global_admin_js")
 def media_picker_admin_js():
 
-    return format_html('<script src="{}"></script>', static("js/media_position_picker.js"))
+    return format_html('<script src="{}"></script>', static("js/media-position-picker.js"))
 
 @hooks.register("insert_global_admin_css")
 def media_picker_admin_css():
