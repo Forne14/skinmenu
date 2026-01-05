@@ -1,0 +1,67 @@
+.media-picker-block {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 900px) {
+  .media-picker-block {
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: start;
+  }
+}
+
+.media-picker-preview {
+  border: 1px solid var(--w-border-furniture, #e3e3e3);
+  border-radius: 10px;
+  background: #0b0b0b;
+  overflow: hidden;
+}
+
+.media-picker-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  min-height: 180px;
+  cursor: crosshair;
+}
+
+.media-picker-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* This is the value you’ll mirror on the frontend video tag */
+  object-position: var(--focus-x, 50%) var(--focus-y, 50%);
+  opacity: 0.95;
+}
+
+.media-picker-target {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  margin-top: -7px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.media-picker-hint {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(0, 0, 0, 0.35);
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+
+.media-picker-xy {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
