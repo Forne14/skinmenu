@@ -7,75 +7,124 @@ ENV_FILE="/etc/skinmenu/skinmenu.env"
 SERVICE="skinmenu"
 DJANGO_SETTINGS_MODULE="config.settings.production"
 
+LOCK_FILE="/tmp/skinmenu-deploy.lock"
+DEPLOY_STATE_FILE="$APP_DIR/.deploy_state"
+DEPLOY_LOG_FILE="$APP_DIR/.deploy_log"
+
+# Optional:
+#   DEPLOY_REF=main            (default)
+#   DEPLOY_REF=origin/main     (allowed)
+#   DEPLOY_REF=<branch-name>   (allowed if exists on origin)
+DEPLOY_REF="${DEPLOY_REF:-main}"
+
+log() { echo "[$(date -Is)] $*"; }
+die() { log "ERROR: $*"; exit 1; }
+
 cd "$APP_DIR"
 
-# Sanity: ensure this is a git repo
-if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  echo "ERROR: $APP_DIR is not a git repo"
-  exit 1
-fi
+# ---- Single-deploy lock (prevents concurrent deploys)
+exec 200>"$LOCK_FILE"
+flock -n 200 || die "another deploy is in progress"
 
-# Refuse to deploy with local modifications
+log "== Deploying (ref=$DEPLOY_REF) =="
+
+# ---- Sanity: ensure this is a git repo
+git rev-parse --is-inside-work-tree >/dev/null 2>&1 || die "$APP_DIR is not a git repo"
+
+# ---- Refuse to deploy with local modifications
 if ! git diff --quiet || ! git diff --cached --quiet; then
-  echo "ERROR: working tree is dirty. Commit/stash before deploying."
-  git status -sb
-  exit 1
+  log "Working tree is dirty:"
+  git status -sb || true
+  die "commit/stash/reset before deploying"
 fi
 
-echo "== Deploying $(date -Is) =="
-echo "== Git status before =="
-git status -sb || true
+# ---- Ensure origin exists
+git remote get-url origin >/dev/null 2>&1 || die "git remote 'origin' not configured"
 
-echo "== Fetch & fast-forward main =="
+# ---- Record PRE-PULL SHA for rollback safety
+PRE_PULL_SHA="$(git rev-parse HEAD)"
+log "== Current HEAD before pull: $PRE_PULL_SHA =="
+
+log "== Fetch origin =="
 git fetch origin --prune
-git checkout main
-git pull --ff-only origin main
 
-echo "== Python env =="
+# ---- Resolve target ref to a commit
+# Allow:
+#   - "main"  -> origin/main
+#   - "origin/main"
+#   - any branch that exists on origin (e.g. "feature/x")
+TARGET_COMMIT=""
+if [[ "$DEPLOY_REF" == "origin/"* ]]; then
+  TARGET_COMMIT="$(git rev-parse "$DEPLOY_REF" 2>/dev/null || true)"
+else
+  # prefer origin/<branch>
+  if git show-ref --verify --quiet "refs/remotes/origin/$DEPLOY_REF"; then
+    TARGET_COMMIT="$(git rev-parse "origin/$DEPLOY_REF")"
+  else
+    # or direct ref if valid (tags/sha)
+    TARGET_COMMIT="$(git rev-parse "$DEPLOY_REF" 2>/dev/null || true)"
+  fi
+fi
+
+[[ -n "$TARGET_COMMIT" ]] || die "could not resolve DEPLOY_REF=$DEPLOY_REF"
+
+log "== Target commit: $TARGET_COMMIT =="
+
+# ---- Force local main branch to match the target (fast-forward only when DEPLOY_REF=main)
+# Safer approach: deploy detached HEAD at target commit (no 'server ahead of local' surprises)
+log "== Checkout target commit (detached HEAD) =="
+git checkout --detach "$TARGET_COMMIT"
+
+CURRENT_SHA="$(git rev-parse HEAD)"
+log "== Deploying commit: $CURRENT_SHA =="
+
+# ---- Python env
+[[ -d "$VENV" ]] || die "venv not found: $VENV"
+# shellcheck disable=SC1090
 source "$VENV/bin/activate"
 
-if [[ ! -f "$ENV_FILE" ]]; then
-  echo "ERROR: env file not found: $ENV_FILE"
-  exit 1
-fi
+# ---- Load env file
+[[ -f "$ENV_FILE" ]] || die "env file not found: $ENV_FILE"
 
 set -a
+# shellcheck disable=SC1090
 source "$ENV_FILE"
 set +a
 export DJANGO_SETTINGS_MODULE="$DJANGO_SETTINGS_MODULE"
 
-echo "== Install Python deps =="
+# ---- Minimal required env guards
+: "${DJANGO_SECRET_KEY:?DJANGO_SECRET_KEY missing (from $ENV_FILE)}"
+: "${DJANGO_ALLOWED_HOSTS:?DJANGO_ALLOWED_HOSTS missing (from $ENV_FILE)}"
+
+log "== Install Python deps =="
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
-# If you have node build steps, add them here (npm ci && npm run build)
-
-echo "== Django checks (deploy) =="
+log "== Django checks (deploy) =="
 python manage.py check --deploy
 
-echo "== Migrate =="
-python manage.py makemigrations --noinput
+log "== Migration sanity (FAIL if missing migrations) =="
+python manage.py makemigrations --check --dry-run
+
+log "== Migrate =="
 python manage.py migrate --noinput
 
+log "== Collectstatic (clear + rebuild manifest) =="
+python manage.py collectstatic --noinput --clear
 
-echo "== Collectstatic =="
-rm -f "$APP_DIR/static/staticfiles.json" || true
-python manage.py collectstatic --noinput
+log "== Restart service =="
+sudo -n systemctl restart "$SERVICE" || die "failed to restart $SERVICE"
+sudo -n systemctl --no-pager --full status "$SERVICE" | sed -n '1,80p'
 
-echo "== Restart service =="
-sudo systemctl restart "$SERVICE"
-sudo systemctl --no-pager --full status "$SERVICE" | sed -n '1,40p'
+log "== Smoke test admin login =="
+python scripts/smoke_test.py
 
-echo "== Smoke test admin login =="
-python - <<'PY'
-import os, django
-from django.test import Client
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
-django.setup()
-c = Client(HTTP_HOST="skin-menu.co.uk", wsgi_url_scheme="https")
-r = c.get("/admin/login/")
-print("status:", r.status_code)
-assert r.status_code == 200, r.status_code
-PY
+# ---- Record deployment
+PREV_SHA=""
+if [[ -f "$DEPLOY_STATE_FILE" ]]; then
+  PREV_SHA="$(cat "$DEPLOY_STATE_FILE" || true)"
+fi
+echo "$CURRENT_SHA" > "$DEPLOY_STATE_FILE"
+echo "[$(date -Is)] deployed=$CURRENT_SHA previous=${PREV_SHA:-none} pre_pull=$PRE_PULL_SHA ref=$DEPLOY_REF" >> "$DEPLOY_LOG_FILE"
 
-echo "== Done =="
+log "== Done =="
