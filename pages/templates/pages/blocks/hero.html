@@ -10,82 +10,81 @@
       data-autoplay="true" data-interval="6500"
     {% endif %}
   >
-    {# Slides layer (lowest) #}
+    {# TRACK: keep it in its own stacking layer #}
     <div class="relative z-0 h-[62vh] min-h-[520px] w-full md:h-[76vh]" data-carousel-track>
 
       {# Preferred: hero_media (image and/or video) #}
       {% if block.value.hero_media %}
         {% for item in block.value.hero_media %}
           {% with media=item %}
-            {% firstof media.pos_x 50 as fx %}
-            {% firstof media.pos_y 50 as fy %}
+            {% with px=media.pos_x|default:50 py=media.pos_y|default:50 %}
+              <div
+                class="absolute inset-0 transition-opacity duration-700 ease-out will-change-[opacity]
+                       {% if forloop.first %}opacity-100{% else %}opacity-0{% endif %}"
+                data-carousel-slide
+                {% if forloop.first %}data-active="true"{% endif %}
+              >
+                {% if media.video %}
+                  {# If an image is also provided, use it as poster + background fallback #}
+                  {% if media.image %}
+                    {% image media.image fill-2600x1600 as hero_img %}
+                    <img
+                      src="{{ hero_img.url }}"
+                      width="{{ hero_img.width }}"
+                      height="{{ hero_img.height }}"
+                      alt="{{ media.image.title }}"
+                      class="h-full w-full object-cover"
+                      style="object-position: {{ px }}% {{ py }}%;"
+                      {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                    />
+                    <video
+                      class="absolute inset-0 h-full w-full object-cover"
+                      style="object-position: {{ px }}% {{ py }}%;"
+                      src="{{ media.video.file.url }}"
+                      poster="{{ hero_img.url }}"
+                      autoplay
+                      muted
+                      playsinline
+                      preload="{% if forloop.first %}auto{% else %}metadata{% endif %}"
+                      {% if media.loop %}loop{% endif %}
+                      data-playback-rate="{{ media.playback_rate|default:'1.0' }}"
+                    ></video>
+                  {% else %}
+                    <video
+                      class="h-full w-full object-cover"
+                      style="object-position: {{ px }}% {{ py }}%;"
+                      src="{{ media.video.file.url }}"
+                      autoplay
+                      muted
+                      playsinline
+                      preload="{% if forloop.first %}auto{% else %}metadata{% endif %}"
+                      {% if media.loop %}loop{% endif %}
+                      data-playback-rate="{{ media.playback_rate|default:'1.0' }}"
+                    ></video>
+                  {% endif %}
 
-            <div
-              class="absolute inset-0 z-0 transition-opacity duration-700 ease-out will-change-[opacity]
-                     {% if forloop.first %}opacity-100{% else %}opacity-0{% endif %}"
-              data-carousel-slide
-              {% if forloop.first %}data-active="true"{% endif %}
-            >
-              {% if media.video %}
-                {# A) image+video in the same item = poster + video (one slide) #}
-                {% if media.image %}
+                {% elif media.image %}
                   {% image media.image fill-2600x1600 as hero_img %}
-                  {# Keep a real image underneath as a fast first-paint fallback #}
                   <img
                     src="{{ hero_img.url }}"
                     width="{{ hero_img.width }}"
                     height="{{ hero_img.height }}"
                     alt="{{ media.image.title }}"
-                    class="absolute inset-0 h-full w-full object-cover"
-                    style="object-position: {{ fx }}% {{ fy }}%;"
+                    class="h-full w-full object-cover"
+                    style="object-position: {{ px }}% {{ py }}%;"
                     {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
                   />
-                  <video
-                    class="absolute inset-0 h-full w-full object-cover"
-                    style="object-position: {{ fx }}% {{ fy }}%;"
-                    src="{{ media.video.file.url }}"
-                    poster="{{ hero_img.url }}"
-                    autoplay
-                    muted
-                    playsinline
-                    preload="{% if forloop.first %}auto{% else %}metadata{% endif %}"
-                    {% if media.loop %}loop{% endif %}
-                    data-playback-rate="{{ media.playback_rate|default:'1.0' }}"
-                  ></video>
+
                 {% else %}
-                  <video
-                    class="absolute inset-0 h-full w-full object-cover"
-                    style="object-position: {{ fx }}% {{ fy }}%;"
-                    src="{{ media.video.file.url }}"
-                    autoplay
-                    muted
-                    playsinline
-                    preload="{% if forloop.first %}auto{% else %}metadata{% endif %}"
-                    {% if media.loop %}loop{% endif %}
-                    data-playback-rate="{{ media.playback_rate|default:'1.0' }}"
-                  ></video>
+                  <div class="absolute inset-0 flex items-center justify-center bg-surface-2 text-fg/70">
+                    Add hero media in Wagtail → HomePage → Hero
+                  </div>
                 {% endif %}
 
-              {% elif media.image %}
-                {% image media.image fill-2600x1600 as hero_img %}
-                <img
-                  src="{{ hero_img.url }}"
-                  width="{{ hero_img.width }}"
-                  height="{{ hero_img.height }}"
-                  alt="{{ media.image.title }}"
-                  class="absolute inset-0 h-full w-full object-cover"
-                  style="object-position: {{ fx }}% {{ fy }}%;"
-                  {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
-                />
-              {% else %}
-                <div class="absolute inset-0 flex items-center justify-center bg-surface-2 text-fg/70">
-                  Add hero media in Wagtail → HomePage → Hero
-                </div>
-              {% endif %}
-
-              {# Scrim above media, below text/dots #}
-              <div class="absolute inset-0 z-10 bg-bg/15"></div>
-            </div>
+                {# Scrim: keep subtle, but slightly stronger for video frames #}
+                <div class="absolute inset-0 {% if media.video %}bg-bg/25 md:bg-bg/20{% else %}bg-bg/15{% endif %}"></div>
+              </div>
+            {% endwith %}
           {% endwith %}
         {% endfor %}
 
@@ -94,7 +93,7 @@
         {% for img_obj in block.value.hero_images %}
           {% image img_obj fill-2600x1600 as hero_img %}
           <div
-            class="absolute inset-0 z-0 transition-opacity duration-700 ease-out will-change-[opacity]
+            class="absolute inset-0 transition-opacity duration-700 ease-out will-change-[opacity]
                    {% if forloop.first %}opacity-100{% else %}opacity-0{% endif %}"
             data-carousel-slide
             {% if forloop.first %}data-active="true"{% endif %}
@@ -104,10 +103,10 @@
               width="{{ hero_img.width }}"
               height="{{ hero_img.height }}"
               alt="{{ img_obj.title }}"
-              class="absolute inset-0 h-full w-full object-cover"
+              class="h-full w-full object-cover"
               {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
             />
-            <div class="absolute inset-0 z-10 bg-bg/15"></div>
+            <div class="absolute inset-0 bg-bg/15"></div>
           </div>
         {% endfor %}
       {% else %}
@@ -117,7 +116,7 @@
       {% endif %}
     </div>
 
-    {# Overlay content (middle) #}
+    {# OVERLAY (ensure it's above slides but below dots) #}
     <div class="pointer-events-none absolute inset-0 z-20">
       <div class="container-shell h-full">
         {% if block.value.cta_position == "bottom_left" %}
@@ -137,12 +136,13 @@
             <div class="pointer-events-auto max-w-2xl text-center">
         {% endif %}
 
-              <h1 class="text-4xl leading-[1.02] md:text-6xl">
+              {# Pop text only when the first hero_media item is a video #}
+              <h1 class="text-4xl leading-[1.02] md:text-6xl {% if block.value.hero_media and block.value.hero_media.0.video %}text-white/95 hero-title-pop{% endif %}">
                 {{ block.value.headline }}
               </h1>
 
               {% if block.value.subheadline %}
-                <p class="mt-4 max-w-prose text-base text-fg/85 md:text-lg">
+                <p class="mt-4 max-w-prose text-base md:text-lg {% if block.value.hero_media and block.value.hero_media.0.video %}text-white/85 hero-subtitle-pop{% else %}text-fg/85{% endif %}">
                   {{ block.value.subheadline }}
                 </p>
               {% endif %}
@@ -159,9 +159,9 @@
       </div>
     </div>
 
-    {# Dots (top) – always above videos/images #}
+    {# DOTS: absolutely above everything (including video) #}
     {% if block.value.hero_media and block.value.hero_media|length > 1 %}
-      <div class="absolute bottom-6 left-0 right-0 z-40 pointer-events-auto">
+      <div class="absolute bottom-6 left-0 right-0 z-50 pointer-events-auto">
         <div class="container-shell">
           <div class="flex items-center gap-2" data-carousel-dots aria-label="Hero slides">
             {% for _ in block.value.hero_media %}
@@ -177,7 +177,7 @@
         </div>
       </div>
     {% elif not block.value.hero_media and block.value.hero_images and block.value.hero_images|length > 1 %}
-      <div class="absolute bottom-6 left-0 right-0 z-40 pointer-events-auto">
+      <div class="absolute bottom-6 left-0 right-0 z-50 pointer-events-auto">
         <div class="container-shell">
           <div class="flex items-center gap-2" data-carousel-dots aria-label="Hero slides">
             {% for _ in block.value.hero_images %}

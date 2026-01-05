@@ -5,7 +5,10 @@ DEBUG = True
 # Dev-only key (override in config/settings/local.py if you want)
 SECRET_KEY = "dev-only-not-for-production"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
+# SECURITY WARNING: define the correct hosts in production!
+ALLOWED_HOSTS = ["www.skin-menu.co.uk", "skin-menu.co.uk", "localhost",  "127.0.0.1"]
+
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 

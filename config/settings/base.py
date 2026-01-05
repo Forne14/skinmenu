@@ -152,9 +152,11 @@ WAGTAILSEARCH_BACKENDS = {
     }
 }
 
-# Base URL to use when referring to full URLs within the Wagtail admin backend.
-# In production we override this via local.py reading env var.
-WAGTAILADMIN_BASE_URL = "http://example.com"
+
+# Base URL to use when referring to full URLs within the Wagtail admin backend -
+# e.g. in notification emails. Don't include '/admin' or a trailing slash
+WAGTAILADMIN_BASE_URL = "http://www.skin-menu.co.uk"
+
 
 WAGTAILDOCS_EXTENSIONS = [
     "csv", "docx", "key", "odt", "pdf", "pptx", "rtf", "txt", "xlsx", "zip",

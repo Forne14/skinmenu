@@ -134,6 +134,12 @@ class TreatmentsIndexPage(Page):
 
 
 class MenuSectionPage(Page):
+    hero = StreamField(
+        [("hero_block", HeroBlock())],
+        use_json_field=True,
+        blank=True,
+    )
+
     intro = RichTextField(blank=True, help_text="Optional editorial intro for this menu section.")
     featured_image = models.ForeignKey(
         get_image_model_string(),
@@ -150,6 +156,7 @@ class MenuSectionPage(Page):
     )
 
     content_panels = Page.content_panels + [
+        FieldPanel("hero"),
         FieldPanel("intro"),
         FieldPanel("featured_image"),
         FieldPanel("sections"),
