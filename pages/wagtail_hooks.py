@@ -9,5 +9,5 @@ def media_picker_admin_js():
 
 @hooks.register("insert_global_admin_css")
 def media_picker_admin_css():
-    return format_html('<link rel="stylesheet" href="{}">', static("js/media_position_picker.css"))
+    return format_html('<link rel="stylesheet" href="{}">', static("css/media_position_picker.css"))
 
