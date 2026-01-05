@@ -490,6 +490,18 @@
   .treatment-tile:hover .treatment-img {
     transform: scale(1.05);
   }
+
+  /* -----------------------------------
+     Hero text readability on video
+     (no background panel — just optical separation)
+  ----------------------------------- */
+  .hero-title-pop {
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.35), 0 6px 18px rgb(0 0 0 / 0.35);
+  }
+
+  .hero-subtitle-pop {
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 12px rgb(0 0 0 / 0.3);
+  }
 }
 
 @keyframes fade-up {

@@ -138,8 +138,8 @@ class MediaChooserBlock(blocks.StructBlock):
 # ---------------------------
 
 class HeroBlock(blocks.StructBlock):
-    headline = blocks.CharBlock(required=True, max_length=80, default="Your best skin, on the menu")
-    subheadline = blocks.TextBlock(required=False, max_length=240)
+    headline = blocks.CharBlock(required=True, max_length=100, default="Your best skin, on the menu")
+    subheadline = blocks.TextBlock(required=False, max_length=480)
     primary_cta = LinkBlock(required=False)
 
     cta_position = blocks.ChoiceBlock(
