@@ -1,7 +1,7 @@
 <section class="section">
   <div class="container-shell">
     {% if value.heading %}
-      <header class="max-w-3xl">
+      <header class="max-w-3xl mb-10">
         <h2 class="font-display text-3xl md:text-4xl leading-[1.05] text-heading">
           {{ value.heading }}
         </h2>
@@ -12,12 +12,13 @@
   {# Count products once #}
   {% with n=value.products|length %}
 
+    {# SCENARIO 1: Single Card (Centered, Portrait width) #}
     {% if n == 1 %}
-      <div class="container-shell mt-10">
+      <div class="container-shell">
         {% for product in value.products %}
           <div class="flex justify-center">
             <article
-              class="card p-10 xl:p-12 min-h-[520px] flex flex-col w-full max-w-[760px]"
+              class="card p-8 min-h-[220px] flex flex-col w-full max-w-[460px] lg:max-w-[520px]"
               aria-label="{{ product.title }}"
             >
               {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
@@ -26,13 +27,13 @@
         {% endfor %}
       </div>
 
-
+    {# SCENARIO 2: Two Columns (Centered Pair) #}
     {% elif n == 2 %}
-      <div class="container-shell mt-10">
-        <div class="grid gap-10 lg:grid-cols-2 justify-items-center">
+      <div class="container-shell">
+        <div class="grid gap-6 md:grid-cols-2 justify-items-center">
           {% for product in value.products %}
             <article
-              class="card p-10 xl:p-12 min-h-[520px] flex flex-col w-full max-w-[640px]"
+              class="card p-6 md:p-8 min-h-[260px] flex flex-col w-full max-w-[460px]"
               aria-label="{{ product.title }}"
             >
               {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
@@ -41,25 +42,41 @@
         </div>
       </div>
 
+    {# SCENARIO 3: Carousel (Tight Cards) #}
     {% else %}
-      <div class="mt-10 treatments-bleed" data-hscroll-root>
-        <div class="hscroll" aria-label="{{ value.heading|default:'Products' }}" data-hscroll>
+      <div class="mt-4 treatments-bleed">
+        <div 
+          class="hscroll flex gap-6 overflow-x-auto px-5 sm:px-8 pb-8 pt-2" 
+          aria-label="{{ value.heading|default:'Products' }}" 
+          data-hscroll-track
+        >
           {% for product in value.products %}
             <article
-              class="card p-10 xl:p-12 snap-start shrink-0 min-h-[520px] flex flex-col"
-              style="width: clamp(520px, 75vw, 820px);"
+              class="card p-8 snap-start shrink-0 min-h-[440px] flex flex-col w-[300px] md:w-[340px]"
+              data-hscroll-slide
               aria-label="{{ product.title }}"
             >
               {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
             </article>
           {% endfor %}
+          
+          {# Spacer for scroll padding #}
+          <div class="shrink-0 w-4"></div>
         </div>
       </div>
 
       <div class="container-shell">
-        <div class="mt-6 flex items-center justify-between gap-4">
-          <div class="flex items-center gap-2" data-hscroll-dots aria-label="Product slides"></div>
-          <div class="hidden md:block text-xs text-fg/60">Swipe / scroll</div>
+        <div class="mt-2 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-2" data-hscroll-dots aria-label="Product slides">
+            {% for product in value.products %}
+              <button 
+                class="h-1.5 w-1.5 rounded-full bg-border/40 transition-all hover:bg-heading aria-[current=true]:bg-heading aria-[current=true]:scale-125"
+                data-hscroll-dot="{{ forloop.counter0 }}"
+                aria-label="Go to slide {{ forloop.counter }}"
+              ></button>
+            {% endfor %}
+          </div>
+          <div class="hidden md:block text-[10px] uppercase tracking-widest text-muted/60">Swipe</div>
         </div>
       </div>
     {% endif %}
