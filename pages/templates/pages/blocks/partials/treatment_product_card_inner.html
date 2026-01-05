@@ -1,14 +1,16 @@
-{# Header #}
-<div class="space-y-2">
+
+<div class="space-y-3">
   <div class="font-display text-xl md:text-2xl leading-tight text-heading">
     {{ product.title }}
   </div>
 
   {% if product.price %}
     <div class="space-y-2">
-      <div class="font-display text-2xl md:text-3xl leading-none text-heading">
+      <div class="font-display text-lg md:text-xl leading-tight text-heading">
         {{ product.price }}
       </div>
+
+      {# Divider restored #}
       <div class="h-px w-10 bg-border/40"></div>
     </div>
   {% endif %}
@@ -20,31 +22,42 @@
   {% endif %}
 </div>
 
-{# Targets #}
+
 {% if product.targets %}
   <div class="mt-5">
-    <div class="text-xs text-muted mb-3 uppercase tracking-wider">Areas covered:</div>
+    <div class="text-xs text-muted mb-3 uppercase tracking-wider">
+      Areas covered:
+    </div>
 
-    <ul class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+    <ul class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-muted">
       {% for t in product.targets %}
-        <li class="flex items-start gap-2">
-          <span class="mt-[0.6rem] h-[1.5px] w-[8px] bg-border/60 shrink-0"></span>
-          <span>{{ t }}</span>
+        <li class="leading-snug">
+          {{ t }}
         </li>
       {% endfor %}
     </ul>
+
+    {# Divider restored #}
+    <div class="mt-4 h-px w-10 bg-border/30"></div>
   </div>
 {% endif %}
 
-{# Footer pinned to bottom #}
-<div class="mt-auto pt-5">
+
+<div class="mt-auto pt-5 flex justify-center">
   {% if product.cta_url %}
-    {# IMPORTANT: this is a span because the whole card becomes an <a> #}
-    <span class="btn-primary inline-flex items-center justify-center w-full md:w-auto px-6 py-2 text-sm mx-auto">
+    {# span because whole card is an <a> #}
+    <span
+      class="btn-primary inline-flex items-center justify-center
+             px-6 py-2 text-sm"
+    >
       {{ product.cta_label|default:"Book now" }}
     </span>
   {% else %}
-    <div class="inline-flex items-center justify-center w-full md:w-auto px-6 py-2 rounded-full border border-border/40 text-xs md:text-sm text-muted mx-auto">
+    <div
+      class="inline-flex items-center justify-center
+             px-6 py-2 rounded-full border border-border/40
+             text-xs md:text-sm text-muted"
+    >
       {{ product.cta_label|default:"Book now" }}
     </div>
   {% endif %}
