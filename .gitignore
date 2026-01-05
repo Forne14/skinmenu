@@ -24,6 +24,9 @@ staticfiles/
 .env
 .env.*
 
+/static/
+staticfiles.json
+
 # OS / editor
 .DS_Store
 .idea/
