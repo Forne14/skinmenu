@@ -1,16 +1,16 @@
 from .base import *
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-6c4!$e-91n&1yzay_jj&wim+27)hm+q8-2d!ha_ugosyrv8ldk"
+# Dev-only key (override in config/settings/local.py if you want)
+SECRET_KEY = "dev-only-not-for-production"
 
-# SECURITY WARNING: define the correct hosts in production!
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+# Make debugging friendlier behind proxies/containers sometimes
+CSRF_TRUSTED_ORIGINS = []
 
 try:
     from .local import *
