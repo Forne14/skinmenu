@@ -7,14 +7,20 @@ ENV_FILE="/etc/skinmenu/skinmenu.env"
 SERVICE="skinmenu"
 DJANGO_SETTINGS_MODULE="config.settings.production"
 
+cd "$APP_DIR"
+
+# Sanity: ensure this is a git repo
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "ERROR: $APP_DIR is not a git repo"
+  exit 1
+fi
+
+# Refuse to deploy with local modifications
 if ! git diff --quiet || ! git diff --cached --quiet; then
   echo "ERROR: working tree is dirty. Commit/stash before deploying."
   git status -sb
   exit 1
 fi
-
-
-cd "$APP_DIR"
 
 echo "== Deploying $(date -Is) =="
 echo "== Git status before =="
@@ -27,24 +33,30 @@ git pull --ff-only origin main
 
 echo "== Python env =="
 source "$VENV/bin/activate"
+
+if [[ ! -f "$ENV_FILE" ]]; then
+  echo "ERROR: env file not found: $ENV_FILE"
+  exit 1
+fi
+
 set -a
 source "$ENV_FILE"
 set +a
 export DJANGO_SETTINGS_MODULE="$DJANGO_SETTINGS_MODULE"
 
 echo "== Install Python deps =="
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 
 # If you have node build steps, add them here (npm ci && npm run build)
 
-echo "== Django checks =="
-python manage.py check --deploy || true
+echo "== Django checks (deploy) =="
+python manage.py check --deploy
 
 echo "== Migrate =="
 python manage.py migrate --noinput
 
 echo "== Collectstatic =="
-# Make sure manifest is rebuilt
 rm -f "$APP_DIR/static/staticfiles.json" || true
 python manage.py collectstatic --noinput
 
