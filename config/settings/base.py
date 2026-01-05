@@ -55,9 +55,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            PROJECT_DIR / "templates",
-        ],
+        "DIRS": [PROJECT_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -111,26 +109,25 @@ USE_TZ = True
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 
-# Note: In your current project you set STATIC_ROOT to BASE_DIR/static and also
-# have STATICFILES_DIRS pointing at PROJECT_DIR/static. That can work, but it’s
-# cleaner to keep STATIC_ROOT as a *separate* folder.
-# HOWEVER: since you already collected to BASE_DIR/static and nginx aliases it,
-# we keep your existing approach to avoid breaking your deployment.
-
+# IMPORTANT:
+# - STATICFILES_DIRS points at *source* static files in the repo.
+# - STATIC_ROOT is where collectstatic writes its output (should be separate).
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
+# source static (repo)
 STATICFILES_DIRS = [
     PROJECT_DIR / "static",
 ]
 
-STATIC_ROOT = BASE_DIR / "static"
+# collected static output (keep separate to avoid clobbering source files)
+STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_ROOT = BASE_DIR / "media"
 
 
-# Storage backends
+# Storage backends (production overrides staticfiles backend to ManifestStaticFilesStorage)
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -152,11 +149,8 @@ WAGTAILSEARCH_BACKENDS = {
     }
 }
 
-
-# Base URL to use when referring to full URLs within the Wagtail admin backend -
-# e.g. in notification emails. Don't include '/admin' or a trailing slash
-WAGTAILADMIN_BASE_URL = "http://www.skin-menu.co.uk"
-
+# Use HTTPS by default; can be overridden via env in local.py
+WAGTAILADMIN_BASE_URL = "https://www.skin-menu.co.uk"
 
 WAGTAILDOCS_EXTENSIONS = [
     "csv", "docx", "key", "odt", "pdf", "pptx", "rtf", "txt", "xlsx", "zip",
@@ -166,12 +160,11 @@ WAGTAILDOCS_EXTENSIONS = [
 
 
 # --------------------------------------------------------------------
-# Safety defaults (overridden in dev/production)
+# Safety defaults (overridden in dev/production/local)
 # --------------------------------------------------------------------
 DEBUG = False
 SECRET_KEY = "change-me"
 ALLOWED_HOSTS: list[str] = []
-
 
 # Wagtail/Django forms can get large
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10_000
