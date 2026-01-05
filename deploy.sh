@@ -7,6 +7,13 @@ ENV_FILE="/etc/skinmenu/skinmenu.env"
 SERVICE="skinmenu"
 DJANGO_SETTINGS_MODULE="config.settings.production"
 
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  echo "ERROR: working tree is dirty. Commit/stash before deploying."
+  git status -sb
+  exit 1
+fi
+
+
 cd "$APP_DIR"
 
 echo "== Deploying $(date -Is) =="

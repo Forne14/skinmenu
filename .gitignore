@@ -3,7 +3,6 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-*.pyc
 *.so
 *.egg-info/
 dist/
@@ -18,14 +17,15 @@ venv/
 local_settings.py
 db.sqlite3
 media/
+
+# Collected static output + manifest
+/static/
 staticfiles/
+staticfiles.json
 
 # Environment variables
 .env
 .env.*
-
-/static/
-staticfiles.json
 
 # OS / editor
 .DS_Store
@@ -38,16 +38,13 @@ staticfiles.json
 htmlcov/
 .pytest_cache/
 
-# Tailwind / frontend build artifacts (if/when added)
+# Frontend
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Local helpers / artifacts
 dump_codebase.sh
-node_modules/
-
-# Django / Wagtail templates        
-
 codebase-skinmenu.txt
