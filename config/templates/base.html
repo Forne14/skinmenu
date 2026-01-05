@@ -63,32 +63,45 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}" />
 
     {# Inline theme tokens from Wagtail settings (admin-editable) #}
-    {% with brand=site_settings.site_settings.BrandAppearanceSettings %}
-      <style>
-        :root {
-          --bg: {{ brand.light_bg|hex_to_rgb }};
-          --fg: {{ brand.light_fg|hex_to_rgb }};
-          --surface: {{ brand.light_surface|hex_to_rgb }};
-          --surface-2: {{ brand.light_surface_2|hex_to_rgb }};
-          --border: {{ brand.light_border|hex_to_rgb }};
-          --muted: {{ brand.light_muted|hex_to_rgb }};
-          --heading: {{ brand.light_heading|hex_to_rgb }};
-          --accent: {{ brand.light_accent|hex_to_rgb }};
-          --accent-2: {{ brand.light_accent_2|hex_to_rgb }};
-        }
-        :root[data-theme='dark'] {
-          --bg: {{ brand.dark_bg|hex_to_rgb }};
-          --fg: {{ brand.dark_fg|hex_to_rgb }};
-          --surface: {{ brand.dark_surface|hex_to_rgb }};
-          --surface-2: {{ brand.dark_surface_2|hex_to_rgb }};
-          --border: {{ brand.dark_border|hex_to_rgb }};
-          --muted: {{ brand.dark_muted|hex_to_rgb }};
-          --heading: {{ brand.dark_heading|hex_to_rgb }};
-          --accent: {{ brand.dark_accent|hex_to_rgb }};
-          --accent-2: {{ brand.dark_accent_2|hex_to_rgb }};
-        }
-      </style>
-    {% endwith %}
+
+{# Inline theme tokens from Wagtail settings (admin-editable) #}
+{% with brand=site_settings.site_settings.BrandAppearanceSettings %}
+  <style>
+    :root {
+      --bg: {{ brand.light_bg|hex_to_rgb }};
+      --fg: {{ brand.light_fg|hex_to_rgb }};
+      --surface: {{ brand.light_surface|hex_to_rgb }};
+      --surface-2: {{ brand.light_surface_2|hex_to_rgb }};
+      --border: {{ brand.light_border|hex_to_rgb }};
+      --muted: {{ brand.light_muted|hex_to_rgb }};
+      --heading: {{ brand.light_heading|hex_to_rgb }};
+      --accent: {{ brand.light_accent|hex_to_rgb }};
+      --accent-2: {{ brand.light_accent_2|hex_to_rgb }};
+
+      /* Background texture controls (used by app.css) */
+      --paper-texture-on: {% if brand.paper_texture_enabled %}1{% else %}0{% endif %};
+      --paper-texture-strength: {{ brand.paper_texture_strength|default:100 }};
+    }
+    :root[data-theme='dark'] {
+      --bg: {{ brand.dark_bg|hex_to_rgb }};
+      --fg: {{ brand.dark_fg|hex_to_rgb }};
+      --surface: {{ brand.dark_surface|hex_to_rgb }};
+      --surface-2: {{ brand.dark_surface_2|hex_to_rgb }};
+      --border: {{ brand.dark_border|hex_to_rgb }};
+      --muted: {{ brand.dark_muted|hex_to_rgb }};
+      --heading: {{ brand.dark_heading|hex_to_rgb }};
+      --accent: {{ brand.dark_accent|hex_to_rgb }};
+      --accent-2: {{ brand.dark_accent_2|hex_to_rgb }};
+
+      /* Same controls in dark mode */
+      --paper-texture-on: {% if brand.paper_texture_enabled %}1{% else %}0{% endif %};
+      --paper-texture-strength: {{ brand.paper_texture_strength|default:100 }};
+    }
+  </style>
+{% endwith %}
+
+{# ... keep everything below exactly the same ... #}
+
 
     {# Consent + site scripts #}
     <script defer src="{% static 'js/consent.js' %}"></script>

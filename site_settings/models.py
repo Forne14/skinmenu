@@ -193,6 +193,16 @@ class BrandAppearanceSettings(BaseSiteSetting):
     mark_light_path = models.CharField(max_length=255, choices=MARK_CHOICES, default="brand/brand_mark/Logo-02.svg")
     mark_dark_path = models.CharField(max_length=255, choices=MARK_CHOICES, default="brand/brand_mark/Logo-03.svg")
 
+    # Background texture (CSS-only “paper” grain)
+    paper_texture_enabled = models.BooleanField(
+        default=True,
+        help_text="Adds a subtle paper-like texture to the site background (works in light + dark mode).",
+    )
+    paper_texture_strength = models.PositiveSmallIntegerField(
+        default=100,
+        help_text="Texture strength (0–200). 100 is subtle and recommended.",
+    )
+
     light_bg = ColorField(default="#e5e0d6")
     light_fg = ColorField(default="#261b16")
     light_surface = ColorField(default="#ffffff")
@@ -222,6 +232,13 @@ class BrandAppearanceSettings(BaseSiteSetting):
                 FieldPanel("mark_dark_path"),
             ],
             heading="Brand assets",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("paper_texture_enabled"),
+                FieldPanel("paper_texture_strength"),
+            ],
+            heading="Background texture",
         ),
         MultiFieldPanel(
             [
