@@ -6,6 +6,7 @@ import os
 import sys
 import subprocess
 from pathlib import Path
+from typing import List, Tuple
 
 
 def _project_root() -> Path:
@@ -19,31 +20,59 @@ def _add_project_to_syspath() -> None:
         sys.path.insert(0, root)
 
 
-def _curl(url: str) -> tuple[int, str]:
+def _curl(args: List[str]) -> Tuple[int, str, str]:
     """
-    Returns: (exit_code, stdout)
-    Uses curl because it mirrors the server+nginx reality well.
+    Returns: (exit_code, stdout, stderr)
+
+    We use curl because it mirrors the server+nginx reality well.
+    Caller should include:
+      - "-sS", "-o", "/dev/null", "-w", "%{http_code}"
     """
-    p = subprocess.run(
-        ["curl", "-sS", "-o", "/dev/null", "-w", "%{http_code}", url],
-        text=True,
-        capture_output=True,
-    )
-    # stdout contains status code if curl succeeded
-    return p.returncode, (p.stdout or "").strip()
+    p = subprocess.run(args, text=True, capture_output=True)
+    return p.returncode, (p.stdout or "").strip(), (p.stderr or "").strip()
+
+
+def _determine_static_probe_host() -> str:
+    """
+    Pick the hostname we expect nginx to serve for.
+
+    Priority:
+      1) SMOKE_HOST env
+      2) settings.ALLOWED_HOSTS first non-wildcard
+      3) default to skin-menu.co.uk
+    """
+    env_host = os.environ.get("SMOKE_HOST")
+    if env_host:
+        return env_host.strip()
+
+    try:
+        from django.conf import settings  # noqa: E402
+
+        allowed = list(getattr(settings, "ALLOWED_HOSTS", []) or [])
+        for h in allowed:
+            if isinstance(h, str) and h and h not in ("*", "0.0.0.0", "127.0.0.1", "localhost"):
+                return h
+    except Exception:
+        pass
+
+    return "skin-menu.co.uk"
 
 
 def main() -> int:
     _add_project_to_syspath()
 
     # Prefer env, but provide a safe default
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", os.environ.get("DJANGO_SETTINGS_MODULE", "config.settings.production"))
+    os.environ.setdefault(
+        "DJANGO_SETTINGS_MODULE",
+        os.environ.get("DJANGO_SETTINGS_MODULE", "config.settings.production"),
+    )
 
     import django  # noqa: E402
-    from django.conf import settings  # noqa: E402
-    from django.test import Client  # noqa: E402
 
     django.setup()
+
+    from django.conf import settings  # noqa: E402
+    from django.test import Client  # noqa: E402
 
     print("== Smoke: Django import + setup OK ==")
     print("DJANGO_SETTINGS_MODULE =", os.environ.get("DJANGO_SETTINGS_MODULE"))
@@ -98,18 +127,75 @@ def main() -> int:
         print("ERROR: manifest has no usable entries")
         return 6
 
-    url = f"http://127.0.0.1/static/{target}"
-    rc, code = _curl(url)
-    print(f"curl {url} -> rc={rc} http={code} (manifest key={key})")
+    host = _determine_static_probe_host()
+    path = f"/static/{target}"
 
-    if rc != 0:
-        print("ERROR: curl failed (is curl installed? is nginx running?)")
-        return 7
+    # We want to verify nginx serves /static correctly.
+    #
+    # IMPORTANT:
+    # - Curling https://127.0.0.1 without Host/SNI can hit the wrong vhost and produce 502.
+    # - Best check: curl the real host (domain) OR hit 127.0.0.1 but force Host header and SNI.
+    #
+    # We'll attempt in order:
+    #  1) https://{host}{path}  (normal real-world)
+    #  2) https://127.0.0.1{path} with Host header = host, and --resolve for SNI/cert routing
+    #  3) http://127.0.0.1{path} with Host header = host (if local http->https redirect exists it may return 301)
+    #
+    attempts: List[Tuple[str, List[str], str]] = []
 
-    # If nginx isn't set up for /static/, you'll usually see 404 here
-    if code != "200":
+    # 1) domain directly (best)
+    url1 = f"https://{host}{path}"
+    attempts.append(
+        (
+            "domain_https",
+            ["curl", "-sS", "-o", "/dev/null", "-w", "%{http_code}", url1],
+            url1,
+        )
+    )
+
+    # 2) 127.0.0.1 but force Host + SNI via --resolve; -k to skip cert mismatch if any
+    # --resolve makes curl send SNI/Host = host while connecting to 127.0.0.1
+    url2 = f"https://{host}{path}"
+    attempts.append(
+        (
+            "loopback_https_resolve",
+            ["curl", "-sS", "-k", "--resolve", f"{host}:443:127.0.0.1", "-o", "/dev/null", "-w", "%{http_code}", url2],
+            f"https://127.0.0.1{path} (SNI/Host={host})",
+        )
+    )
+
+    # 3) http loopback with Host header (some setups 301 to https; acceptable)
+    url3 = f"http://127.0.0.1{path}"
+    attempts.append(
+        (
+            "loopback_http_host",
+            ["curl", "-sS", "-o", "/dev/null", "-w", "%{http_code}", "-H", f"Host: {host}", url3],
+            f"{url3} (Host={host})",
+        )
+    )
+
+    ok = False
+    for label, cmd, display_url in attempts:
+        rc, code, err = _curl(cmd)
+        print(f"curl[{label}] {display_url} -> rc={rc} http={code} (manifest key={key})")
+        if rc == 0 and code == "200":
+            ok = True
+            break
+
+        # Some setups intentionally redirect http->https; allow 301 for the http attempt,
+        # but don't treat it as success by itself (since it doesn't prove file served).
+        if label == "loopback_http_host" and rc == 0 and code in ("301", "302"):
+            print("note: http redirect observed (expected on many setups). continuing...")
+
+        if err:
+            print(f"curl[{label}] stderr:", err)
+
+    if not ok:
         print("ERROR: nginx did not serve static correctly (expected 200).")
-        print("This usually means nginx lacks: location /static/ { alias .../staticfiles/; }")
+        print("Hints:")
+        print(" - Ensure nginx site has: location /static/ { alias /home/deploy/apps/skinmenu/staticfiles/; }")
+        print(" - Ensure you're testing the correct vhost (Host header / SNI matters).")
+        print(" - If using /home/deploy paths, ensure nginx can traverse parent directories (execute bit / ACL).")
         return 8
 
     print("== Smoke: OK ==")
