@@ -54,7 +54,9 @@ echo "== Django checks (deploy) =="
 python manage.py check --deploy
 
 echo "== Migrate =="
+python manage.py makemigrations --noinput
 python manage.py migrate --noinput
+
 
 echo "== Collectstatic =="
 rm -f "$APP_DIR/static/staticfiles.json" || true

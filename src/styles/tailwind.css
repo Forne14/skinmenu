@@ -17,13 +17,60 @@
     /* Base background color */
     background-color: rgb(var(--bg) / 1);
 
-    /* Paper grain simulation (blended into bg) */
-    background-image: radial-gradient(circle at 20% 30%, rgb(0 0 0 / 0.025) 1px, transparent 1px),
-      radial-gradient(circle at 80% 70%, rgb(0 0 0 / 0.02) 1px, transparent 1px),
-      radial-gradient(circle at 55% 10%, rgb(0 0 0 / 0.015) 1px, transparent 1px),
-      linear-gradient(0deg, rgb(255 255 255 / 0.02), rgb(0 0 0 / 0.02));
+    /*
+      Paper texture (CSS-only). Controlled by:
+      --paper-texture-on: 0|1
+      --paper-texture-strength: 0..200 (100 = default subtle)
+    */
+    background-image: radial-gradient(
+        circle at 20% 30%,
+        rgb(
+            0 0 0 /
+              calc(0.03 * var(--paper-texture-on, 1) * var(--paper-texture-strength, 100) / 100)
+          )
+          1px,
+        transparent 1px
+      ),
+      radial-gradient(
+        circle at 80% 70%,
+        rgb(
+            0 0 0 /
+              calc(0.022 * var(--paper-texture-on, 1) * var(--paper-texture-strength, 100) / 100)
+          )
+          1px,
+        transparent 1px
+      ),
+      radial-gradient(
+        circle at 55% 10%,
+        rgb(
+            0 0 0 /
+              calc(0.016 * var(--paper-texture-on, 1) * var(--paper-texture-strength, 100) / 100)
+          )
+          1px,
+        transparent 1px
+      ),
+      /* subtle “fiber” directionality (very classy when barely visible) */
+        repeating-linear-gradient(
+          115deg,
+          rgb(
+              0 0 0 /
+                calc(0.01 * var(--paper-texture-on, 1) * var(--paper-texture-strength, 100) / 100)
+            )
+            0 1px,
+          transparent 1px 10px
+        ),
+      linear-gradient(
+        0deg,
+        rgb(
+          255 255 255 /
+            calc(0.02 * var(--paper-texture-on, 1) * var(--paper-texture-strength, 100) / 100)
+        ),
+        rgb(
+          0 0 0 / calc(0.02 * var(--paper-texture-on, 1) * var(--paper-texture-strength, 100) / 100)
+        )
+      );
 
-    background-size: 120px 120px, 160px 160px, 220px 220px, 100% 100%;
+    background-size: 120px 120px, 160px 160px, 220px 220px, 420px 420px, 100% 100%;
     background-attachment: fixed;
     background-blend-mode: multiply;
   }
@@ -32,12 +79,50 @@
     /* Grain should be subtler in dark mode */
     background-image: radial-gradient(
         circle at 20% 30%,
-        rgb(255 255 255 / 0.02) 1px,
+        rgb(
+            255 255 255 /
+              calc(0.022 * var(--paper-texture-on, 1) * var(--paper-texture-strength, 100) / 100)
+          )
+          1px,
         transparent 1px
       ),
-      radial-gradient(circle at 80% 70%, rgb(255 255 255 / 0.015) 1px, transparent 1px),
-      radial-gradient(circle at 55% 10%, rgb(255 255 255 / 0.012) 1px, transparent 1px),
-      linear-gradient(0deg, rgb(255 255 255 / 0.01), rgb(0 0 0 / 0.02));
+      radial-gradient(
+        circle at 80% 70%,
+        rgb(
+            255 255 255 /
+              calc(0.016 * var(--paper-texture-on, 1) * var(--paper-texture-strength, 100) / 100)
+          )
+          1px,
+        transparent 1px
+      ),
+      radial-gradient(
+        circle at 55% 10%,
+        rgb(
+            255 255 255 /
+              calc(0.012 * var(--paper-texture-on, 1) * var(--paper-texture-strength, 100) / 100)
+          )
+          1px,
+        transparent 1px
+      ),
+      repeating-linear-gradient(
+        115deg,
+        rgb(
+            255 255 255 /
+              calc(0.008 * var(--paper-texture-on, 1) * var(--paper-texture-strength, 100) / 100)
+          )
+          0 1px,
+        transparent 1px 12px
+      ),
+      linear-gradient(
+        0deg,
+        rgb(
+          255 255 255 /
+            calc(0.01 * var(--paper-texture-on, 1) * var(--paper-texture-strength, 100) / 100)
+        ),
+        rgb(
+          0 0 0 / calc(0.02 * var(--paper-texture-on, 1) * var(--paper-texture-strength, 100) / 100)
+        )
+      );
 
     background-blend-mode: screen;
   }
