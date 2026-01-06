@@ -81,6 +81,13 @@
       /* Background texture controls (used by app.css) */
       --paper-texture-on: {% if brand.paper_texture_enabled %}1{% else %}0{% endif %};
       --paper-texture-strength: {{ brand.paper_texture_strength|default:100 }};
+
+      /* Typography */
+  --body-size: {{ brand.body_font_size_px|default:16 }}px;
+  --body-wght: {{ brand.body_font_weight|default:400 }};
+  --heading-wght: {{ brand.heading_font_weight|default:300 }};
+  --ui-size: {{ brand.ui_font_size_px|default:15 }}px;
+  --ui-wght: {{ brand.ui_font_weight|default:300 }};
     }
     :root[data-theme='dark'] {
       --bg: {{ brand.dark_bg|hex_to_rgb }};
@@ -92,6 +99,13 @@
       --heading: {{ brand.dark_heading|hex_to_rgb }};
       --accent: {{ brand.dark_accent|hex_to_rgb }};
       --accent-2: {{ brand.dark_accent_2|hex_to_rgb }};
+
+      /* Typography */
+  --body-size: {{ brand.body_font_size_px|default:16 }}px;
+  --body-wght: {{ brand.body_font_weight|default:400 }};
+  --heading-wght: {{ brand.heading_font_weight|default:300 }};
+  --ui-size: {{ brand.ui_font_size_px|default:15 }}px;
+  --ui-wght: {{ brand.ui_font_weight|default:300 }};
 
       /* Same controls in dark mode */
       --paper-texture-on: {% if brand.paper_texture_enabled %}1{% else %}0{% endif %};

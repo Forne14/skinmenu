@@ -15,11 +15,11 @@
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {% for step in value.steps %}
             <div class="card p-6">
-              <div class="text-lg font-medium text-heading">
+              <h3 class="text-heading">
                 {{ step.title }}
-              </div>
+              </h3>
 
-              <div class="mt-2 text-sm text-fg/75 leading-relaxed">
+              <div class="mt-2 text-fg/75 leading-relaxed">
                 {{ step.text|richtext }}
               </div>
             </div>

@@ -5,7 +5,7 @@
     <div class="flex items-end justify-between gap-6">
       <div class="max-w-2xl">
         {% if block.value.heading %}
-          <h2 class="font-display text-3xl md:text-4xl tracking-tightish text-heading">
+          <h2 class="section-title">
             {{ block.value.heading }}
           </h2>
         {% endif %}
@@ -30,9 +30,9 @@
       {# Legacy: featured_pages may contain missing references after dev reseeds #}
       {% for p in block.value.featured_pages %}
         {% if p %}
-          <a href="{% pageurl p %}" class="card p-6 hover:border-border/70 transition">
+          <a href="{% pageurl p %}" class="card p-6 hover:border-border/70 transition no-underline">
             <div class="flex items-center justify-between gap-4">
-              <h3 class="font-display text-xl text-heading">{{ p.title }}</h3>
+              <h3 class="text-heading">{{ p.title }}</h3>
               <span class="text-muted">→</span>
             </div>
             {% if p.search_description %}

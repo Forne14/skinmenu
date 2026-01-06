@@ -193,6 +193,33 @@ class BrandAppearanceSettings(BaseSiteSetting):
     mark_light_path = models.CharField(max_length=255, choices=MARK_CHOICES, default="brand/brand_mark/Logo-02.svg")
     mark_dark_path = models.CharField(max_length=255, choices=MARK_CHOICES, default="brand/brand_mark/Logo-03.svg")
 
+    # Typography (site-wide)
+    body_font_size_px = models.PositiveSmallIntegerField(
+        default=16,
+        help_text="Base body font size in pixels (default 16).",
+    )
+    body_font_weight = models.PositiveSmallIntegerField(
+        default=400,
+        help_text="Work Sans variable font weight for body copy (e.g. 300–700). Default 400.",
+    )
+
+    heading_font_weight = models.PositiveSmallIntegerField(
+        default=300,
+        help_text="Heading font weight (Koh Santepheap). Default 300 to match current styling.",
+    )
+
+    ui_font_size_px = models.PositiveSmallIntegerField(
+        default=15,
+        help_text="Base UI font size in pixels for buttons/nav/labels (default 15).",
+    )
+    ui_font_weight = models.PositiveSmallIntegerField(
+        default=300,
+        help_text="UI font weight for components (default 300 to match nav/labels/headings).",
+    )
+
+
+
+
     # Background texture (CSS-only “paper” grain)
     paper_texture_enabled = models.BooleanField(
         default=True,
@@ -224,6 +251,17 @@ class BrandAppearanceSettings(BaseSiteSetting):
     dark_accent_2 = ColorField(default="#786050")
 
     panels = [
+         MultiFieldPanel(
+            [
+                FieldPanel("body_font_size_px"),
+                FieldPanel("body_font_weight"),
+                FieldPanel("heading_font_weight"),
+                FieldPanel("ui_font_size_px"),
+                FieldPanel("ui_font_weight"),
+            ],
+            heading="Typography",
+        ),
+
         MultiFieldPanel(
             [
                 FieldPanel("logo_light_path"),

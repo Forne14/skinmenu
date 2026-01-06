@@ -1,12 +1,11 @@
-
 <div class="space-y-3">
-  <div class="font-display text-xl md:text-2xl leading-tight text-heading">
+  <h3 class="text-heading leading-tight">
     {{ product.title }}
-  </div>
+  </h3>
 
   {% if product.price %}
     <div class="space-y-2">
-      <div class="font-display text-lg md:text-xl leading-tight text-heading">
+      <div class="text-heading leading-tight">
         {{ product.price }}
       </div>
 
@@ -16,20 +15,19 @@
   {% endif %}
 
   {% if product.description %}
-    <p class="text-sm md:text-base text-muted leading-relaxed max-w-prose">
+    <p class="text-muted leading-relaxed max-w-prose">
       {{ product.description }}
     </p>
   {% endif %}
 </div>
 
-
 {% if product.targets %}
   <div class="mt-5">
-    <div class="text-xs text-muted mb-3 uppercase tracking-wider">
+    <div class="label-display text-muted mb-3">
       Areas covered:
     </div>
 
-    <ul class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-muted">
+    <ul class="grid grid-cols-2 gap-x-6 gap-y-2 text-muted">
       {% for t in product.targets %}
         <li class="leading-snug">
           {{ t }}
@@ -42,21 +40,17 @@
   </div>
 {% endif %}
 
-
 <div class="mt-auto pt-5 flex justify-center">
   {% if product.cta_url %}
     {# span because whole card is an <a> #}
-    <span
-      class="btn-primary inline-flex items-center justify-center
-             px-6 py-2 text-sm"
-    >
+    <span class="btn-primary inline-flex items-center justify-center px-6 py-2">
       {{ product.cta_label|default:"Book now" }}
     </span>
   {% else %}
     <div
       class="inline-flex items-center justify-center
-             px-6 py-2 rounded-full border border-border/40
-             text-xs md:text-sm text-muted"
+             px-6 py-2 border border-border/40
+             text-muted"
     >
       {{ product.cta_label|default:"Book now" }}
     </div>

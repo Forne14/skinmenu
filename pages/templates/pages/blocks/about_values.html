@@ -10,8 +10,10 @@
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for v in value.values %}
           <div class="card p-6">
-            <div class="text-lg font-medium">{{ v.title }}</div>
-            <p class="mt-2 text-sm text-fg/75 leading-relaxed">
+            <h3 class="text-heading">
+              {{ v.title }}
+            </h3>
+            <p class="mt-2 text-fg/75 leading-relaxed">
               {{ v.text }}
             </p>
           </div>

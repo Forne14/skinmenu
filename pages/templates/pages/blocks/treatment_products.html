@@ -16,104 +16,101 @@
     {% if n == 1 %}
       <div class="container-shell">
         {% for product in value.products %}
-          <<div class="flex justify-center">
-  {% if product.cta_url %}
-    <a
-      href="{{ product.cta_url }}"
-      class="card p-8 min-h-[220px] flex flex-col w-full max-w-[520px]
-          no-underline text-inherit
-             transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lg
-             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-heading/30
-             cursor-pointer"
-      aria-label="{{ product.title }}"
-    >
-      {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
-    </a>
-  {% else %}
-    <article class="card p-8 min-h-[220px] flex flex-col w-full max-w-[520px]" aria-label="{{ product.title }}">
-      {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
-    </article>
-  {% endif %}
-</div>
-
+          <div class="flex justify-center">
+            {% if product.cta_url %}
+              <a
+                href="{{ product.cta_url }}"
+                class="card p-8 min-h-[220px] flex flex-col w-full max-w-[520px]
+                    no-underline text-inherit
+                       transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lg
+                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-heading/30
+                       cursor-pointer"
+                aria-label="{{ product.title }}"
+              >
+                {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
+              </a>
+            {% else %}
+              <article class="card p-8 min-h-[220px] flex flex-col w-full max-w-[520px]" aria-label="{{ product.title }}">
+                {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
+              </article>
+            {% endif %}
+          </div>
         {% endfor %}
       </div>
 
     {# SCENARIO 2: Two Columns (Centered Pair) #}
     {% elif n == 2 %}
       <div class="grid gap-6 md:grid-cols-2 justify-items-center">
-  {% for product in value.products %}
-    {% if product.cta_url %}
-      <a
-        href="{{ product.cta_url }}"
-        class="card p-6 md:p-8 min-h-[260px] flex flex-col w-full max-w-[520px] no-underline text-inherit
-               transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lg
-               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-heading/30
-               cursor-pointer"
-        aria-label="{{ product.title }}"
-      >
-        {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
-      </a>
-    {% else %}
-      <article class="card p-6 md:p-8 min-h-[260px] flex flex-col w-full max-w-[520px]" aria-label="{{ product.title }}">
-        {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
-      </article>
-    {% endif %}
-  {% endfor %}
-</div>
-
+        {% for product in value.products %}
+          {% if product.cta_url %}
+            <a
+              href="{{ product.cta_url }}"
+              class="card p-6 md:p-8 min-h-[260px] flex flex-col w-full max-w-[520px] no-underline text-inherit
+                     transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lg
+                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-heading/30
+                     cursor-pointer"
+              aria-label="{{ product.title }}"
+            >
+              {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
+            </a>
+          {% else %}
+            <article class="card p-6 md:p-8 min-h-[260px] flex flex-col w-full max-w-[520px]" aria-label="{{ product.title }}">
+              {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
 
     {# SCENARIO 3: Carousel (Tight Cards) #}
     {% else %}
       <div class="mt-4 treatments-bleed">
-  <div
-    class="overflow-x-auto px-5 sm:px-8 pb-8 pt-2"
-    aria-label="{{ value.heading|default:'Products' }}"
-    data-hscroll-track
-  >
-    <div class="flex gap-5 w-max mx-auto">
-      {% for product in value.products %}
-        {% if product.cta_url %}
-          <a
-            href="{{ product.cta_url }}"
-            class="card p-6 snap-start shrink-0 min-h-[280px] flex flex-col w-[300px] md:w-[350px] no-underline text-inherit
-                   transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lg
-                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-heading/30
-                   cursor-pointer"
-            data-hscroll-slide
-            aria-label="{{ product.title }}"
-          >
-            {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
-          </a>
-        {% else %}
-          <article
-            class="card p-6 snap-start shrink-0 min-h-[280px] flex flex-col w-[300px] md:w-[350px]"
-            data-hscroll-slide
-            aria-label="{{ product.title }}"
-          >
-            {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
-          </article>
-        {% endif %}
-      {% endfor %}
+        <div
+          class="overflow-x-auto px-5 sm:px-8 pb-8 pt-2"
+          aria-label="{{ value.heading|default:'Products' }}"
+          data-hscroll-track
+        >
+          <div class="flex gap-5 w-max mx-auto">
+            {% for product in value.products %}
+              {% if product.cta_url %}
+                <a
+                  href="{{ product.cta_url }}"
+                  class="card p-6 snap-start shrink-0 min-h-[280px] flex flex-col w-[300px] md:w-[350px] no-underline text-inherit
+                         transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lg
+                         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-heading/30
+                         cursor-pointer"
+                  data-hscroll-slide
+                  aria-label="{{ product.title }}"
+                >
+                  {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
+                </a>
+              {% else %}
+                <article
+                  class="card p-6 snap-start shrink-0 min-h-[280px] flex flex-col w-[300px] md:w-[350px]"
+                  data-hscroll-slide
+                  aria-label="{{ product.title }}"
+                >
+                  {% include "pages/blocks/partials/treatment_product_card_inner.html" with product=product only %}
+                </article>
+              {% endif %}
+            {% endfor %}
 
-      <div class="shrink-0 w-5 sm:w-8"></div>
-    </div>
-  </div>
-</div>
-
+            <div class="shrink-0 w-5 sm:w-8"></div>
+          </div>
+        </div>
+      </div>
 
       <div class="container-shell">
         <div class="mt-2 flex items-center justify-between gap-4">
           <div class="flex items-center gap-2" data-hscroll-dots aria-label="Product slides">
             {% for product in value.products %}
-              <button 
+              <button
                 class="h-1.5 w-1.5 rounded-full bg-border/40 transition-all hover:bg-heading aria-[current=true]:bg-heading aria-[current=true]:scale-125"
                 data-hscroll-dot="{{ forloop.counter0 }}"
                 aria-label="Go to slide {{ forloop.counter }}"
               ></button>
             {% endfor %}
           </div>
-          <div class="hidden md:block text-[10px] uppercase tracking-widest text-muted/60">Swipe</div>
+          <div class="hidden md:block label-display text-muted/60">Swipe</div>
         </div>
       </div>
     {% endif %}

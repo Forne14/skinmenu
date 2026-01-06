@@ -14,7 +14,7 @@
       </a>
 
       <!-- Desktop Nav -->
-      <nav class="hidden md:flex items-center gap-8">
+      <nav class="hidden md:flex items-center gap-8 nav-primary">
         <div class="flex items-center gap-6">
 
           {# Menu dropdown FIRST (site requirement) #}
@@ -45,7 +45,7 @@
                         <a
                           href="{% pageurl link.page %}"
                           role="menuitem"
-                          class="block rounded-md px-3 py-2 text-sm text-heading hover:bg-surface-2 transition no-underline"
+                          class="block rounded-md px-3 py-2 text-heading hover:bg-surface-2 transition no-underline"
                         >
                           {{ link.label }}
                         </a>
@@ -53,7 +53,7 @@
                         <a
                           href="{{ link.url }}"
                           role="menuitem"
-                          class="block rounded-md px-3 py-2 text-sm text-heading hover:bg-surface-2 transition no-underline"
+                          class="block rounded-md px-3 py-2 text-heading hover:bg-surface-2 transition no-underline"
                           {% if link.open_in_new_tab %}target="_blank" rel="noopener"{% endif %}
                         >
                           {{ link.label }}
@@ -101,7 +101,7 @@
       <!-- Mobile Toggle -->
       <button
         type="button"
-        class="md:hidden inline-flex items-center justify-center gap-2 border border-border/60 bg-surface px-4 py-2 text-base
+        class="md:hidden inline-flex items-center justify-center gap-2 border border-border/60 bg-surface px-4 py-2
                hover:border-accent transition no-underline"
         aria-controls="mobile-nav"
         aria-expanded="false"
@@ -114,13 +114,13 @@
   </div>
 
   <!-- Mobile Nav -->
-<div
+  <div
     id="mobile-nav"
     class="md:hidden hidden border-t border-border/40 bg-bg"
     data-mobile-nav
   >
     <div class="container-shell py-4">
-      <div class="flex flex-col gap-2 text-base nav-primary">
+      <div class="flex flex-col gap-2 nav-primary">
         {% for b in nav.primary_links %}
           {% with link=b.value %}
             {% if link.page %}

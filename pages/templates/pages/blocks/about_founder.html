@@ -4,30 +4,27 @@
   <div class="container-shell">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-y-16 lg:gap-x-20 items-start">
 
-
       <!-- MEDIA -->
-<div class="lg:col-span-6">
-  {% if value.media %}
-    <div
-      class="
-        relative
-        overflow-hidden
-        rounded-[32px]
-        shadow-soft
-        aspect-square
-        bg-black/5
-      "
-    >
-      {% include_block value.media %}
-    </div>
-  {% else %}
-    <div class="aspect-square">
-      {% include "pages/blocks/_media_placeholder.html" %}
-    </div>
-  {% endif %}
-</div>
-
-
+      <div class="lg:col-span-6">
+        {% if value.media %}
+          <div
+            class="
+              relative
+              overflow-hidden
+              rounded-[32px]
+              shadow-soft
+              aspect-square
+              bg-black/5
+            "
+          >
+            {% include_block value.media %}
+          </div>
+        {% else %}
+          <div class="aspect-square">
+            {% include "pages/blocks/_media_placeholder.html" %}
+          </div>
+        {% endif %}
+      </div>
 
       <!-- TEXT -->
       <div class="lg:col-span-6 max-w-[48ch]">
@@ -46,21 +43,19 @@
         </div>
 
         {% if value.quote %}
-  <blockquote
-    class="
-      mt-12
-      pl-6
-      border-l border-border/40
-      text-lg
-      italic
-      text-muted
-      max-w-[40ch]
-    "
-  >
-    “{{ value.quote }}”
-  </blockquote>
-{% endif %}
-
+          <blockquote
+            class="
+              mt-12
+              pl-6
+              border-l border-border/40
+              italic
+              text-muted
+              max-w-[40ch]
+            "
+          >
+            “{{ value.quote }}”
+          </blockquote>
+        {% endif %}
       </div>
 
     </div>

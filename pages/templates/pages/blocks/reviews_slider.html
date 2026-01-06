@@ -27,12 +27,12 @@
                 <div class="testimonial-card min-w-[280px] md:min-w-[360px] snap-start">
               {% endif %}
 
-                  <blockquote class="text-lg leading-relaxed text-fg/85">
+                  <blockquote class="leading-relaxed text-fg/85">
                     {{ review.quote }}
                   </blockquote>
 
-                  <div class="mt-5 text-sm text-muted">
-                    <span class="font-medium text-heading">
+                  <div class="mt-5 text-muted">
+                    <span class="text-heading">
                       {{ review.author }}
                     </span>
                     {% if review.source %}
@@ -41,7 +41,7 @@
                   </div>
 
                   {% if review.link %}
-                    <div class="mt-4 text-xs uppercase tracking-wide text-accent-2">
+                    <div class="mt-4 label-display text-accent-2">
                       Read on Google →
                     </div>
                   {% endif %}

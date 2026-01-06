@@ -48,3 +48,5 @@ pnpm-debug.log*
 # Local helpers / artifacts
 dump_codebase.sh
 codebase-skinmenu.txt
+archive.zip
+*.zip

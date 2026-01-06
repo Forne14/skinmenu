@@ -10,12 +10,12 @@
       {# Brand / address / socials / map #}
       <div class="lg:col-span-5 space-y-6">
         <div>
-          <div class="text-2xl font-display font-light text-heading tracking-wide mb-3">
+          <h3 class="text-2xl font-display text-heading tracking-wide mb-3">
             {{ gs.clinic_name|default:"SKINMENU" }}
-          </div>
+          </h3>
 
           {% if gs.address %}
-            <div class="text-sm text-fg/60 whitespace-pre-line leading-relaxed font-sans">
+            <div class="text-fg/60 whitespace-pre-line leading-relaxed">
               {{ gs.address }}
             </div>
           {% endif %}
@@ -48,7 +48,7 @@
 
             {% if gs.google_maps_url %}
               <div class="pt-2">
-                <a href="{{ gs.google_maps_url }}" class="text-xs text-fg/50 hover:text-skinmenu-brown transition no-underline" target="_blank" rel="noopener">
+                <a href="{{ gs.google_maps_url }}" class="text-fg/50 hover:text-skinmenu-brown transition no-underline" target="_blank" rel="noopener">
                   Open in Google Maps →
                 </a>
               </div>
@@ -59,11 +59,11 @@
 
       {# Footer links #}
       <div class="lg:col-span-3">
-        <h3 class="text-sm font-semibold uppercase tracking-widest text-skinmenu-brown mb-4">
+        <div class="label-display text-skinmenu-brown mb-4">
           Links
-        </h3>
+        </div>
 
-        <nav class="flex flex-col gap-2 text-sm text-fg/70">
+        <nav class="flex flex-col gap-2 text-fg/70">
           {% for b in nav.footer_links %}
             {% with link=b.value %}
               {% if link.page %}
@@ -80,9 +80,9 @@
 
       {# Newsletter ONLY (removed Enquire block) #}
       <div class="lg:col-span-4">
-        <h3 class="text-sm font-semibold uppercase tracking-widest text-skinmenu-brown mb-4">
+        <div class="label-display text-skinmenu-brown mb-4">
           {{ gs.newsletter_heading|default:"Stay in the know" }}
-        </h3>
+        </div>
 
         <form
           {% if gs.newsletter_form_action %}
@@ -100,21 +100,21 @@
             type="email"
             name="email"
             placeholder="Email Address"
-            class="w-full bg-transparent border-b border-skinmenu-brown/20 py-2 text-sm text-heading outline-none focus:border-skinmenu-brown transition-colors placeholder:text-fg/40"
+            class="w-full bg-transparent border-b border-skinmenu-brown/20 py-2 text-heading outline-none focus:border-skinmenu-brown transition-colors placeholder:text-fg/40"
             required
             {% if not gs.newsletter_form_action %}disabled{% endif %}
           >
 
           <button
             type="submit"
-            class="text-xs font-semibold uppercase tracking-widest text-fg/60 hover:text-skinmenu-brown transition-colors no-underline"
+            class="label-display text-fg/60 hover:text-skinmenu-brown transition-colors no-underline"
             {% if not gs.newsletter_form_action %}disabled aria-disabled="true"{% endif %}
           >
             {{ gs.newsletter_button_label|default:"Subscribe" }}
           </button>
 
           {% if not gs.newsletter_form_action %}
-            <p class="text-sm text-fg/50 font-sans">
+            <p class="text-fg/50">
               Newsletter signup will be available shortly.
             </p>
           {% endif %}
@@ -125,12 +125,12 @@
 
     {# Bottom bar (tighter) #}
     <div class="border-t border-border/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-5">
-      <div class="text-xs text-fg/40 font-sans">
+      <div class="text-fg/40">
         &copy; {% now "Y" %} {{ gs.clinic_name|default:"SKINMENU" }}. All rights reserved.
       </div>
 
       <div class="flex items-center gap-8">
-        <div class="flex gap-4 text-xs text-fg/40">
+        <div class="flex gap-4 text-fg/40">
           <a href="/privacy/" class="hover:text-fg transition no-underline">Privacy</a>
           <a href="/terms/" class="hover:text-fg transition no-underline">Terms</a>
         </div>

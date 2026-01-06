@@ -7,7 +7,7 @@
       <!-- TEXT -->
       <div class="lg:col-span-6 max-w-[60ch]">
         {% if value.eyebrow %}
-          <p class="label-display  mb-4">
+          <p class="label-display mb-4">
             {{ value.eyebrow }}
           </p>
         {% endif %}
@@ -22,26 +22,26 @@
       </div>
 
       <!-- MEDIA -->
-<div class="lg:col-span-6">
-  {% if value.media %}
-    <div
-      class="
-        relative
-        overflow-hidden
-        rounded-[32px]
-        shadow-soft
-        aspect-square
-        bg-black/5
-      "
-    >
-      {% include_block value.media %}
-    </div>
-  {% else %}
-    <div class="aspect-square">
-      {% include "pages/blocks/_media_placeholder.html" %}
-    </div>
-  {% endif %}
-</div>
+      <div class="lg:col-span-6">
+        {% if value.media %}
+          <div
+            class="
+              relative
+              overflow-hidden
+              rounded-[32px]
+              shadow-soft
+              aspect-square
+              bg-black/5
+            "
+          >
+            {% include_block value.media %}
+          </div>
+        {% else %}
+          <div class="aspect-square">
+            {% include "pages/blocks/_media_placeholder.html" %}
+          </div>
+        {% endif %}
+      </div>
 
     </div>
   </div>
