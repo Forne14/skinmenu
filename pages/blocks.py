@@ -142,6 +142,12 @@ class HeroBlock(blocks.StructBlock):
     subheadline = blocks.TextBlock(required=False, max_length=480)
     primary_cta = LinkBlock(required=False)
 
+    show_primary_cta = blocks.BooleanBlock(
+        required=False,
+        default=True,
+        help_text="Turn off to hide the call to action button in the hero.",
+    )
+
     cta_position = blocks.ChoiceBlock(
         required=True,
         default="bottom_left",

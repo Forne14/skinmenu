@@ -159,6 +159,25 @@ WAGTAILDOCS_EXTENSIONS = [
 ]
 
 
+WAGTAILDOCS_CONTENT_TYPES = {
+    # keep any existing entries
+    "pdf": "application/pdf",
+    "txt": "text/plain",
+    "mp4": "video/mp4",
+}
+
+# settings.py
+
+WAGTAILDOCS_INLINE_CONTENT_TYPES = [
+    "application/pdf",
+    "text/plain",
+    "video/mp4",
+]
+
+WAGTAILDOCS_SERVE_METHOD = "direct"
+
+
+
 # --------------------------------------------------------------------
 # Safety defaults (overridden in dev/production/local)
 # --------------------------------------------------------------------

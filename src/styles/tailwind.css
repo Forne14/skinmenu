@@ -1,5 +1,68 @@
 @import './tokens.css';
 
+/* -----------------------------------
+   Webfonts (served from /static/fonts/)
+----------------------------------- */
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('../fonts/KohSantepheap-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('../fonts/KohSantepheap-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('../fonts/KohSantepheap-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('../fonts/KohSantepheap-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Koh Santepheap';
+  src: url('../fonts/KohSantepheap-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Work Sans uses the variable font – this covers Regular (400), SemiBold (600), etc. */
+@font-face {
+  font-family: 'Work Sans';
+  src: url('../fonts/WorkSans-VariableFont_wght.woff2') format('woff2-variations'),
+    url('../fonts/WorkSans-VariableFont_wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Work Sans';
+  src: url('../fonts/WorkSans-Italic-VariableFont_wght.woff2') format('woff2-variations'),
+    url('../fonts/WorkSans-Italic-VariableFont_wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

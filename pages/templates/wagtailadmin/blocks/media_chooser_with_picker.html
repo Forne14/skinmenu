@@ -2,8 +2,15 @@
 
 <div class="media-picker-block" data-media-picker-block>
   <div class="media-picker-fields">
-    {{ children.image.render_form }}
-    {{ children.video.render_form }}
+
+    <div data-media-picker-image-field>
+      {{ children.image.render_form }}
+    </div>
+
+    <div data-media-picker-video-field>
+      {{ children.video.render_form }}
+    </div>
+
     {{ children.loop.render_form }}
     {{ children.playback_rate.render_form }}
 
@@ -17,7 +24,9 @@
   <div class="media-picker-preview" data-media-picker-preview aria-label="Media preview">
     <div class="media-picker-stage" data-media-picker-stage>
       <div class="media-picker-target" data-media-picker-target title="Drag to set focus"></div>
-      <div class="media-picker-hint">Drag the dot to remind the crop framing.</div>
+      <div class="media-picker-hint">
+        Drag to set the crop center. Preview uses poster image when video preview isn’t available.
+      </div>
     </div>
   </div>
 </div>

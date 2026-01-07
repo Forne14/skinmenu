@@ -147,7 +147,8 @@
                 </p>
               {% endif %}
 
-              {% if block.value.primary_cta %}
+              {# CHANGE: CTA only renders if explicitly enabled AND has data #}
+              {% if block.value.show_primary_cta and block.value.primary_cta %}
                 <div class="mt-6">
                   <a class="btn-primary btn-lg" href="{{ block.value.primary_cta.url }}">
                     {{ block.value.primary_cta.label }}
@@ -161,7 +162,7 @@
 
     {# DOTS: absolutely above everything (including video) #}
     {% if block.value.hero_media and block.value.hero_media|length > 1 %}
-      <div class="absolute bottom-6 left-0 right-0 z-50 pointer-events-auto">
+      <div class="absolute bottom-6 left-0 right-0 z-35 pointer-events-auto">
         <div class="container-shell">
           <div class="flex items-center gap-2" data-carousel-dots aria-label="Hero slides">
             {% for _ in block.value.hero_media %}

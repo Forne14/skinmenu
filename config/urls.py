@@ -5,11 +5,12 @@ from django.contrib import admin
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
-
+from pages.admin_media import document_url
 from search import views as search_views
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
+    path("admin/media-picker/document-url/<int:doc_id>/", document_url, name="media_picker_document_url"),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
