@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-{% with gs=settings.site_settings.GlobalSiteSettings nav=settings.site_settings.NavigationSettings %}
+{% with gs=settings.site_settings.GlobalSiteSettings nav=settings.site_settings.NavigationSettings brand=settings.site_settings.BrandAppearanceSettings %}
 <footer class="border-t border-border/20 bg-surface pt-10 md:pt-12 pb-8">
   <div class="container-shell">
 
@@ -10,14 +10,32 @@
       {# Brand / address / socials / map #}
       <div class="lg:col-span-5 space-y-6">
         <div>
-          <h3 class="text-2xl font-display text-heading tracking-wide mb-3">
-            {{ gs.clinic_name|default:"SKINMENU" }}
-          </h3>
+          {# Footer logo links to home. Falls back to clinic name only if no assets. #}
+          {% if brand and brand.logo_light_path and brand.logo_dark_path %}
+            <a href="/" class="inline-block no-underline" aria-label="{{ gs.clinic_name|default:'Home' }}">
+              {% include "partials/brand/footer_logo.html" with brand=brand %}
+            </a>
+          {% else %}
+            <h3 class="text-2xl font-display text-heading tracking-wide mb-3">
+              {{ gs.clinic_name|default:"SKINMENU" }}
+            </h3>
+          {% endif %}
 
           {% if gs.address %}
-            <div class="text-fg/60 whitespace-pre-line leading-relaxed">
-              {{ gs.address }}
-            </div>
+            {% if gs.google_maps_url %}
+              <a
+                href="{{ gs.google_maps_url }}"
+                class="block text-fg/60 whitespace-pre-line leading-relaxed mt-3 no-underline hover:text-skinmenu-brown transition"
+                target="_blank"
+                rel="noopener"
+              >
+                {{ gs.address }}
+              </a>
+            {% else %}
+              <div class="text-fg/60 whitespace-pre-line leading-relaxed mt-3">
+                {{ gs.address }}
+              </div>
+            {% endif %}
           {% endif %}
         </div>
 
@@ -78,7 +96,7 @@
         </nav>
       </div>
 
-      {# Newsletter ONLY (removed Enquire block) #}
+      {# Newsletter ONLY #}
       <div class="lg:col-span-4">
         <div class="label-display text-skinmenu-brown mb-4">
           {{ gs.newsletter_heading|default:"Stay in the know" }}
@@ -135,7 +153,6 @@
           <a href="/terms/" class="hover:text-fg transition no-underline">Terms</a>
         </div>
 
-        {# Keep your preferred theme toggle #}
         <button
           type="button"
           class="theme-toggle flex items-center justify-center text-fg/60 hover:text-skinmenu-brown transition-colors p-2 rounded-full border border-transparent hover:border-skinmenu-brown/10"

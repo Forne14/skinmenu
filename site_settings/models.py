@@ -1,9 +1,14 @@
 from django.db import models
+from django.conf import settings
+from django import forms
 
 from colorfield.fields import ColorField
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.fields import StreamField
+
+from pathlib import Path
+import glob
 
 from .blocks import NavLinkBlock
 
@@ -186,12 +191,89 @@ MARK_CHOICES = [
 ]
 
 
+def _static_dir() -> Path:
+    """
+    Returns a filesystem path to a static directory we can scan for SVGs.
+
+    Prefers BASE_DIR/config/static (matches your repo layout),
+    then falls back to the first STATICFILES_DIRS entry.
+    """
+    base_dir = Path(getattr(settings, "BASE_DIR", Path(".")))
+    preferred = base_dir / "config" / "static"
+    if preferred.exists():
+        return preferred
+
+    staticfiles_dirs = getattr(settings, "STATICFILES_DIRS", []) or []
+    if staticfiles_dirs:
+        return Path(staticfiles_dirs[0])
+
+    # Last resort: project root
+    return base_dir
+
+
+def _svg_choices_in_static(rel_glob: str) -> list[tuple[str, str]]:
+    """
+    Build (static_path, label) choices by scanning the filesystem.
+    rel_glob should be relative to a static root (e.g. 'brand/secondary/*.svg').
+    Stored value will be the *static path* (e.g. 'brand/secondary/Logo-16.svg').
+    """
+    static_root = _static_dir()
+    pattern = str(static_root / rel_glob)
+    found = sorted(glob.glob(pattern))
+    choices: list[tuple[str, str]] = []
+
+    for abs_path in found:
+        p = Path(abs_path)
+        try:
+            rel = p.relative_to(static_root).as_posix()
+        except ValueError:
+            continue
+        choices.append((rel, p.name))
+
+    return choices
+
+
+def _secondary_logo_choices() -> list[tuple[str, str]]:
+    # Scans config/static/brand/secondary/*.svg
+    return _svg_choices_in_static("brand/secondary/*.svg")
+
+
 @register_setting
 class BrandAppearanceSettings(BaseSiteSetting):
     logo_light_path = models.CharField(max_length=255, choices=LOGO_CHOICES, default="brand/primary/Logo-08.svg")
     logo_dark_path = models.CharField(max_length=255, choices=LOGO_CHOICES, default="brand/primary/Logo-09.svg")
     mark_light_path = models.CharField(max_length=255, choices=MARK_CHOICES, default="brand/brand_mark/Logo-02.svg")
     mark_dark_path = models.CharField(max_length=255, choices=MARK_CHOICES, default="brand/brand_mark/Logo-03.svg")
+
+    # Footer logo variant selection
+    FOOTER_LOGO_VARIANT_PRIMARY = "primary"
+    FOOTER_LOGO_VARIANT_SECONDARY = "secondary"
+    FOOTER_LOGO_VARIANT_MARK = "mark"
+
+    FOOTER_LOGO_VARIANT_CHOICES = [
+        (FOOTER_LOGO_VARIANT_PRIMARY, "Primary"),
+        (FOOTER_LOGO_VARIANT_SECONDARY, "Secondary"),
+        (FOOTER_LOGO_VARIANT_MARK, "Mark"),
+    ]
+
+    footer_logo_variant = models.CharField(
+        max_length=20,
+        choices=FOOTER_LOGO_VARIANT_CHOICES,
+        default=FOOTER_LOGO_VARIANT_PRIMARY,
+        help_text="Logo variant to show in the footer.",
+    )
+
+    secondary_logo_light_path = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Static path under /static (e.g. 'brand/secondary/Logo-16.svg'). Used on light theme.",
+    )
+
+    secondary_logo_dark_path = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Static path under /static (e.g. 'brand/secondary/Logo-16.svg'). Used on dark theme.",
+    )
 
     # Typography (site-wide)
     body_font_size_px = models.PositiveSmallIntegerField(
@@ -216,9 +298,6 @@ class BrandAppearanceSettings(BaseSiteSetting):
         default=300,
         help_text="UI font weight for components (default 300 to match nav/labels/headings).",
     )
-
-
-
 
     # Background texture (CSS-only “paper” grain)
     paper_texture_enabled = models.BooleanField(
@@ -251,7 +330,7 @@ class BrandAppearanceSettings(BaseSiteSetting):
     dark_accent_2 = ColorField(default="#786050")
 
     panels = [
-         MultiFieldPanel(
+        MultiFieldPanel(
             [
                 FieldPanel("body_font_size_px"),
                 FieldPanel("body_font_weight"),
@@ -261,7 +340,6 @@ class BrandAppearanceSettings(BaseSiteSetting):
             ],
             heading="Typography",
         ),
-
         MultiFieldPanel(
             [
                 FieldPanel("logo_light_path"),
@@ -270,6 +348,19 @@ class BrandAppearanceSettings(BaseSiteSetting):
                 FieldPanel("mark_dark_path"),
             ],
             heading="Brand assets",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("secondary_logo_light_path", widget=forms.Select(choices=_secondary_logo_choices())),
+                FieldPanel("secondary_logo_dark_path", widget=forms.Select(choices=_secondary_logo_choices())),
+            ],
+            heading="Secondary logo",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("footer_logo_variant"),
+            ],
+            heading="Footer",
         ),
         MultiFieldPanel(
             [
