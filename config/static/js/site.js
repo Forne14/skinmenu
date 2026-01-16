@@ -101,6 +101,54 @@
     })
   }
 
+  function attachVideoSources(videoEl) {
+    if (!videoEl) return
+    if (videoEl.dataset.sourcesAttached === 'true') return
+
+    const webm = videoEl.getAttribute('data-video-src-webm')
+    const mp4 = videoEl.getAttribute('data-video-src-mp4')
+    if (!webm && !mp4) return
+
+    // Clear any existing sources to avoid duplicates
+    videoEl.querySelectorAll('source').forEach((n) => n.remove())
+    videoEl.removeAttribute('src')
+
+    if (webm) {
+      const s = document.createElement('source')
+      s.src = webm
+      s.type = 'video/webm'
+      videoEl.appendChild(s)
+    }
+    if (mp4) {
+      const s = document.createElement('source')
+      s.src = mp4
+      s.type = 'video/mp4'
+      videoEl.appendChild(s)
+    }
+
+    try {
+      videoEl.load()
+    } catch (e) {}
+
+    videoEl.dataset.sourcesAttached = 'true'
+  }
+
+  function detachVideoSources(videoEl) {
+    if (!videoEl) return
+    try {
+      videoEl.pause?.()
+    } catch (e) {}
+
+    videoEl.removeAttribute('src')
+    videoEl.querySelectorAll('source').forEach((n) => n.remove())
+
+    try {
+      videoEl.load?.()
+    } catch (e) {}
+
+    videoEl.dataset.sourcesAttached = 'false'
+  }
+
   // ---------------------------
   // Carousels (hero + reviews)
   // ---------------------------
@@ -162,7 +210,9 @@
             const vids = s.querySelectorAll('video')
             vids.forEach((v) => {
               if (active) {
-                // Apply playback rate here too (slide may become visible after init)
+                attachVideoSources(v)
+
+                // Apply playback rate (keep your existing logic)
                 const raw = v.getAttribute('data-playback-rate') || '1.0'
                 const rate = parseFloat(raw)
                 if (rate && !Number.isNaN(rate)) {
@@ -174,6 +224,8 @@
                 const p = v.play && v.play()
                 if (p && typeof p.catch === 'function') p.catch(() => {})
               } else {
+                detachVideoSources(v)
+
                 try {
                   if (v.pause) v.pause()
                   v.currentTime = 0

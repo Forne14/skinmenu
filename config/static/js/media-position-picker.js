@@ -1,3 +1,4 @@
+// /config/static/js/media-position-picker.js
 ;(function () {
   const DEBUG = typeof window !== 'undefined' && window.MEDIA_PICKER_DEBUG === true
 
@@ -155,6 +156,124 @@
     return v
   }
 
+  // ---------------------------
+  // NEW: lightweight status overlay (doesn't affect existing flows)
+  // ---------------------------
+  function ensureStatusEl(stage) {
+    let el = stage.querySelector('[data-media-picker-status]')
+    if (el) return el
+
+    el = document.createElement('div')
+    el.setAttribute('data-media-picker-status', 'true')
+    // Inline styles so we don't require CSS changes (production-safe)
+    el.style.position = 'absolute'
+    el.style.left = '10px'
+    el.style.bottom = '10px'
+    el.style.padding = '6px 8px'
+    el.style.borderRadius = '8px'
+    el.style.fontSize = '12px'
+    el.style.color = 'rgba(255,255,255,0.92)'
+    el.style.background = 'rgba(0,0,0,0.45)'
+    el.style.zIndex = '5'
+    el.style.pointerEvents = 'none'
+    el.style.display = 'none'
+
+    stage.appendChild(el)
+    return el
+  }
+
+  function setStatus(stage, text) {
+    const el = ensureStatusEl(stage)
+    if (!text) {
+      el.textContent = ''
+      el.style.display = 'none'
+      return
+    }
+    el.textContent = String(text)
+    el.style.display = 'block'
+  }
+
+  // ---------------------------
+  // NEW: Derivatives status fetch + best source selection
+  // ---------------------------
+  function fetchDerivativesStatus(docId) {
+    // Global-ish throttle per docId (prevents bursts from rerenders + polling)
+    const key = `mediaPickerLastStatusFetch_${docId}`
+    const now = Date.now()
+    const last = parseInt(sessionStorage.getItem(key) || '0', 10)
+
+    // allow at most ~1 request per 800ms per doc
+    if (now - last < 800) {
+      // Return a promise that resolves to null; callers should handle it
+      return Promise.resolve(null)
+    }
+    sessionStorage.setItem(key, String(now))
+
+    const url = `/admin/media-derivatives/${docId}/status/`
+    return fetch(url, { credentials: 'same-origin' }).then((r) => {
+      if (!r.ok) throw new Error('Failed to fetch derivatives status: ' + r.status)
+      return r.json()
+    })
+  }
+
+  function pickBestVideoUrlFromStatus(data) {
+    // Prefer MP4 (fast decode + widest support in admin)
+    // Data shape: { derivatives: [ { kind, status, progress, file_url, poster_url, ... } ] }
+    const list = (data && data.derivatives) || []
+    const mp4 = list.find((d) => d && d.kind === 'mp4')
+    const webm = list.find((d) => d && d.kind === 'webm')
+
+    // Best-case: MP4 ready
+    if (mp4 && mp4.status === 'ready' && mp4.file_url) {
+      return {
+        url: String(mp4.file_url),
+        poster: mp4.poster_url ? String(mp4.poster_url) : '',
+        status: mp4.status,
+        progress: mp4.progress || 0,
+        error: mp4.error || '',
+      }
+    }
+
+    // Next: WebM ready (rare in admin preview preference, but allowed)
+    if (webm && webm.status === 'ready' && webm.file_url) {
+      return {
+        url: String(webm.file_url),
+        poster: webm.poster_url ? String(webm.poster_url) : '',
+        status: webm.status,
+        progress: webm.progress || 0,
+        error: webm.error || '',
+      }
+    }
+
+    // Processing: return progress text if possible
+    const processing =
+      mp4 && mp4.status === 'processing' ? mp4 : webm && webm.status === 'processing' ? webm : null
+    if (processing) {
+      return {
+        url: '',
+        poster: processing.poster_url ? String(processing.poster_url) : '',
+        status: processing.status,
+        progress: processing.progress || 0,
+        error: processing.error || '',
+      }
+    }
+
+    // Failed: if both failed, surface error, but allow fallback to doc.url
+    const failed =
+      mp4 && mp4.status === 'failed' ? mp4 : webm && webm.status === 'failed' ? webm : null
+    if (failed) {
+      return {
+        url: '',
+        poster: failed.poster_url ? String(failed.poster_url) : '',
+        status: failed.status,
+        progress: failed.progress || 0,
+        error: failed.error || '',
+      }
+    }
+
+    return { url: '', poster: '', status: '', progress: 0, error: '' }
+  }
+
   function setPreview(stage, blockRoot) {
     const DOC_URL_ENDPOINT_BASE = '/admin/media-picker/document-url/'
 
@@ -168,6 +287,7 @@
     const cachedUrl = blockRoot.dataset.mediaPickerDocumentUrl
     if (cachedUrl) {
       log('preview: cached video url', cachedUrl)
+      setStatus(stage, '') // clear any prior status overlay
       const v = buildVideoEl(cachedUrl, loopEnabled)
       v.addEventListener('error', () => warn('video error', cachedUrl, v.error), { once: true })
       stage.prepend(v)
@@ -182,41 +302,233 @@
       const requestId = String(Date.now()) + ':' + String(Math.random()).slice(2)
       stage.dataset.mediaPickerRequestId = requestId
 
-      log('preview: fetching doc url', docId)
+      // NEW: Poll derivatives status first, then fall back to original doc url.
+      // This keeps existing behavior working even if derivatives endpoint fails.
+      const pollKey = `mediaPickerPoll_${docId}`
+      const existingPoll = stage.dataset[pollKey]
+      if (existingPoll) {
+        // Avoid stacking intervals on repeated re-renders
+        try {
+          clearTimeout(parseInt(existingPoll, 10))
+        } catch (e) {}
+        delete stage.dataset[pollKey]
+      }
 
-      fetch(DOC_URL_ENDPOINT_BASE + docId + '/', { credentials: 'same-origin' })
-        .then((r) => {
-          if (!r.ok) throw new Error('Failed to fetch document URL: ' + r.status)
-          return r.json()
-        })
+      function renderVideoUrl(url, posterUrl) {
+        if (stage.dataset.mediaPickerRequestId !== requestId) return
+        if (!url) return false
+
+        setCachedDocument(blockRoot, docId, url)
+
+        const v = buildVideoEl(url, loopEnabled)
+        if (posterUrl) v.poster = posterUrl
+
+        v.addEventListener('error', () => warn('video error', url, v.error), { once: true })
+
+        removeExistingPreview(stage)
+        stage.prepend(v)
+
+        applyPlaybackRateToVideo(v, blockRoot)
+        const p = v.play && v.play()
+        if (p && typeof p.catch === 'function') p.catch(() => {})
+        log('preview: inserted video', url)
+        return true
+      }
+
+      function renderPosterFallback(posterUrl) {
+        if (stage.dataset.mediaPickerRequestId !== requestId) return
+        if (!posterUrl) return false
+        removeExistingPreview(stage)
+        stage.prepend(makeImgPreview(posterUrl))
+        return true
+      }
+
+      function fetchOriginalDocUrlFallback() {
+        log('preview: fetching doc url', docId)
+
+        fetch(DOC_URL_ENDPOINT_BASE + docId + '/', { credentials: 'same-origin' })
+          .then((r) => {
+            if (!r.ok) throw new Error('Failed to fetch document URL: ' + r.status)
+            return r.json()
+          })
+          .then((data) => {
+            if (stage.dataset.mediaPickerRequestId !== requestId) return
+            const url = data && data.url ? String(data.url) : ''
+            if (!url) return
+
+            setStatus(stage, '') // clear status
+            setCachedDocument(blockRoot, docId, url)
+
+            const v = buildVideoEl(url, loopEnabled)
+            v.addEventListener('error', () => warn('video error', url, v.error), { once: true })
+
+            removeExistingPreview(stage)
+            stage.prepend(v)
+
+            applyPlaybackRateToVideo(v, blockRoot)
+            const p = v.play && v.play()
+            if (p && typeof p.catch === 'function') p.catch(() => {})
+            log('preview: inserted video (fallback)', url)
+          })
+          .catch((err) => {
+            warn('preview: doc url fetch failed', err)
+
+            // fallback poster
+            const posterSrc = getPosterPreviewSrc(blockRoot)
+            if (posterSrc) {
+              setStatus(stage, '')
+              removeExistingPreview(stage)
+              stage.prepend(makeImgPreview(posterSrc))
+              log('preview: fallback poster')
+            }
+          })
+      }
+
+      // First attempt: derivatives status
+      // First attempt: derivatives status (single setTimeout loop, not setInterval)
+      let pollTimer = null
+      let pollInFlight = false
+
+      function stopPoll() {
+        if (pollTimer) window.clearTimeout(pollTimer)
+        pollTimer = null
+        pollInFlight = false
+      }
+
+      function schedulePoll(delayMs) {
+        stopPoll()
+        pollTimer = window.setTimeout(pollTick, delayMs)
+        // store so a rerender can cancel it
+        stage.dataset[pollKey] = String(pollTimer)
+      }
+
+      function pollTick() {
+        if (stage.dataset.mediaPickerRequestId !== requestId) return
+        if (pollInFlight) {
+          // try again shortly; don't stack calls
+          schedulePoll(250)
+          return
+        }
+        pollInFlight = true
+
+        fetchDerivativesStatus(docId)
+          .then((data) => {
+            pollInFlight = false
+            if (stage.dataset.mediaPickerRequestId !== requestId) return
+
+            // throttled fetch may return null
+            if (!data) {
+              schedulePoll(800)
+              return
+            }
+
+            const best = pickBestVideoUrlFromStatus(data)
+
+            if (best.status === 'ready' && best.url) {
+              setStatus(stage, '')
+              renderVideoUrl(best.url, best.poster)
+              stopPoll()
+              delete stage.dataset[pollKey]
+              return
+            }
+
+            if (best.status === 'failed') {
+              setStatus(stage, 'Encoding failed (using original)')
+              if (best.poster) renderPosterFallback(best.poster)
+              stopPoll()
+              delete stage.dataset[pollKey]
+              fetchOriginalDocUrlFallback()
+              return
+            }
+
+            if (best.status === 'processing') {
+              const pct =
+                typeof best.progress === 'number'
+                  ? best.progress
+                  : parseInt(best.progress || '0', 10)
+              if (pct >= 0) setStatus(stage, `Encoding… ${pct}%`)
+              else setStatus(stage, 'Encoding…')
+
+              if (best.poster) renderPosterFallback(best.poster)
+
+              // poll again
+              schedulePoll(1200)
+              return
+            }
+
+            // no useful derivative info -> fallback to original and stop polling
+            setStatus(stage, '')
+            stopPoll()
+            delete stage.dataset[pollKey]
+            fetchOriginalDocUrlFallback()
+          })
+          .catch((err) => {
+            pollInFlight = false
+            warn('preview: derivatives poll failed', err)
+
+            // On repeated failures, don't hammer; fall back.
+            setStatus(stage, '')
+            stopPoll()
+            delete stage.dataset[pollKey]
+            fetchOriginalDocUrlFallback()
+          })
+      }
+
+      // One-shot initial fetch; if processing, start timeout loop.
+      fetchDerivativesStatus(docId)
         .then((data) => {
           if (stage.dataset.mediaPickerRequestId !== requestId) return
-          const url = data && data.url ? String(data.url) : ''
-          if (!url) return
 
-          setCachedDocument(blockRoot, docId, url)
+          if (!data) {
+            // throttled; try again once shortly
+            schedulePoll(600)
+            return
+          }
 
-          const v = buildVideoEl(url, loopEnabled)
-          v.addEventListener('error', () => warn('video error', url, v.error), { once: true })
+          const best = pickBestVideoUrlFromStatus(data)
 
-          removeExistingPreview(stage)
-          stage.prepend(v)
+          if (best.status === 'ready' && best.url) {
+            setStatus(stage, '')
+            renderVideoUrl(best.url, best.poster)
+            stopPoll()
+            delete stage.dataset[pollKey]
+            return
+          }
 
-          applyPlaybackRateToVideo(v, blockRoot)
-          const p = v.play && v.play()
-          if (p && typeof p.catch === 'function') p.catch(() => {})
-          log('preview: inserted video', url)
+          if (best.status === 'failed') {
+            setStatus(stage, 'Encoding failed (using original)')
+            if (best.poster) renderPosterFallback(best.poster)
+            stopPoll()
+            delete stage.dataset[pollKey]
+            fetchOriginalDocUrlFallback()
+            return
+          }
+
+          if (best.status === 'processing') {
+            const pct =
+              typeof best.progress === 'number' ? best.progress : parseInt(best.progress || '0', 10)
+            if (pct >= 0) setStatus(stage, `Encoding… ${pct}%`)
+            else setStatus(stage, 'Encoding…')
+
+            if (best.poster) renderPosterFallback(best.poster)
+
+            // start loop
+            schedulePoll(1200)
+            return
+          }
+
+          // No derivative info => fallback
+          setStatus(stage, '')
+          stopPoll()
+          delete stage.dataset[pollKey]
+          fetchOriginalDocUrlFallback()
         })
         .catch((err) => {
-          warn('preview: doc url fetch failed', err)
-
-          // fallback poster
-          const posterSrc = getPosterPreviewSrc(blockRoot)
-          if (posterSrc) {
-            removeExistingPreview(stage)
-            stage.prepend(makeImgPreview(posterSrc))
-            log('preview: fallback poster')
-          }
+          warn('preview: derivatives status fetch failed', err)
+          setStatus(stage, '')
+          stopPoll()
+          delete stage.dataset[pollKey]
+          fetchOriginalDocUrlFallback()
         })
 
       return
@@ -225,11 +537,13 @@
     // No video -> poster fallback
     const posterSrc = getPosterPreviewSrc(blockRoot)
     if (posterSrc) {
+      setStatus(stage, '')
       stage.prepend(makeImgPreview(posterSrc))
       log('preview: poster (no video)')
       return
     }
 
+    setStatus(stage, '')
     log('preview: empty')
   }
 
@@ -283,6 +597,7 @@
       const doc = e && e.detail ? e.detail : null
       if (!doc || !doc.id || !doc.url) return
       log('document:chosen', doc.id, doc.url)
+      // Keep caching behavior — but note: derivative preview may overwrite it later.
       setCachedDocument(blockRoot, doc.id, doc.url)
       setTimeout(() => setPreview(stage, blockRoot), 0)
     })
@@ -299,14 +614,30 @@
 
     // Observe DOM changes
     let raf = null
+    let isRendering = false
+
     const schedule = () => {
+      if (isRendering) return
       if (raf) return
       raf = requestAnimationFrame(() => {
         raf = null
-        setPreview(stage, blockRoot)
+        isRendering = true
+        try {
+          setPreview(stage, blockRoot)
+        } finally {
+          isRendering = false
+        }
       })
     }
-    const obs = new MutationObserver(schedule)
+
+    const obs = new MutationObserver((mutations) => {
+      // Ignore mutations inside the stage, because setPreview mutates there.
+      for (const m of mutations) {
+        if (m.target && stage.contains(m.target)) return
+      }
+      schedule()
+    })
+
     obs.observe(blockRoot, { childList: true, subtree: true })
   }
 

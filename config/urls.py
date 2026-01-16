@@ -8,9 +8,12 @@ from wagtail.documents import urls as wagtaildocs_urls
 from pages.admin_media import document_url
 from search import views as search_views
 
+from media_derivatives.views import derivatives_status
+
 urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/media-picker/document-url/<int:doc_id>/", document_url, name="media_picker_document_url"),
+    path("admin/media-derivatives/<int:document_id>/status/", derivatives_status, name="media_derivatives_status"),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),

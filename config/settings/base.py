@@ -3,6 +3,7 @@ Base settings shared by dev + production.
 """
 
 from pathlib import Path
+import os
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = PROJECT_DIR.parent
@@ -14,6 +15,8 @@ BASE_DIR = PROJECT_DIR.parent
 INSTALLED_APPS = [
     "pages",
     "search",
+    "media_derivatives",
+    "django_rq",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -187,3 +190,33 @@ ALLOWED_HOSTS: list[str] = []
 
 # Wagtail/Django forms can get large
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10_000
+
+
+REDIS_URL = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/0")
+
+RQ_QUEUES = {
+    "default": {
+        "URL": REDIS_URL,
+        "DEFAULT_TIMEOUT": 60 * 20,  # 20 minutes
+    }
+}
+
+# --------------------------------------------------------------------
+# Cache (shared)
+# --------------------------------------------------------------------
+# Uses the same Redis as RQ by default. If you want separation later,
+# set REDIS_CACHE_URL separately.
+REDIS_CACHE_URL = os.environ.get("REDIS_CACHE_URL", REDIS_URL)
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_CACHE_URL,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # Optional: compress cached values (good for JSON-ish dict payloads)
+            "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
+        },
+        "TIMEOUT": 300,  # default; individual cache.set overrides this
+    }
+}

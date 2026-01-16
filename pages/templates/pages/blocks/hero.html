@@ -1,4 +1,4 @@
-{% load wagtailimages_tags %}
+{% load wagtailimages_tags media_derivatives_tags  %}
 
 <section class="relative">
   <div
@@ -37,30 +37,33 @@
                       style="object-position: {{ px }}% {{ py }}%;"
                       {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
                     />
+                    {% hero_video_sources media.video.id as sources %}
                     <video
                       class="absolute inset-0 h-full w-full object-cover"
                       style="object-position: {{ px }}% {{ py }}%;"
-                      src="{{ media.video.file.url }}"
-                      poster="{{ hero_img.url }}"
+                      {% if sources.poster %}poster="{{ sources.poster }}"{% else %}poster="{{ hero_img.url }}"{% endif %}
                       autoplay
                       muted
                       playsinline
-                      preload="{% if forloop.first %}auto{% else %}metadata{% endif %}"
-                      {% if media.loop %}loop{% endif %}
+                      preload="none"
+                      {% if sources.mp4 %}data-video-src-mp4="{{ sources.mp4 }}"{% else %}data-video-src-mp4="{{ media.video.file.url }}"{% endif %}
+                      {% if sources.webm %}data-video-src-webm="{{ sources.webm }}"{% endif %}
                       data-playback-rate="{{ media.playback_rate|default:'1.0' }}"
-                    ></video>
+                    ></video> 
                   {% else %}
-                    <video
-                      class="h-full w-full object-cover"
-                      style="object-position: {{ px }}% {{ py }}%;"
-                      src="{{ media.video.file.url }}"
-                      autoplay
-                      muted
-                      playsinline
-                      preload="{% if forloop.first %}auto{% else %}metadata{% endif %}"
-                      {% if media.loop %}loop{% endif %}
-                      data-playback-rate="{{ media.playback_rate|default:'1.0' }}"
-                    ></video>
+                  {% hero_video_sources media.video.id as sources %}
+                  <video
+                    class="h-full w-full object-cover"
+                    style="object-position: {{ px }}% {{ py }}%;"
+                    autoplay
+                    muted
+                    playsinline
+                    preload="none"
+                    {% if sources.poster %}poster="{{ sources.poster }}"{% endif %}
+                    {% if sources.mp4 %}data-video-src-mp4="{{ sources.mp4 }}"{% else %}data-video-src-mp4="{{ media.video.file.url }}"{% endif %}
+                    {% if sources.webm %}data-video-src-webm="{{ sources.webm }}"{% endif %}
+                    data-playback-rate="{{ media.playback_rate|default:'1.0' }}"
+                  ></video>
                   {% endif %}
 
                 {% elif media.image %}
@@ -74,12 +77,14 @@
                     style="object-position: {{ px }}% {{ py }}%;"
                     {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
                   />
+                  
 
                 {% else %}
                   <div class="absolute inset-0 flex items-center justify-center bg-surface-2 text-fg/70">
                     Add hero media in Wagtail → HomePage → Hero
                   </div>
                 {% endif %}
+                
 
                 {# Scrim: keep subtle, but slightly stronger for video frames #}
                 <div class="absolute inset-0 {% if media.video %}bg-bg/25 md:bg-bg/20{% else %}bg-bg/15{% endif %}"></div>

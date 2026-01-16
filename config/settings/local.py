@@ -19,3 +19,7 @@ CSRF_TRUSTED_ORIGINS = _csv_env("DJANGO_CSRF_TRUSTED_ORIGINS")
 
 # Wagtail admin base URL for notification emails
 WAGTAILADMIN_BASE_URL = os.environ.get("WAGTAILADMIN_BASE_URL", "https://www.skin-menu.co.uk")
+
+# config/settings/local.py
+WAGTAILDOCS_SERVE_METHOD = "direct"
+
