@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import re
 from django.db import models
 from django.utils import timezone
 from wagtail.documents import get_document_model
@@ -14,26 +15,20 @@ Image = get_image_model()
 
 def _derived_upload_path(instance: "VideoDerivative", filename: str) -> str:
     """
-    Store derivatives under a stable namespace so we can:
-    - set long-lived cache headers later for /media/derived/
-    - keep originals untouched under /media/documents/
+    Store derivatives under:
+      derived/videos/<doc_id>/<profile_slug>/<filename>
+
+    IMPORTANT:
+    - Do not override the provided filename (otherwise everything becomes video.mp4 again).
+    - Sanitize filename lightly.
     """
-    # Example:
-    # derived/videos/123/hero_mobile_v1/video.webm
     doc_id = instance.document_id or "unknown"
     profile = instance.profile_slug or "default"
-    base, ext = os.path.splitext(filename)
-    ext = ext.lower().lstrip(".") or "bin"
 
-    # Keep filenames predictable
-    if instance.kind == VideoDerivative.Kind.WEBM:
-        out_name = f"video.webm"
-    elif instance.kind == VideoDerivative.Kind.MP4:
-        out_name = f"video.mp4"
-    else:
-        out_name = f"file.{ext}"
-
-    return f"derived/videos/{doc_id}/{profile}/{out_name}"
+    base = os.path.basename(filename or "")
+    base = base.strip() or f"doc_{doc_id}__{profile}__{instance.kind}"
+    base = re.sub(r"[^A-Za-z0-9_\.\-]+", "_", base)  # keep dot for extensions
+    return f"derived/videos/{doc_id}/{profile}/{base}"
 
 
 class VideoDerivative(models.Model):

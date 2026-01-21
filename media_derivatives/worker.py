@@ -3,10 +3,11 @@ from __future__ import annotations
 
 import os
 import re
+import select
 import subprocess
 import tempfile
 import time
-from typing import Callable, Optional
+from typing import Callable
 
 from django.core.cache import cache
 from django.core.files import File
@@ -30,15 +31,10 @@ def _hero_sources_cache_key(document_id: int, profile_slug: str) -> str:
 
 
 def _safe_stem_from_doc(doc) -> str:
-    """
-    Use the original filename (without extension) as a stable stem.
-    Example: documents/foo/bar/my_video.mp4 -> my_video
-    """
     name = getattr(doc.file, "name", "") or ""
     base = os.path.basename(name)
     stem, _ext = os.path.splitext(base)
     stem = stem.strip() or f"doc_{doc.id}"
-    # basic sanitize: keep letters/numbers/_/-
     stem = re.sub(r"[^A-Za-z0-9_\-]+", "_", stem)
     return stem[:120]
 
@@ -65,66 +61,138 @@ def _run_with_progress(
     *,
     timeout_seconds: int,
     on_out_time_ms: Callable[[int], None] | None = None,
+    label: str = "ffmpeg",
 ) -> None:
     """
-    Run ffmpeg while streaming stdout so we don't buffer huge output in memory.
-    Parse `-progress pipe:1` lines like `out_time_ms=...` to update progress.
-    Enforce a hard timeout.
+    Run ffmpeg while:
+      - streaming output when available (truly non-blocking)
+      - enforcing a hard timeout even if the process produces no output
+      - parsing -progress pipe:1 lines (out_time_ms=...) when present
+
+    Uses os.set_blocking(False) + os.read() to avoid readline() blocking issues.
     """
+    from collections import deque
+
     start = time.time()
-    print("RUNNING:", " ".join(cmd))
+    last_heartbeat = start
+    last_data_time = start
+    tail = deque(maxlen=200)
+    buffer = b""
+
+    print(f"RUNNING({label}):", " ".join(cmd), flush=True)
 
     proc = subprocess.Popen(
         cmd,
         stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,  # combine streams; keeps order
-        text=True,
-        bufsize=1,  # line-buffered
-        universal_newlines=True,
+        stderr=subprocess.STDOUT,
     )
 
     assert proc.stdout is not None
-    try:
-        for line in proc.stdout:
-            line = line.strip()
+    fd = proc.stdout.fileno()
+
+    # Make stdout non-blocking
+    os.set_blocking(fd, False)
+
+    def _kill_and_raise(msg: str) -> None:
+        try:
+            proc.kill()
+        except Exception:
+            pass
+        try:
+            proc.wait(timeout=2)
+        except Exception:
+            pass
+
+        debug_tail = "\n".join(list(tail)[-50:])
+        raise RuntimeError(
+            f"{msg}\n\nCommand:\n  {' '.join(cmd)}\n\nLast output (tail):\n{debug_tail}\n"
+        )
+
+    def _process_buffer() -> None:
+        nonlocal buffer, last_data_time
+        # Split buffer into lines
+        while b"\n" in buffer:
+            line_bytes, buffer = buffer.split(b"\n", 1)
+            try:
+                line = line_bytes.decode("utf-8", errors="replace").strip()
+            except Exception:
+                continue
             if not line:
                 continue
 
-            # Optional: keep logs lighter
-            # print(line)
+            tail.append(line)
+            last_data_time = time.time()
 
             m = _PROGRESS_RE.match(line)
             if m and on_out_time_ms is not None:
                 on_out_time_ms(int(m.group(1)))
 
-            if time.time() - start > timeout_seconds:
-                proc.kill()
-                proc.wait()
-                raise RuntimeError(f"ffmpeg timed out after {timeout_seconds}s: {' '.join(cmd)}")
+    try:
+        while True:
+            now = time.time()
 
-        rc = proc.wait()
-        if rc != 0:
-            raise RuntimeError(f"Command failed (exit {rc}): {' '.join(cmd)}")
+            # Timeout enforcement even when ffmpeg is silent
+            if now - start > timeout_seconds:
+                _kill_and_raise(f"{label} timed out after {timeout_seconds}s")
+
+            # Heartbeat every 5 seconds
+            if now - last_heartbeat > 5:
+                elapsed = int(now - start)
+                silent_for = int(now - last_data_time)
+                print(f"[{label}] alive: elapsed={elapsed}s, silent_for={silent_for}s", flush=True)
+                last_heartbeat = now
+
+            # Try to read available data (non-blocking)
+            try:
+                chunk = os.read(fd, 4096)
+                if chunk:
+                    buffer += chunk
+                    _process_buffer()
+            except BlockingIOError:
+                # No data available right now, that's fine
+                pass
+            except OSError:
+                # Pipe closed or error
+                pass
+
+            # Check if process exited
+            rc = proc.poll()
+            if rc is not None:
+                # Drain any remaining data
+                try:
+                    while True:
+                        chunk = os.read(fd, 4096)
+                        if not chunk:
+                            break
+                        buffer += chunk
+                except (BlockingIOError, OSError):
+                    pass
+
+                # Process remaining buffer (including incomplete last line)
+                _process_buffer()
+                if buffer.strip():
+                    try:
+                        tail.append(buffer.decode("utf-8", errors="replace").strip())
+                    except Exception:
+                        pass
+
+                if rc != 0:
+                    _kill_and_raise(f"{label} failed (exit {rc})")
+
+                print(f"[{label}] completed in {int(now - start)}s", flush=True)
+                return
+
+            # Brief sleep to avoid busy-waiting
+            time.sleep(0.1)
 
     finally:
         try:
-            if proc.stdout:
-                proc.stdout.close()
+            proc.stdout.close()
         except Exception:
             pass
 
 
 def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_v1") -> None:
-    """
-    RQ job entrypoint.
-
-    Output strategy:
-      1) Poster first (fast)  -> editors see *something* ASAP
-      2) MP4 (H.264) next     -> broad support
-      3) WebM last (VP9)      -> best-effort
-
-    Files are saved to VideoDerivative.file (upload_to controls final path).
-    """
     doc = Document.objects.get(id=document_id)
 
     webm = VideoDerivative.objects.get(
@@ -134,10 +202,13 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
         document=doc, profile_slug=profile_slug, kind=VideoDerivative.Kind.MP4
     )
 
-    input_path = doc.file.path  # assumes local filesystem storage
+    # Fast exit if MP4 is already READY with a file (WebM optional)
+    if mp4.status == VideoDerivative.Status.READY and mp4.file:
+        return
+
+    input_path = doc.file.path
     stem = _safe_stem_from_doc(doc)
 
-    # duration for progress
     duration_s = _probe_duration_seconds(input_path)
     duration_ms = max(1, int(duration_s * 1000))
 
@@ -151,12 +222,7 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
             d.error = ""
             d.save(update_fields=["status", "progress", "started_at", "finished_at", "error", "updated_at"])
 
-    poster_img = None
-
     def _fail_all(msg: str) -> None:
-        """
-        Ensure we never leave rows in PROCESSING.
-        """
         ts = timezone.now()
         VideoDerivative.objects.filter(pk__in=[mp4.pk, webm.pk]).update(
             status=VideoDerivative.Status.FAILED,
@@ -167,6 +233,8 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
         )
         cache.delete(_hero_sources_cache_key(document_id, profile_slug))
 
+    poster_img = None
+
     try:
         with tempfile.TemporaryDirectory() as tmpdir:
             poster_out = os.path.join(tmpdir, "poster.jpg")
@@ -174,27 +242,40 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
             webm_out = os.path.join(tmpdir, "out.webm")
 
             # -----------------------
-            # 1) Poster (JPEG, 1 frame)
+            # 1) Poster
             # -----------------------
-            # JPEG works reliably with Wagtail metadata extraction.
+            # Give immediate "life sign" progress
+            VideoDerivative.objects.filter(pk__in=[mp4.pk, webm.pk]).update(progress=1)
+
+            # poster can sometimes emit no progress lines; timeout must still work
             _run_with_progress(
                 [
                     "ffmpeg",
                     "-y",
+                    "-nostdin",
                     "-hide_banner",
-                    "-nostats",
+                    "-loglevel",
+                    "warning",
+                    # reduce probe overhead
+                    "-probesize",
+                    "32k",
+                    "-analyzeduration",
+                    "0",
+                    # fast seek
                     "-ss",
                     "0.25",
                     "-i",
                     input_path,
-                    "-vframes",
+                    "-frames:v",
+                    "1",
+                    "-update",
                     "1",
                     "-q:v",
                     "3",
                     poster_out,
                 ],
+                label="poster",
                 timeout_seconds=30,
-                on_out_time_ms=None,
             )
 
             if not os.path.exists(poster_out) or os.path.getsize(poster_out) == 0:
@@ -209,19 +290,27 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
                 )
                 poster_img.save()
 
+            # CRITICAL: attach poster_image NOW so /status/ shows poster_url immediately
+            VideoDerivative.objects.filter(pk__in=[mp4.pk, webm.pk]).update(
+                poster_image_id=poster_img.id,
+                progress=5,
+            )
+
             # -----------------------
-            # 2) MP4 (H.264)
+            # 2) MP4 (required)
             # -----------------------
             def mp4_progress(out_time_ms: int) -> None:
                 pct = min(99, int(out_time_ms / duration_ms * 100))
-                VideoDerivative.objects.filter(pk=mp4.pk).update(progress=pct)
+                VideoDerivative.objects.filter(pk=mp4.pk).update(progress=max(5, pct))
 
             _run_with_progress(
                 [
                     "ffmpeg",
                     "-y",
+                    "-nostdin",
                     "-hide_banner",
-                    "-nostats",
+                    "-loglevel",
+                    "warning",
                     "-progress",
                     "pipe:1",
                     "-i",
@@ -249,6 +338,7 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
                 ],
                 timeout_seconds=180,
                 on_out_time_ms=mp4_progress,
+                label="mp4",
             )
 
             if not os.path.exists(mp4_out) or os.path.getsize(mp4_out) == 0:
@@ -256,7 +346,6 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
 
             with transaction.atomic():
                 with open(mp4_out, "rb") as f:
-                    # Use a deterministic name to avoid confusing overwrites
                     mp4.file.save(
                         f"{stem}__{profile_slug}.mp4",
                         ContentFile(f.read()),
@@ -271,19 +360,21 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
             cache.delete(_hero_sources_cache_key(document_id, profile_slug))
 
             # -----------------------
-            # 3) WebM (VP9) best-effort
+            # 3) WebM (optional best-effort)
             # -----------------------
             def webm_progress(out_time_ms: int) -> None:
                 pct = min(99, int(out_time_ms / duration_ms * 100))
-                VideoDerivative.objects.filter(pk=webm.pk).update(progress=pct)
+                VideoDerivative.objects.filter(pk=webm.pk).update(progress=max(5, pct))
 
             try:
                 _run_with_progress(
                     [
                         "ffmpeg",
                         "-y",
+                        "-nostdin",
                         "-hide_banner",
-                        "-nostats",
+                        "-loglevel",
+                        "warning",
                         "-progress",
                         "pipe:1",
                         "-i",
@@ -311,8 +402,9 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
                         "-an",
                         webm_out,
                     ],
-                    timeout_seconds=240,
+                    timeout_seconds=900,
                     on_out_time_ms=webm_progress,
+                    label="webm",
                 )
 
                 if not os.path.exists(webm_out) or os.path.getsize(webm_out) == 0:
@@ -333,7 +425,6 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
                     webm.save()
 
             except Exception as e:
-                # WebM optional: mark only WebM as failed
                 webm.status = VideoDerivative.Status.FAILED
                 webm.error = f"WebM failed: {e}"
                 webm.finished_at = timezone.now()

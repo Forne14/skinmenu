@@ -34,7 +34,7 @@
   function findCheckbox(root, ...suffixes) {
     for (const s of suffixes) {
       const el = root.querySelector(
-        `input[type="checkbox"][name$="${s}"], input[type="checkbox"][id$="${s}"]`
+        `input[type="checkbox"][name$="${s}"], input[type="checkbox"][id$="${s}"]`,
       )
       if (el) return el
     }
@@ -202,8 +202,8 @@
     const now = Date.now()
     const last = parseInt(sessionStorage.getItem(key) || '0', 10)
 
-    // allow at most ~1 request per 800ms per doc
-    if (now - last < 800) {
+    // allow at most ~1 request per 2s per doc
+    if (now - last < 2000) {
       // Return a promise that resolves to null; callers should handle it
       return Promise.resolve(null)
     }
@@ -217,13 +217,24 @@
   }
 
   function pickBestVideoUrlFromStatus(data) {
-    // Prefer MP4 (fast decode + widest support in admin)
-    // Data shape: { derivatives: [ { kind, status, progress, file_url, poster_url, ... } ] }
     const list = (data && data.derivatives) || []
     const mp4 = list.find((d) => d && d.kind === 'mp4')
     const webm = list.find((d) => d && d.kind === 'webm')
 
-    // Best-case: MP4 ready
+    if (DEBUG) {
+      log(
+        'status:',
+        list.map((d) => ({
+          kind: d.kind,
+          status: d.status,
+          progress: d.progress,
+          hasFile: !!d.file_url,
+          hasPoster: !!d.poster_url,
+          updated_at: d.updated_at,
+        })),
+      )
+    }
+
     if (mp4 && mp4.status === 'ready' && mp4.file_url) {
       return {
         url: String(mp4.file_url),
@@ -234,7 +245,6 @@
       }
     }
 
-    // Next: WebM ready (rare in admin preview preference, but allowed)
     if (webm && webm.status === 'ready' && webm.file_url) {
       return {
         url: String(webm.file_url),
@@ -245,7 +255,6 @@
       }
     }
 
-    // Processing: return progress text if possible
     const processing =
       mp4 && mp4.status === 'processing' ? mp4 : webm && webm.status === 'processing' ? webm : null
     if (processing) {
@@ -258,7 +267,6 @@
       }
     }
 
-    // Failed: if both failed, surface error, but allow fallback to doc.url
     const failed =
       mp4 && mp4.status === 'failed' ? mp4 : webm && webm.status === 'failed' ? webm : null
     if (failed) {
@@ -418,7 +426,7 @@
 
             // throttled fetch may return null
             if (!data) {
-              schedulePoll(800)
+              schedulePoll(2000)
               return
             }
 
@@ -446,13 +454,18 @@
                 typeof best.progress === 'number'
                   ? best.progress
                   : parseInt(best.progress || '0', 10)
-              if (pct >= 0) setStatus(stage, `Encoding… ${pct}%`)
-              else setStatus(stage, 'Encoding…')
+
+              // If progress is 0 and no poster yet, we're probably still extracting poster / probing
+              if ((!best.poster || !best.poster.length) && (pct === 0 || Number.isNaN(pct))) {
+                setStatus(stage, 'Preparing…')
+              } else if (pct >= 0) {
+                setStatus(stage, `Encoding… ${pct}%`)
+              } else {
+                setStatus(stage, 'Encoding…')
+              }
 
               if (best.poster) renderPosterFallback(best.poster)
-
-              // poll again
-              schedulePoll(1200)
+              schedulePoll(2500)
               return
             }
 
@@ -481,7 +494,7 @@
 
           if (!data) {
             // throttled; try again once shortly
-            schedulePoll(600)
+            schedulePoll(2000)
             return
           }
 
@@ -507,13 +520,18 @@
           if (best.status === 'processing') {
             const pct =
               typeof best.progress === 'number' ? best.progress : parseInt(best.progress || '0', 10)
-            if (pct >= 0) setStatus(stage, `Encoding… ${pct}%`)
-            else setStatus(stage, 'Encoding…')
+
+            // If progress is 0 and no poster yet, we're probably still extracting poster / probing
+            if ((!best.poster || !best.poster.length) && (pct === 0 || Number.isNaN(pct))) {
+              setStatus(stage, 'Preparing…')
+            } else if (pct >= 0) {
+              setStatus(stage, `Encoding… ${pct}%`)
+            } else {
+              setStatus(stage, 'Encoding…')
+            }
 
             if (best.poster) renderPosterFallback(best.poster)
-
-            // start loop
-            schedulePoll(1200)
+            schedulePoll(2500)
             return
           }
 
