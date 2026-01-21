@@ -9,6 +9,7 @@ import tempfile
 import time
 from typing import Callable
 
+from django.conf import settings
 from django.core.cache import cache
 from django.core.files import File
 from django.core.files.base import ContentFile
@@ -19,6 +20,11 @@ from wagtail.images import get_image_model
 from wagtail.models import Collection
 
 from .models import VideoDerivative
+
+
+class AlreadyProcessingError(Exception):
+    """Raised when another worker is already processing this document."""
+    pass
 
 Document = get_document_model()
 Image = get_image_model()
@@ -195,32 +201,72 @@ def _run_with_progress(
 def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_v1") -> None:
     doc = Document.objects.get(id=document_id)
 
-    webm = VideoDerivative.objects.get(
-        document=doc, profile_slug=profile_slug, kind=VideoDerivative.Kind.WEBM
-    )
-    mp4 = VideoDerivative.objects.get(
-        document=doc, profile_slug=profile_slug, kind=VideoDerivative.Kind.MP4
+    # -------------------------------------------------------------------------
+    # RACE CONDITION FIX: Use atomic conditional update to claim the job.
+    # Only proceed if we successfully transition from PENDING → PROCESSING.
+    # This works on SQLite (unlike select_for_update which requires PostgreSQL).
+    # -------------------------------------------------------------------------
+    now = timezone.now()
+
+    # Atomically claim both derivatives by updating only PENDING rows
+    claimed_count = VideoDerivative.objects.filter(
+        document=doc,
+        profile_slug=profile_slug,
+        kind__in=[VideoDerivative.Kind.MP4, VideoDerivative.Kind.WEBM],
+        status__in=[VideoDerivative.Status.PENDING, VideoDerivative.Status.FAILED],
+    ).update(
+        status=VideoDerivative.Status.PROCESSING,
+        progress=0,
+        started_at=now,
+        finished_at=None,
+        error="",
+        updated_at=now,
     )
 
-    # Fast exit if MP4 is already READY with a file (WebM optional)
-    if mp4.status == VideoDerivative.Status.READY and mp4.file:
+    if claimed_count == 0:
+        # Either already processing/ready, or rows don't exist
+        # Check if already complete
+        mp4_ready = VideoDerivative.objects.filter(
+            document=doc,
+            profile_slug=profile_slug,
+            kind=VideoDerivative.Kind.MP4,
+            status=VideoDerivative.Status.READY,
+        ).exists()
+
+        if mp4_ready:
+            print(f"[transcode] document_id={document_id} already has MP4 ready, skipping", flush=True)
+        else:
+            print(f"[transcode] document_id={document_id} is being processed by another worker, skipping", flush=True)
         return
 
+    # Fetch the derivatives we just claimed
+    mp4 = VideoDerivative.objects.filter(
+        document=doc, profile_slug=profile_slug, kind=VideoDerivative.Kind.MP4
+    ).first()
+    webm = VideoDerivative.objects.filter(
+        document=doc, profile_slug=profile_slug, kind=VideoDerivative.Kind.WEBM
+    ).first()
+
+    if not mp4 or not webm:
+        raise ValueError(f"Missing derivative rows for document_id={document_id}")
+
+    # -------------------------------------------------------------------------
+    # PATH TRAVERSAL FIX: Validate file is within MEDIA_ROOT
+    # -------------------------------------------------------------------------
     input_path = doc.file.path
+    media_root = os.path.realpath(settings.MEDIA_ROOT)
+    real_input_path = os.path.realpath(input_path)
+
+    if not real_input_path.startswith(media_root + os.sep):
+        raise ValueError(f"File path '{input_path}' is outside MEDIA_ROOT")
+
+    if not os.path.isfile(real_input_path):
+        raise FileNotFoundError(f"Source file does not exist: {real_input_path}")
+
     stem = _safe_stem_from_doc(doc)
 
     duration_s = _probe_duration_seconds(input_path)
     duration_ms = max(1, int(duration_s * 1000))
-
-    now = timezone.now()
-    with transaction.atomic():
-        for d in (webm, mp4):
-            d.status = VideoDerivative.Status.PROCESSING
-            d.progress = 0
-            d.started_at = now
-            d.finished_at = None
-            d.error = ""
-            d.save(update_fields=["status", "progress", "started_at", "finished_at", "error", "updated_at"])
 
     def _fail_all(msg: str) -> None:
         ts = timezone.now()
@@ -362,9 +408,15 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
             # -----------------------
             # 3) WebM (optional best-effort)
             # -----------------------
+            # DESIGN NOTE: WebM is independent of MP4. If WebM fails, MP4 remains
+            # READY and usable. This is intentional - MP4 has universal browser
+            # support while WebM is a nice-to-have optimization.
+
             def webm_progress(out_time_ms: int) -> None:
                 pct = min(99, int(out_time_ms / duration_ms * 100))
                 VideoDerivative.objects.filter(pk=webm.pk).update(progress=max(5, pct))
+
+            webm_pk = webm.pk  # Capture PK for atomic updates
 
             try:
                 _run_with_progress(
@@ -410,6 +462,8 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
                 if not os.path.exists(webm_out) or os.path.getsize(webm_out) == 0:
                     raise RuntimeError("WebM output file was not created or is empty.")
 
+                # Refresh webm from DB to avoid stale object issues
+                webm = VideoDerivative.objects.get(pk=webm_pk)
                 with transaction.atomic():
                     with open(webm_out, "rb") as f:
                         webm.file.save(
@@ -425,10 +479,16 @@ def transcode_document_video(document_id: int, profile_slug: str = "hero_mobile_
                     webm.save()
 
             except Exception as e:
-                webm.status = VideoDerivative.Status.FAILED
-                webm.error = f"WebM failed: {e}"
-                webm.finished_at = timezone.now()
-                webm.save(update_fields=["status", "error", "finished_at", "updated_at"])
+                # ATOMICITY FIX: Use queryset.update() instead of object.save()
+                # to avoid race conditions with stale object data
+                error_msg = f"WebM failed: {e}"
+                print(f"[webm] {error_msg}", flush=True)
+                VideoDerivative.objects.filter(pk=webm_pk).update(
+                    status=VideoDerivative.Status.FAILED,
+                    error=error_msg[:1000],  # Truncate to avoid DB field overflow
+                    finished_at=timezone.now(),
+                    updated_at=timezone.now(),
+                )
             finally:
                 cache.delete(_hero_sources_cache_key(document_id, profile_slug))
 
