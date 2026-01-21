@@ -64,6 +64,7 @@ TEMPLATES = [
             "context_processors": [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
+                "django.template.context_processors.csrf",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "wagtail.contrib.settings.context_processors.settings",
@@ -128,6 +129,9 @@ STATICFILES_DIRS = [
 # collected static output (keep separate to avoid clobbering source files)
 STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_ROOT = BASE_DIR / "media"
+NEWSLETTER_CSV_PATH = Path(
+    os.environ.get("NEWSLETTER_CSV_PATH", str(BASE_DIR / "var" / "newsletter_signups.csv"))
+)
 
 
 # Storage backends (production overrides staticfiles backend to ManifestStaticFilesStorage)

@@ -147,38 +147,28 @@
           {{ gs.newsletter_heading|default:"Stay in the know" }}
         </div>
 
-        <form
-          {% if gs.newsletter_form_action %}
-            action="{{ gs.newsletter_form_action }}"
-            method="post"
-            target="_blank"
-          {% else %}
-            action="#"
-            method="post"
-            onsubmit="return false;"
-          {% endif %}
-          class="space-y-4"
-        >
+        <form action="{% url 'newsletter_subscribe' %}" method="post" class="space-y-4">
+          {% csrf_token %}
           <input
             type="email"
             name="email"
             placeholder="Email Address"
             class="w-full bg-transparent border-b border-skinmenu-brown/20 py-2 text-heading outline-none focus:border-skinmenu-brown transition-colors placeholder:text-fg/40"
             required
-            {% if not gs.newsletter_form_action %}disabled{% endif %}
+            autocomplete="email"
           >
+          <input type="hidden" name="source_url" value="{{ request.get_full_path }}">
 
           <button
             type="submit"
             class="label-display text-fg/60 hover:text-skinmenu-brown transition-colors no-underline text-center"
-            {% if not gs.newsletter_form_action %}disabled aria-disabled="true"{% endif %}
           >
             {{ gs.newsletter_button_label|default:"Subscribe" }}
           </button>
 
-          {% if not gs.newsletter_form_action %}
-            <p class="text-fg/50">
-              Newsletter signup will be available shortly.
+          {% if request.GET.newsletter %}
+            <p class="text-fg/50 {% if request.GET.newsletter == 'error' %}text-red-600{% endif %}">
+              {{ request.GET.newsletter_message|default:"Thanks for subscribing." }}
             </p>
           {% endif %}
         </form>
@@ -298,38 +288,28 @@
             {{ gs.newsletter_heading|default:"Stay in the know" }}
           </div>
 
-          <form
-            {% if gs.newsletter_form_action %}
-              action="{{ gs.newsletter_form_action }}"
-              method="post"
-              target="_blank"
-            {% else %}
-              action="#"
-              method="post"
-              onsubmit="return false;"
-            {% endif %}
-            class="space-y-4"
-          >
+          <form action="{% url 'newsletter_subscribe' %}" method="post" class="space-y-4">
+            {% csrf_token %}
             <input
               type="email"
               name="email"
               placeholder="Email Address"
               class="w-full bg-transparent border-b border-skinmenu-brown/20 py-2 text-heading outline-none focus:border-skinmenu-brown transition-colors placeholder:text-fg/40"
               required
-              {% if not gs.newsletter_form_action %}disabled{% endif %}
+              autocomplete="email"
             >
+            <input type="hidden" name="source_url" value="{{ request.get_full_path }}">
 
             <button
               type="submit"
               class="label-display text-fg/60 hover:text-skinmenu-brown transition-colors no-underline"
-              {% if not gs.newsletter_form_action %}disabled aria-disabled="true"{% endif %}
             >
               {{ gs.newsletter_button_label|default:"Subscribe" }}
             </button>
 
-            {% if not gs.newsletter_form_action %}
-              <p class="text-fg/50">
-                Newsletter signup will be available shortly.
+            {% if request.GET.newsletter %}
+              <p class="text-fg/50 {% if request.GET.newsletter == 'error' %}text-red-600{% endif %}">
+                {{ request.GET.newsletter_message|default:"Thanks for subscribing." }}
               </p>
             {% endif %}
           </form>

@@ -7,6 +7,7 @@ from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 from pages.admin_media import document_url
 from search import views as search_views
+from site_settings import views as site_settings_views
 
 from media_derivatives.views import derivatives_status
 
@@ -17,6 +18,7 @@ urlpatterns = [
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
+    path("newsletter/subscribe/", site_settings_views.newsletter_subscribe, name="newsletter_subscribe"),
 ]
 
 
