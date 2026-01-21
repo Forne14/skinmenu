@@ -100,6 +100,10 @@ log "== Restart service =="
 sudo -n systemctl restart "$SERVICE" || die "failed to restart $SERVICE"
 sudo -n systemctl --no-pager --full status "$SERVICE" | sed -n '1,80p'
 
+log "== Restart rqworker service =="
+sudo -n systemctl restart "skinmenu-rqworker" || die "failed to restart skinmenu-rqworker"
+sudo -n systemctl --no-pager --full status "skinmenu-rqworker" | sed -n '1,80p'
+
 log "== Smoke test (Django + nginx) =="
 python scripts/smoke_test.py
 
