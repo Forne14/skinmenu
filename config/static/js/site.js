@@ -178,6 +178,26 @@
               s.dataset.active = 'false'
             }
           })
+
+          const first = slides[0]
+          if (first) {
+            first.querySelectorAll('video').forEach((v) => {
+              attachVideoSources(v)
+
+              const raw = v.getAttribute('data-playback-rate') || '1.0'
+              const rate = parseFloat(raw)
+              if (rate && !Number.isNaN(rate)) {
+                try {
+                  v.playbackRate = rate
+                } catch (e) {}
+              }
+
+              if (!prefersReducedMotion) {
+                const p = v.play && v.play()
+                if (p && typeof p.catch === 'function') p.catch(() => {})
+              }
+            })
+          }
         }
         // Keep dots correct if present
         dots.forEach((d, i) => {
