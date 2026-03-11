@@ -1,0 +1,7 @@
+{% load content_blocks %}
+
+{% if blocks %}
+  {% for block in blocks %}
+    {% render_content_block block %}
+  {% endfor %}
+{% endif %}

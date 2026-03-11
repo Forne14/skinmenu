@@ -30,9 +30,13 @@
   <div class="mt-8 treatments-bleed" data-hscroll-root>
     <div class="hscroll" aria-label="Treatments carousel" data-hscroll>
       {% for item in block.value.items %}
-        {% with p=item.page %}
+        {% with p=item.page treatment=p.treatment %}
         {% if p %}
-          <a class="treatment-tile" href="{% pageurl p %}">
+          {% if treatment %}
+            <a class="treatment-tile" href="{% pageurl p %}">
+          {% else %}
+            <a class="treatment-tile" href="{% pageurl p %}">
+          {% endif %}
             <div class="treatment-media">
               {% if item.image %}
                 {% image item.image fill-900x1200 as timg %}
@@ -54,10 +58,12 @@
 
               <div class="treatment-overlay">
                 <div class="treatment-overlay-inner">
-                  <div class="treatment-title">{{ p.title }}</div>
+                  <div class="treatment-title">{{ treatment.name|default:p.title }}</div>
 
                   {% if item.blurb %}
                     <div class="treatment-blurb">{{ item.blurb }}</div>
+                  {% elif treatment and treatment.summary %}
+                    <div class="treatment-blurb">{{ treatment.summary }}</div>
                   {% elif p.search_description %}
                     <div class="treatment-blurb">{{ p.search_description }}</div>
                   {% endif %}

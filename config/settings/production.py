@@ -22,7 +22,7 @@ SECURE_REFERRER_POLICY = "same-origin"
 
 # If nginx already does HTTP->HTTPS redirect, it's okay to keep False.
 # If you want belt-and-suspenders, change to True AFTER confirming proxy header behavior.
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = True
 
 # --------------------------------------------------------------------
 # Email (Gmail SMTP)

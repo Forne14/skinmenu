@@ -4,6 +4,7 @@ import json
 from typing import Any, Dict, List, Optional
 
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from modelcluster.fields import ParentalKey
@@ -141,68 +142,47 @@ class MenuSectionPage(Page):
     )
 
     intro = RichTextField(blank=True, help_text="Optional editorial intro for this menu section.")
-    featured_image = models.ForeignKey(
-        get_image_model_string(),
+    treatment = models.ForeignKey(
+        "catalog.Treatment",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="+",
-    )
-
-    sections = StreamField(
-        ModularSections(),
-        use_json_field=True,
-        blank=True,
+        related_name="menu_pages",
+        help_text="Link this menu section to the normalized treatment record.",
     )
 
     content_panels = Page.content_panels + [
         FieldPanel("hero"),
         FieldPanel("intro"),
-        FieldPanel("featured_image"),
-        FieldPanel("sections"),
+        FieldPanel("treatment"),
     ]
 
     parent_page_types = ["TreatmentsIndexPage"]
-    subpage_types: List[str] = ["TreatmentPage"]
+    subpage_types: List[str] = []
 
     template = "pages/menu_section_page.html"
 
     class Meta:
         verbose_name = "Menu section"
 
+    def clean(self):
+        super().clean()
+        if not self.treatment_id:
+            raise ValidationError({"treatment": "Select a Treatment before publishing this page."})
+
 
 class TreatmentPage(Page):
-    hero = StreamField(
-        [("hero_block", HeroBlock())], 
-        use_json_field=True, 
-        blank=True
-    )
-
-    summary = models.TextField(
-        blank=True,
-        max_length=240,
-        help_text="One paragraph summary for the top of the page.",
-    )
-
-    featured_image = models.ForeignKey(
-        get_image_model_string(),
+    option = models.ForeignKey(
+        "catalog.TreatmentOption",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="+",
-    )
-
-    sections = StreamField(
-        ModularSections(),
-        use_json_field=True,
-        blank=True,
+        related_name="detail_pages",
+        help_text="Link this page to a normalized treatment option.",
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel("hero"),
-        FieldPanel("summary"),
-        FieldPanel("featured_image"),
-        FieldPanel("sections"),
+        FieldPanel("option"),
     ]
 
     parent_page_types = ["MenuSectionPage"]
@@ -212,6 +192,11 @@ class TreatmentPage(Page):
 
     class Meta:
         verbose_name = "Treatment page"
+
+    def clean(self):
+        super().clean()
+        if not self.option_id:
+            raise ValidationError({"option": "Select a Treatment option before publishing this page."})
 
 
 # ---------------------------
@@ -462,6 +447,3 @@ class AboutTeamMember(models.Model):
 
     def __str__(self) -> str:
         return self.name
-
-
-

@@ -39,7 +39,7 @@
                     />
                     {% hero_video_sources media.video.id as sources %}
                     <video
-                      class="absolute inset-0 h-full w-full object-cover"
+                      class="absolute inset-0 h-full w-full object-cover hero-video"
                       style="object-position: {{ px }}% {{ py }}%;"
                       {% if sources.poster %}poster="{{ sources.poster }}"{% else %}poster="{{ hero_img.url }}"{% endif %}
                       autoplay
@@ -49,11 +49,12 @@
                       {% if sources.mp4 %}data-video-src-mp4="{{ sources.mp4 }}"{% else %}data-video-src-mp4="{{ media.video.file.url }}"{% endif %}
                       {% if sources.webm %}data-video-src-webm="{{ sources.webm }}"{% endif %}
                       data-playback-rate="{{ media.playback_rate|default:'1.0' }}"
+                      data-video-ready="false"
                     ></video> 
                   {% else %}
                   {% hero_video_sources media.video.id as sources %}
                   <video
-                    class="h-full w-full object-cover"
+                    class="h-full w-full object-cover hero-video"
                     style="object-position: {{ px }}% {{ py }}%;"
                     autoplay
                     muted
@@ -63,7 +64,17 @@
                     {% if sources.mp4 %}data-video-src-mp4="{{ sources.mp4 }}"{% else %}data-video-src-mp4="{{ media.video.file.url }}"{% endif %}
                     {% if sources.webm %}data-video-src-webm="{{ sources.webm }}"{% endif %}
                     data-playback-rate="{{ media.playback_rate|default:'1.0' }}"
+                    data-video-ready="false"
                   ></video>
+                  {% if sources.poster %}
+                    <img
+                      src="{{ sources.poster }}"
+                      alt=""
+                      class="absolute inset-0 h-full w-full object-cover hero-video-poster"
+                      style="object-position: {{ px }}% {{ py }}%;"
+                      aria-hidden="true"
+                    />
+                  {% endif %}
                   {% endif %}
 
                 {% elif media.image %}

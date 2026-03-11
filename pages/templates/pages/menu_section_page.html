@@ -1,8 +1,9 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags content_blocks %}
 
 {% block content %}
-  {% if page.hero %}
+  {% with treatment=page.treatment %}
+{% if page.hero %}
     {% for block in page.hero %}
       {% include_block block %}
     {% endfor %}
@@ -13,7 +14,11 @@
           <div class="lg:col-span-7">
             <h1 class="text-3xl md:text-5xl leading-[1.05]">{{ page.title }}</h1>
 
-            {% if page.intro %}
+            {% if treatment and treatment.long_description %}
+              <div class="mt-6 prose max-w-none">
+                {{ treatment.long_description|richtext }}
+              </div>
+            {% elif page.intro %}
               <div class="mt-6 prose max-w-none">
                 {{ page.intro|richtext }}
               </div>
@@ -21,8 +26,8 @@
           </div>
 
           <div class="lg:col-span-5">
-            {% if page.featured_image %}
-              {% image page.featured_image fill-1200x900 as img %}
+            {% if treatment and treatment.featured_image %}
+              {% image treatment.featured_image fill-1200x900 as img %}
               <div class="card overflow-hidden p-2">
                 <img class="w-full rounded-2xl object-cover" src="{{ img.url }}" alt="{{ img.alt|default:page.title }}" />
               </div>
@@ -33,9 +38,31 @@
     </section>
   {% endif %}
 
-  {% if page.sections %}
-    {% for block in page.sections %}
-      {% include_block block %}
-    {% endfor %}
+  {% if treatment and treatment.options.exists %}
+    <section class="section">
+      <div class="container-shell">
+        {% with options=treatment.options.all %}
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {% for opt in options %}
+            <div class="card p-6">
+                  {% if opt.featured_image %}
+                    {% image opt.featured_image fill-900x650 as img %}
+                    <img class="w-full rounded-2xl object-cover aspect-[4/3] border border-border/30 mb-4" src="{{ img.url }}" alt="{{ img.alt|default:opt.name }}" />
+                  {% endif %}
+                  <h3 class="text-heading text-lg">{{ opt.name }}</h3>
+                  {% if opt.summary %}
+                    <p class="mt-2 text-sm text-muted">{{ opt.summary }}</p>
+                  {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        {% endwith %}
+      </div>
+    </section>
   {% endif %}
+
+  {% if treatment and treatment.content_blocks.exists %}
+    {% render_content_blocks treatment.content_blocks.all %}
+  {% endif %}
+  {% endwith %}
 {% endblock %}

@@ -19,5 +19,7 @@ fi
 export DJANGO_SETTINGS_MODULE
 
 python manage.py check
+python manage.py makemigrations --check --dry-run
 python manage.py migrate --plan
+python manage.py test --settings=config.settings.test
 python manage.py collectstatic --noinput

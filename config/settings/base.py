@@ -13,6 +13,7 @@ BASE_DIR = PROJECT_DIR.parent
 # Core Django
 # --------------------------------------------------------------------
 INSTALLED_APPS = [
+    "catalog",
     "pages",
     "search",
     "media_derivatives",

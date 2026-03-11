@@ -1,11 +1,13 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
 
 {% block content %}
+  {% get_settings as site_settings %}
+  {% with gs=site_settings.site_settings.GlobalSiteSettings %}
   <section class="section">
     <div class="container-shell">
-      <div class="grid gap-10 lg:grid-cols-12 lg:gap-12">
-        <div class="lg:col-span-5">
+      <div class="grid gap-10">
+        <div class="max-w-3xl">
           <h1 class="text-3xl md:text-5xl leading-[1.05]">{{ page.title }}</h1>
 
           {% if page.intro %}
@@ -14,58 +16,34 @@
             </div>
           {% endif %}
 
-          {% if page.booking_links %}
-            <div class="mt-8 grid gap-2">
-              {% for b in page.booking_links %}
-                <a class="btn-secondary w-full justify-between" href="{{ b.value.url }}" target="_blank" rel="noopener">
-                  <span>{{ b.value.label }}</span>
-                  {% if b.value.note %}<span class="text-xs text-muted">{{ b.value.note }}</span>{% endif %}
-                </a>
-              {% endfor %}
-            </div>
-          {% endif %}
-
-          {% if page.featured_image %}
-            {% image page.featured_image fill-1200x900 as img %}
-            <div class="mt-10 card overflow-hidden p-2">
-              <img class="w-full rounded-2xl object-cover" src="{{ img.url }}" alt="{{ img.alt|default:page.title }}" />
-            </div>
-          {% endif %}
         </div>
 
-        <div class="lg:col-span-7">
-          <div class="card p-6 md:p-8">
-            <h2 class="text-xl md:text-2xl">Enquire</h2>
-            <p class="mt-2 text-sm text-muted">
-              Share a little context and we’ll respond with next steps.
-            </p>
+        <div class="grid gap-8 lg:grid-cols-12 lg:gap-12 lg:items-start">
+          <div class="lg:col-span-5">
+            {% if page.booking_links or gs.email %}
+              <div class="grid gap-2">
+                {% if gs.email %}
+                  <a class="btn-secondary w-full justify-between" href="mailto:{{ gs.email }}" target="_blank" rel="noopener">
+                    <span>Open Mail</span>
+                  </a>
+                {% endif %}
 
-            <form class="mt-6 grid gap-4" action="{% pageurl page %}" method="POST">
-              {% csrf_token %}
-
-              {% for field in form %}
-                <div class="grid gap-2 border-b border-border/30 pb-4">
-                  <label class="text-sm text-fg/80" for="{{ field.id_for_label }}">
-                    {{ field.label }}
-                    {% if field.field.required %}<span class="text-fg/50">*</span>{% endif %}
-                  </label>
-                  {{ field }}
-                  {% if field.errors %}
-                    <div class="text-xs text-red-500">
-                      {{ field.errors }}
-                    </div>
-                  {% endif %}
-                </div>
-              {% endfor %}
-
-              <button class="btn-primary mt-2" type="submit">Send enquiry</button>
-            </form>
+                {% if page.booking_links %}
+                  {% for b in page.booking_links %}
+                    <a class="btn-secondary w-full justify-between" href="{{ b.value.url }}" target="_blank" rel="noopener">
+                      <span>{{ b.value.label }}</span>
+                      {% if b.value.note %}<span class="text-xs text-muted">{{ b.value.note }}</span>{% endif %}
+                    </a>
+                  {% endfor %}
+                {% endif %}
+              </div>
+            {% endif %}
           </div>
 
           {% if page.map_embed_url %}
-            <div class="mt-8 card overflow-hidden p-2">
+            <div class="lg:col-span-7 border border-border/40 overflow-hidden">
               <iframe
-                class="w-full h-[360px] rounded-2xl"
+                class="w-full h-[360px]"
                 src="{{ page.map_embed_url }}"
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"
@@ -77,4 +55,5 @@
       </div>
     </div>
   </section>
+  {% endwith %}
 {% endblock %}

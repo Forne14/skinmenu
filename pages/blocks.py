@@ -48,46 +48,6 @@ PLAYBACK_RATE_CHOICES = [
     ("1.5", "1.5× (fast)"),
 ]
 
-class TreatmentCarouselItem(blocks.StructBlock):
-    title = blocks.CharBlock(required=True)
-    subtitle = blocks.CharBlock(
-        required=False,
-        help_text="Optional price, tagline, or short descriptor",
-    )
-
-    image = ImageChooserBlock(required=False)
-    video = DocumentChooserBlock(
-        required=False,
-        help_text="Optional MP4/WebM video. If set, video is used instead of image.",
-    )
-
-    link = blocks.URLBlock(
-        required=False,
-        help_text="Optional booking or detail link",
-    )
-
-    class Meta:
-        icon = "image"
-        label = "Carousel item"
-
-
-class TreatmentCarouselBlock(blocks.StructBlock):
-    heading = blocks.CharBlock(
-        required=False,
-        help_text="Optional section heading shown above the carousel",
-    )
-
-    items = blocks.ListBlock(
-        TreatmentCarouselItem(),
-        min_num=1,
-        label="Carousel items",
-    )
-
-    class Meta:
-        icon = "placeholder"
-        label = "Treatment carousel"
-        template = "pages/blocks/treatment_carousel.html"
-
 
 class MediaChooserBlock(blocks.StructBlock):
     image = ImageChooserBlock(required=False, help_text="Optional image (used as poster / fallback; can be used together with video).")
@@ -111,10 +71,12 @@ class MediaChooserBlock(blocks.StructBlock):
     def clean(self, value):
         value = super().clean(value)
         img = value.get("image")
-        vid = value.get("video")
+        media = value.get("media") or {}
+        vid = media.get("video")
 
         # Allow empty (parent may be optional)
-        if not img and not vid:
+        media_img = media.get("image")
+        if not img and not media_img and not vid:
             return value
 
         # Optional: enforce mp4 for video uploads
@@ -122,7 +84,7 @@ class MediaChooserBlock(blocks.StructBlock):
             name = (vid.file.name or "").lower()
             if not name.endswith(".mp4"):
                 raise blocks.StructBlockValidationError(block_errors={
-                    "video": ValidationError("Video must be an .mp4 file."),
+                    "media": ValidationError("Video must be an .mp4 file."),
                 })
 
         return value
@@ -133,11 +95,16 @@ class MediaChooserBlock(blocks.StructBlock):
         form_template = "wagtailadmin/blocks/media_chooser_with_picker.html"
         template = "pages/blocks/media_chooser.html"
 
+
+class SkinmenuModuleBlock(blocks.StructBlock):
+    class Meta:
+        form_template = "wagtailadmin/blocks/module_card.html"
+
 # ---------------------------
 # Homepage blocks
 # ---------------------------
 
-class HeroBlock(blocks.StructBlock):
+class HeroBlock(SkinmenuModuleBlock):
     headline = blocks.CharBlock(required=True, max_length=100, default="Your best skin, on the menu")
     subheadline = blocks.TextBlock(required=False, max_length=480)
     primary_cta = LinkBlock(required=False)
@@ -178,13 +145,14 @@ class HeroBlock(blocks.StructBlock):
     class Meta:
         icon = "image"
         label = "Hero"
+        help_text = "Full-width hero with media, headline, and call-to-action."
         template = "pages/blocks/hero.html"
 
 # ---------------------------
 # Legacy homepage block (back-compat)
 # ---------------------------
 
-class FeaturedMenuLegacyBlock(blocks.StructBlock):
+class FeaturedMenuLegacyBlock(SkinmenuModuleBlock):
     """
     Backwards-compatible homepage block used by older DB content.
     This matches pages/templates/pages/blocks/featured_menu.html
@@ -216,6 +184,7 @@ class FeaturedMenuLegacyBlock(blocks.StructBlock):
     class Meta:
         icon = "list-ul"
         label = "Featured menu (legacy)"
+        help_text = "Legacy module kept to preserve existing content."
         template = "pages/blocks/featured_menu.html"
 
 
@@ -243,7 +212,7 @@ class TreatmentTileBlock(blocks.StructBlock):
         label = "Treatment tile"
 
 
-class TreatmentsGridBlock(blocks.StructBlock):
+class TreatmentsGridBlock(SkinmenuModuleBlock):
     heading = blocks.CharBlock(required=False, max_length=80, default="Treatments")
     intro = blocks.TextBlock(required=False, max_length=220)
 
@@ -260,10 +229,10 @@ class TreatmentsGridBlock(blocks.StructBlock):
     class Meta:
         icon = "list-ul"
         label = "Treatments carousel"
+        help_text = "Carousel/grid of treatments with optional CTA."
         template = "pages/blocks/treatments_grid.html"
 
-
-class TextImageBlock(blocks.StructBlock):
+class TextImageBlock(SkinmenuModuleBlock):
     eyebrow = blocks.CharBlock(required=False, max_length=40)
     heading = blocks.CharBlock(required=True, max_length=80)
     body = blocks.RichTextBlock(required=True, features=["bold", "italic", "link", "ul", "ol"])
@@ -279,6 +248,7 @@ class TextImageBlock(blocks.StructBlock):
     class Meta:
         icon = "doc-full"
         label = "Text + Image"
+        help_text = "Editorial text paired with image or video."
         template = "pages/blocks/text_image.html"
 
 
@@ -297,17 +267,18 @@ class ReviewItemBlock(blocks.StructBlock):
         label = "Review"
 
 
-class ReviewsSliderBlock(blocks.StructBlock):
+class ReviewsSliderBlock(SkinmenuModuleBlock):
     heading = blocks.CharBlock(required=False, max_length=60, default="Client reviews")
     reviews = blocks.ListBlock(ReviewItemBlock(), required=False, max_num=20)
 
     class Meta:
         icon = "group"
         label = "Reviews carousel"
+        help_text = "Client quotes shown as a slider."
         template = "pages/blocks/reviews_slider.html"
 
 
-class CTABlock(blocks.StructBlock):
+class CTABlock(SkinmenuModuleBlock):
     heading = blocks.CharBlock(required=True, max_length=80)
     body = blocks.TextBlock(required=False, max_length=240)
     primary_cta = LinkBlock(required=True)
@@ -326,6 +297,7 @@ class CTABlock(blocks.StructBlock):
     class Meta:
         icon = "tick"
         label = "CTA"
+        help_text = "Call-to-action band with primary + secondary buttons."
         template = "pages/blocks/cta.html"
 
 
@@ -342,6 +314,7 @@ class HomeSections(blocks.StreamBlock):
     class Meta:
         label = "Homepage sections"
         icon = "list-ul"
+        form_classname = "sm-streamfield sm-streamfield--home"
 
 # ---------------------------
 # Treatment product / pricing block (NEW)
@@ -366,13 +339,14 @@ class TreatmentProductItemBlock(blocks.StructBlock):
         label = "Treatment product"
 
 
-class TreatmentProductsBlock(blocks.StructBlock):
+class TreatmentProductsBlock(SkinmenuModuleBlock):
     heading = blocks.CharBlock(required=False, max_length=80, default="Pricing")
     products = blocks.ListBlock(TreatmentProductItemBlock(), min_num=1)
 
     class Meta:
         icon = "list-ul"
         label = "Treatment products"
+        help_text = "Product/pricing cards for a treatment."
         template = "pages/blocks/treatment_products.html"
 
 
@@ -380,7 +354,7 @@ class TreatmentProductsBlock(blocks.StructBlock):
 # Modular blocks for inner pages
 # ---------------------------
 
-class RichTextSectionBlock(blocks.StructBlock):
+class RichTextSectionBlock(SkinmenuModuleBlock):
     eyebrow = blocks.CharBlock(required=False, max_length=40)
     heading = blocks.CharBlock(required=True, max_length=90)
     body = blocks.RichTextBlock(required=True, features=["bold", "italic", "link", "ul", "ol"])
@@ -388,6 +362,7 @@ class RichTextSectionBlock(blocks.StructBlock):
     class Meta:
         icon = "doc-full"
         label = "Text section"
+        help_text = "Long-form editorial copy."
         template = "pages/blocks/rich_text_section.html"
 
 
@@ -400,7 +375,7 @@ class KeyFactsItemBlock(blocks.StructBlock):
         label = "Fact"
 
 
-class KeyFactsBlock(blocks.StructBlock):
+class KeyFactsBlock(SkinmenuModuleBlock):
     eyebrow = blocks.CharBlock(required=False, max_length=40)
     heading = blocks.CharBlock(required=True, max_length=80, default="Key facts")
     facts = blocks.ListBlock(KeyFactsItemBlock(), min_num=1, max_num=8)
@@ -408,6 +383,7 @@ class KeyFactsBlock(blocks.StructBlock):
     class Meta:
         icon = "list-ul"
         label = "Key facts"
+        help_text = "Key facts list (duration, downtime, etc.)."
         template = "pages/blocks/key_facts.html"
 
 
@@ -420,7 +396,7 @@ class StepItemBlock(blocks.StructBlock):
         label = "Step"
 
 
-class StepsBlock(blocks.StructBlock):
+class StepsBlock(SkinmenuModuleBlock):
     eyebrow = blocks.CharBlock(required=False, max_length=40)
     heading = blocks.CharBlock(required=True, max_length=80, default="What to expect")
     steps = blocks.ListBlock(StepItemBlock(), min_num=1, max_num=8)
@@ -428,6 +404,7 @@ class StepsBlock(blocks.StructBlock):
     class Meta:
         icon = "form"
         label = "Steps"
+        help_text = "Step-by-step process or treatment flow."
         template = "pages/blocks/steps.html"
 
 
@@ -440,7 +417,7 @@ class FAQItemBlock(blocks.StructBlock):
         label = "FAQ item"
 
 
-class FAQBlock(blocks.StructBlock):
+class FAQBlock(SkinmenuModuleBlock):
     eyebrow = blocks.CharBlock(required=False, max_length=40)
     heading = blocks.CharBlock(required=True, max_length=80, default="Frequently asked questions")
     items = blocks.ListBlock(FAQItemBlock(), min_num=1, max_num=20)
@@ -448,6 +425,7 @@ class FAQBlock(blocks.StructBlock):
     class Meta:
         icon = "help"
         label = "FAQs"
+        help_text = "Frequently asked questions accordion."
         template = "pages/blocks/faq.html"
 
 
@@ -463,23 +441,25 @@ class ModularSections(blocks.StreamBlock):
     class Meta:
         label = "Sections"
         icon = "list-ul"
+        form_classname = "sm-streamfield sm-streamfield--modular"
 
 
 # ---------------------------
 # Blog blocks
 # ---------------------------
 
-class PullQuoteBlock(blocks.StructBlock):
+class PullQuoteBlock(SkinmenuModuleBlock):
     quote = blocks.TextBlock(required=True, max_length=280)
     attribution = blocks.CharBlock(required=False, max_length=80)
 
     class Meta:
         icon = "openquote"
         label = "Pull quote"
+        help_text = "Large pull-quote highlight."
         template = "pages/blocks/pull_quote.html"
 
 
-class BlogImageBlock(blocks.StructBlock):
+class BlogImageBlock(SkinmenuModuleBlock):
     # New: video-capable media field
     media = MediaChooserBlock(required=False)
 
@@ -508,6 +488,7 @@ class BlogImageBlock(blocks.StructBlock):
     class Meta:
         icon = "image"
         label = "Image / Video"
+        help_text = "Single media block with optional caption."
         template = "pages/blocks/blog_image.html"
 
 
@@ -521,6 +502,7 @@ class BlogBody(blocks.StreamBlock):
     class Meta:
         label = "Blog body"
         icon = "doc-full"
+        form_classname = "sm-streamfield sm-streamfield--blog"
 
 # ---------------------------
 # About page blocks
@@ -542,7 +524,7 @@ class AboutButtonBlock(blocks.StructBlock):
         label = "Button"
 
 
-class AboutWhoBlock(blocks.StructBlock):
+class AboutWhoBlock(SkinmenuModuleBlock):
     eyebrow = blocks.CharBlock(required=False, max_length=40, default="About")
     heading = blocks.CharBlock(required=True, max_length=80)
     body = blocks.RichTextBlock(
@@ -556,6 +538,7 @@ class AboutWhoBlock(blocks.StructBlock):
     class Meta:
         icon = "doc-full"
         label = "Who we are"
+        help_text = "Intro story with media and buttons."
         template = "pages/blocks/about_who.html"
 
 
@@ -568,7 +551,7 @@ class AboutValueItemBlock(blocks.StructBlock):
         label = "Value"
 
 
-class AboutValuesBlock(blocks.StructBlock):
+class AboutValuesBlock(SkinmenuModuleBlock):
     eyebrow = blocks.CharBlock(required=False, max_length=40, default="Principles")
     heading = blocks.CharBlock(required=True, max_length=80, default="Our values")
     values = blocks.ListBlock(AboutValueItemBlock(), min_num=2, max_num=12)
@@ -576,10 +559,11 @@ class AboutValuesBlock(blocks.StructBlock):
     class Meta:
         icon = "list-ul"
         label = "Values grid"
+        help_text = "Grid of values or principles."
         template = "pages/blocks/about_values.html"
 
 
-class AboutFounderBlock(blocks.StructBlock):
+class AboutFounderBlock(SkinmenuModuleBlock):
     eyebrow = blocks.CharBlock(required=False, max_length=40, default="Founder")
     heading = blocks.CharBlock(required=True, max_length=80)
     body = blocks.RichTextBlock(
@@ -593,6 +577,7 @@ class AboutFounderBlock(blocks.StructBlock):
     class Meta:
         icon = "user"
         label = "Founder"
+        help_text = "Founder spotlight with media and buttons."
         template = "pages/blocks/about_founder.html"
 
 
@@ -610,4 +595,4 @@ class AboutSections(blocks.StreamBlock):
     class Meta:
         label = "About sections"
         icon = "list-ul"
-
+        form_classname = "sm-streamfield sm-streamfield--about"

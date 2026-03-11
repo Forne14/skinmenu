@@ -7,7 +7,7 @@ from .models import VideoDerivative
 
 
 @require_GET
-@staff_member_required
+@staff_member_required(login_url="/admin/login/")
 def derivatives_status(request, document_id: int):
     qs = VideoDerivative.objects.filter(document_id=document_id).select_related("poster_image")
 

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.urls import include, path
+from django.views.generic import RedirectView
 from django.contrib import admin
 
 from wagtail.admin import urls as wagtailadmin_urls
@@ -12,7 +13,7 @@ from site_settings import views as site_settings_views
 from media_derivatives.views import derivatives_status
 
 urlpatterns = [
-    path("django-admin/", admin.site.urls),
+    path("django-admin/", RedirectView.as_view(url="/", permanent=False)),
     path("admin/media-picker/document-url/<int:doc_id>/", document_url, name="media_picker_document_url"),
     path("admin/media-derivatives/<int:document_id>/status/", derivatives_status, name="media_derivatives_status"),
     path("admin/", include(wagtailadmin_urls)),

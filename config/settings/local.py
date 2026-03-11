@@ -11,15 +11,22 @@ SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # Strongly recommended to set in prod env:
 # DJANGO_ALLOWED_HOSTS="skin-menu.co.uk,www.skin-menu.co.uk"
-ALLOWED_HOSTS = _csv_env("DJANGO_ALLOWED_HOSTS")
+ALLOWED_HOSTS = _csv_env("DJANGO_ALLOWED_HOSTS") or [
+    "localhost",
+    "127.0.0.1",
+    "skinmenu.local",
+]
 
 # Recommended to set in prod env:
 # DJANGO_CSRF_TRUSTED_ORIGINS="https://skin-menu.co.uk,https://www.skin-menu.co.uk"
-CSRF_TRUSTED_ORIGINS = _csv_env("DJANGO_CSRF_TRUSTED_ORIGINS")
+CSRF_TRUSTED_ORIGINS = _csv_env("DJANGO_CSRF_TRUSTED_ORIGINS") or [
+    "http://localhost:8001",
+    "http://127.0.0.1:8001",
+    "http://skinmenu.local:8001",
+]
 
 # Wagtail admin base URL for notification emails
 WAGTAILADMIN_BASE_URL = os.environ.get("WAGTAILADMIN_BASE_URL", "https://www.skin-menu.co.uk")
 
 # config/settings/local.py
 WAGTAILDOCS_SERVE_METHOD = "direct"
-

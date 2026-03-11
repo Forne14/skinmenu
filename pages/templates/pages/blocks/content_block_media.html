@@ -1,0 +1,33 @@
+{% load wagtailimages_tags %}
+<div>
+  {% if block.media_video %}
+    <div class="overflow-hidden border border-border/35 bg-surface">
+      <video
+        class="h-[380px] w-full object-cover md:h-[560px]"
+        src="{{ block.media_video.url }}"
+        autoplay
+        muted
+        playsinline
+        preload="metadata"
+        {% if block.loop %}loop{% endif %}
+        data-playback-rate="{{ block.playback_rate|default:'1.0' }}"
+      ></video>
+    </div>
+  {% elif block.media_image %}
+    {% image block.media_image fill-1200x900 as img %}
+    <div class="overflow-hidden border border-border/35 bg-surface">
+      <img
+        src="{{ img.url }}"
+        width="{{ img.width }}"
+        height="{{ img.height }}"
+        alt="{{ block.media_image.title }}"
+        class="h-[380px] w-full object-cover md:h-[560px]"
+        loading="lazy"
+      />
+    </div>
+  {% else %}
+    <div class="h-[380px] md:h-[560px] border border-border/35 bg-surface flex items-center justify-center text-fg/60">
+      Optional media
+    </div>
+  {% endif %}
+</div>

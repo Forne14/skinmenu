@@ -1,0 +1,120 @@
+{% load wagtailimages_tags wagtailcore_tags %}
+
+{% if block.block_type == "rich_text" %}
+  <section class="section">
+    <div class="container-shell">
+      <div class="card p-8 md:p-10">
+        {% if block.eyebrow %}
+          <div class="label-display">{{ block.eyebrow }}</div>
+        {% endif %}
+        {% if block.heading %}
+          <h2 class="section-title mt-2">{{ block.heading }}</h2>
+        {% endif %}
+        {% if block.body %}
+          <div class="mt-6 prose max-w-none">
+            {{ block.body|richtext }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% elif block.block_type == "text_media" %}
+  <section class="section">
+    <div class="container-shell">
+      <div class="grid gap-10 md:grid-cols-2 md:items-start">
+        {% if block.media_position == "left" %}
+          {% include "pages/blocks/content_block_media.html" with block=block %}
+          {% include "pages/blocks/content_block_text.html" with block=block %}
+        {% else %}
+          {% include "pages/blocks/content_block_text.html" with block=block %}
+          {% include "pages/blocks/content_block_media.html" with block=block %}
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% elif block.block_type == "cta" %}
+  <section class="cta-bleed">
+    <div class="cta-surface">
+      <div class="container-shell py-14 md:py-18">
+        <div class="cta-inner">
+          <div class="grid gap-8 md:grid-cols-2 md:items-center">
+            <div class="space-y-3">
+              {% if block.heading %}
+                <h2 class="section-title">{{ block.heading }}</h2>
+              {% endif %}
+              {% if block.body %}
+                <p class="text-fg/80 max-w-prose">
+                  {{ block.body|striptags }}
+                </p>
+              {% endif %}
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 md:justify-end">
+              {% if block.primary_cta_url and block.primary_cta_label %}
+                <a class="btn-primary" href="{{ block.primary_cta_url }}">{{ block.primary_cta_label }}</a>
+              {% endif %}
+              {% if block.secondary_cta_url and block.secondary_cta_label %}
+                <a class="btn-secondary" href="{{ block.secondary_cta_url }}">{{ block.secondary_cta_label }}</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% elif block.block_type == "faq" %}
+  <section class="section">
+    <div class="container-shell">
+      <div class="card p-8 md:p-10">
+        {% if block.eyebrow %}
+          <div class="label-display">{{ block.eyebrow }}</div>
+        {% endif %}
+        {% if block.heading %}
+          <h2 class="section-title mt-2">{{ block.heading }}</h2>
+        {% endif %}
+
+        <div class="mt-8 divide-y divide-border/30 rounded-2xl border border-border/30 bg-surface">
+          {% for item in block.items.all %}
+            <details class="group p-6">
+              <summary class="cursor-pointer list-none text-heading">
+                <span class="inline-flex items-start justify-between gap-4">
+                  <span>{{ item.title }}</span>
+                  <span class="text-muted transition group-open:rotate-45" aria-hidden="true">+</span>
+                </span>
+              </summary>
+              <div class="mt-4 prose max-w-none">
+                {{ item.body|richtext }}
+              </div>
+            </details>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% elif block.block_type == "steps" %}
+  <section class="section reviews-bleed">
+    <div class="reviews-surface py-14">
+      <div class="container-shell">
+        {% if block.eyebrow %}
+          <div class="label-display mb-3">{{ block.eyebrow }}</div>
+        {% endif %}
+        {% if block.heading %}
+          <h2 class="section-title mb-10">{{ block.heading }}</h2>
+        {% endif %}
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for item in block.items.all %}
+            <div class="card p-6">
+              <h3 class="text-heading">{{ item.title }}</h3>
+              <div class="mt-2 text-fg/75 leading-relaxed">
+                {{ item.body|richtext }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% elif block.block_type == "products" %}
+  {% include "pages/blocks/content_block_products.html" with block=block %}
+{% endif %}

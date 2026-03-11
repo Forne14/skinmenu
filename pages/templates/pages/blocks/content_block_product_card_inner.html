@@ -1,0 +1,56 @@
+<div class="space-y-3">
+  {% if product.title %}
+    <h3 class="text-heading leading-tight">
+      {{ product.title }}
+    </h3>
+  {% endif %}
+
+  {% if product.price_text %}
+    <div class="space-y-2">
+      <div class="text-heading leading-tight">
+        {{ product.price_text }}
+      </div>
+      <div class="h-px w-10 bg-border/40"></div>
+    </div>
+  {% endif %}
+
+  {% if product.body %}
+    <p class="text-muted leading-relaxed max-w-prose">
+      {{ product.body|striptags }}
+    </p>
+  {% endif %}
+</div>
+
+{% if product.value %}
+  <div class="mt-5">
+    <div class="label-display text-muted mb-3">
+      Options:
+    </div>
+
+    <ul class="grid grid-cols-2 gap-x-6 gap-y-2 text-muted">
+      {% for t in product.value.splitlines %}
+        {% if t %}
+          <li class="leading-snug">{{ t }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+    <div class="mt-4 h-px w-10 bg-border/30"></div>
+  </div>
+{% endif %}
+
+<div class="mt-auto pt-5 flex justify-center">
+  {% if product.cta_url %}
+    <span class="btn-primary inline-flex items-center justify-center px-6 py-2">
+      {{ product.cta_label|default:"Book now" }}
+    </span>
+  {% else %}
+    <div
+      class="inline-flex items-center justify-center
+             px-6 py-2 border border-border/40
+             text-muted"
+    >
+      {{ product.cta_label|default:"Book now" }}
+    </div>
+  {% endif %}
+</div>

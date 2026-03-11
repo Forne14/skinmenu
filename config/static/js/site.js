@@ -109,6 +109,8 @@
     const mp4 = videoEl.getAttribute('data-video-src-mp4')
     if (!webm && !mp4) return
 
+    videoEl.dataset.videoReady = 'false'
+
     // Clear any existing sources to avoid duplicates
     videoEl.querySelectorAll('source').forEach((n) => n.remove())
     videoEl.removeAttribute('src')
@@ -130,6 +132,12 @@
       videoEl.load()
     } catch (e) {}
 
+    const markReady = () => {
+      videoEl.dataset.videoReady = 'true'
+    }
+    videoEl.addEventListener('loadeddata', markReady, { once: true })
+    videoEl.addEventListener('playing', markReady, { once: true })
+
     videoEl.dataset.sourcesAttached = 'true'
   }
 
@@ -141,7 +149,6 @@
 
     videoEl.removeAttribute('src')
     videoEl.querySelectorAll('source').forEach((n) => n.remove())
-
     try {
       videoEl.load?.()
     } catch (e) {}

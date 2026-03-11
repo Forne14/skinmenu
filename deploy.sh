@@ -16,6 +16,12 @@ DEPLOY_REF="${DEPLOY_REF:-main}"
 log() { echo "[$(date -Is)] $*"; }
 die() { log "ERROR: $*"; exit 1; }
 
+log_service_context() {
+  local svc="$1"
+  sudo -n systemctl --no-pager --full status "$svc" | sed -n '1,120p' || true
+  sudo -n journalctl -u "$svc" --no-pager -n 80 || true
+}
+
 cd "$APP_DIR"
 
 exec 200>"$LOCK_FILE"
@@ -78,7 +84,6 @@ export PYTHONPATH="$APP_DIR"
 : "${DJANGO_ALLOWED_HOSTS:?DJANGO_ALLOWED_HOSTS missing (from $ENV_FILE)}"
 
 log "== Install Python deps =="
-python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
 log "== Django checks (deploy) =="
@@ -97,15 +102,24 @@ log "== Verify static manifest contains required picker files (best-effort) =="
 test -f "$APP_DIR/staticfiles/staticfiles.json" && echo "manifest ok"
 
 log "== Restart service =="
-sudo -n systemctl restart "$SERVICE" || die "failed to restart $SERVICE"
+if ! sudo -n systemctl restart "$SERVICE"; then
+  log_service_context "$SERVICE"
+  die "failed to restart $SERVICE"
+fi
 sudo -n systemctl --no-pager --full status "$SERVICE" | sed -n '1,80p'
 
 log "== Restart rqworker service =="
-sudo -n systemctl restart "skinmenu-rqworker" || die "failed to restart skinmenu-rqworker"
+if ! sudo -n systemctl restart "skinmenu-rqworker"; then
+  log_service_context "skinmenu-rqworker"
+  die "failed to restart skinmenu-rqworker"
+fi
 sudo -n systemctl --no-pager --full status "skinmenu-rqworker" | sed -n '1,80p'
 
 log "== Smoke test (Django + nginx) =="
-python scripts/smoke_test.py
+if ! python scripts/smoke_test.py; then
+  log_service_context "$SERVICE"
+  die "smoke test failed"
+fi
 
 PREV_SHA=""
 if [[ -f "$DEPLOY_STATE_FILE" ]]; then
