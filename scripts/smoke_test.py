@@ -89,9 +89,18 @@ def main() -> int:
 
     # --- App-level check (no nginx involved)
     c = Client(HTTP_HOST="skin-menu.co.uk", wsgi_url_scheme="https")
-    r = c.get("/admin/login/")
+    r = c.get("/admin/login/", follow=False)
     print("Django Client GET /admin/login/ ->", r.status_code)
-    if r.status_code != 200:
+
+    if r.status_code in (301, 302, 307, 308):
+        rf = c.get("/admin/login/", follow=True)
+        print("Django Client GET /admin/login/ (follow=True) ->", rf.status_code)
+        if rf.redirect_chain:
+            print("redirect_chain:", rf.redirect_chain)
+        if rf.status_code != 200:
+            print(rf.content[:500])
+            return 2
+    elif r.status_code != 200:
         print(r.content[:500])
         return 2
 
