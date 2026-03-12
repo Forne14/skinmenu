@@ -28,6 +28,7 @@ modelsearch==1.1.1
 openpyxl==3.1.5
 pillow==12.0.0
 pillow_heif==1.1.1
+psycopg2-binary==2.9.10
 python-dateutil==2.9.0.post0
 pytz==2025.2
 redis==7.1.0
