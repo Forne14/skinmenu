@@ -38,6 +38,14 @@
 5. Treat the latest successful artifact directory as the migration gate record.
 6. If parity fails, do not cut over. Fix data import/mapping first.
 
+## Local Control Sequence (No-Prod)
+- Single command gate for readiness assessment:
+  - `DJANGO_SECRET_KEY=... DATABASE_URL=postgresql://... ./scripts/local_cutover_control_sequence.sh`
+- Expected success markers:
+  - `pre_cutover_check: ok`
+  - `database_snapshots_match`
+  - `local_cutover_control_sequence: ok`
+
 ## Failure Triage
 - App service logs:
   - `journalctl -u skinmenu -n 120 --no-pager`
