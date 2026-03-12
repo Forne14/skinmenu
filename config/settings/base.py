@@ -226,6 +226,18 @@ RQ_QUEUES = {
     }
 }
 
+# django-tasks defaults to ImmediateBackend, which executes tasks inline.
+# Keep that default for normal runtime, but allow command-level override for
+# data migration rehearsals where we want deterministic fixture loading.
+TASKS = {
+    "default": {
+        "BACKEND": os.environ.get(
+            "DJANGO_TASK_BACKEND",
+            "django_tasks.backends.immediate.ImmediateBackend",
+        ),
+    }
+}
+
 # --------------------------------------------------------------------
 # Cache (shared)
 # --------------------------------------------------------------------

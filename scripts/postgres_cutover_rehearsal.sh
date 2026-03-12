@@ -42,7 +42,9 @@ echo "[5.5/8] Restore locale seed required by Wagtail before fixture load"
 DATABASE_URL="${DATABASE_URL}" "${PYTHON_BIN}" manage.py shell -c "from wagtail.models import Locale; from django.conf import settings; codes={settings.LANGUAGE_CODE.lower(), settings.LANGUAGE_CODE.lower().replace('_','-').split('-')[0], 'en'}; [Locale.objects.get_or_create(language_code=code) for code in sorted(codes) if code]"
 
 echo "[6/8] Load source fixture into target Postgres"
-DATABASE_URL="${DATABASE_URL}" "${PYTHON_BIN}" manage.py loaddata "${ARTIFACT_DIR}/source.json"
+DATABASE_URL="${DATABASE_URL}" \
+DJANGO_TASK_BACKEND="django_tasks.backends.dummy.DummyBackend" \
+"${PYTHON_BIN}" manage.py loaddata "${ARTIFACT_DIR}/source.json"
 
 echo "[7/8] Candidate snapshot from target Postgres"
 DATABASE_URL="${DATABASE_URL}" "${PYTHON_BIN}" manage.py database_snapshot --output "${ARTIFACT_DIR}/candidate.json"
