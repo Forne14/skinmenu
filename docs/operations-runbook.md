@@ -24,7 +24,10 @@
 3. Verify services and smoke test again.
 
 ## SQLite -> Postgres Rehearsal (No-Prod)
-1. Ensure target Postgres is reachable via `DATABASE_URL`.
+1. Set required env and validate prerequisites:
+   - `export DJANGO_SECRET_KEY=...`
+   - `export DATABASE_URL=postgresql://...`
+   - `./scripts/pre_cutover_check.sh`
 2. Run:
    - `./scripts/postgres_cutover_rehearsal.sh`
 3. Review artifacts in `var/postgres-rehearsal/<timestamp>/`:
@@ -32,7 +35,8 @@
    - `candidate.json`
 4. Confirm parity command passes:
    - `python manage.py compare_database_snapshots --left <baseline> --right <candidate>`
-5. If parity fails, do not cut over. Fix data import/mapping first.
+5. Treat the latest successful artifact directory as the migration gate record.
+6. If parity fails, do not cut over. Fix data import/mapping first.
 
 ## Failure Triage
 - App service logs:
