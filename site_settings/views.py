@@ -10,6 +10,7 @@ from django.http import HttpResponseNotAllowed
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
+from integrations.leads import enqueue_newsletter_signup
 
 
 def _append_newsletter_row(csv_path: Path, row: list[str]) -> None:
@@ -44,6 +45,15 @@ def newsletter_subscribe(request):
 
     csv_path = Path(getattr(settings, "NEWSLETTER_CSV_PATH", settings.MEDIA_ROOT / "newsletter_signups.csv"))
     _append_newsletter_row(csv_path, [email, submitted_at, source_url])
+    enqueue_newsletter_signup(
+        {
+            "event_type": "newsletter_signup",
+            "email": email,
+            "submitted_at": submitted_at,
+            "source_url": source_url,
+            "host": request.get_host(),
+        }
+    )
 
     redirect_target = request.META.get("HTTP_REFERER", "/")
     if not url_has_allowed_host_and_scheme(redirect_target, allowed_hosts={request.get_host()}):

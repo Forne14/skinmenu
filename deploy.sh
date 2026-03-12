@@ -88,6 +88,7 @@ python -m pip install -r requirements.txt
 
 log "== Django checks (deploy) =="
 python manage.py check --deploy
+python manage.py validate_integrations_config
 
 log "== Migration sanity (fail if missing migrations) =="
 python manage.py makemigrations --check --dry-run

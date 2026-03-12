@@ -5,6 +5,8 @@ from urllib.parse import parse_qs, urlparse
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
+from integrations.models import OutboundEvent
+
 
 @override_settings(NEWSLETTER_CSV_PATH=Path(tempfile.gettempdir()) / "skinmenu-newsletter-test.csv")
 class NewsletterSubscribeTests(TestCase):
@@ -52,6 +54,7 @@ class NewsletterSubscribeTests(TestCase):
         self.assertEqual(rows[0], "email,submitted_at,source_url")
         self.assertIn("hello@example.com", rows[1])
         self.assertIn("https://skin-menu.co.uk/?utm=ig", rows[1])
+        self.assertEqual(OutboundEvent.objects.filter(event_type="newsletter_signup").count(), 1)
 
     def test_disallows_external_referer_redirect(self):
         response = self.client.post(

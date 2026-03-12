@@ -17,6 +17,9 @@ This repository is a Django 5 + Wagtail 7 project with Tailwind CSS.
 - `npm run css:dev`: watch and rebuild Tailwind with sourcemaps.
 - `npm run css:build`: produce minified CSS for deploy.
 - `python manage.py test`: run Django/Wagtail test suite.
+- `python manage.py audit_legacy_content --fail-on-issues`: detect legacy/zombie page content debt.
+- `python manage.py cleanup_legacy_content`: preview safe legacy cleanup (`--apply` to persist).
+- `python manage.py validate_integrations_config`: fail fast on invalid integration env config.
 
 ## Coding Style & Naming Conventions
 - Python: PEP 8, 4-space indentation, descriptive class/function names.
@@ -39,6 +42,7 @@ This repository is a Django 5 + Wagtail 7 project with Tailwind CSS.
 - Server access: `ssh -C -i ~/.ssh/hetzner_ed25519 deploy@91.99.125.39`.
 - App root: `/home/deploy/apps/skinmenu`; virtualenv: `/home/deploy/venvs/skinmenu`.
 - Runtime env file: `/etc/skinmenu/skinmenu.env` (do not commit secrets; keep key names stable).
+- Integration env keys: `DATABASE_URL` (optional, Postgres), `LEAD_SYNC_ENABLED`, `LEAD_SYNC_BACKEND`, `LEAD_SYNC_WEBHOOK_URL`, `BOOKING_BASE_URL`.
 - `skinmenu.service` runs Gunicorn on unix socket `/run/skinmenu/skinmenu.sock`.
 - `skinmenu-rqworker.service` runs `manage.py rqworker default --with-scheduler`.
 - Nginx site `skinmenu` fronts the app; `/static/` maps to `.../staticfiles/`, `/media/` maps to `.../media/`.
@@ -48,3 +52,5 @@ This repository is a Django 5 + Wagtail 7 project with Tailwind CSS.
 - It installs deps, runs `check --deploy`, checks migration drift, runs `migrate`, then `collectstatic --clear`.
 - It restarts `skinmenu` and `skinmenu-rqworker`, runs `scripts/smoke_test.py`, and writes `.deploy_state`/`.deploy_log`.
 - Verification commands: `systemctl status skinmenu --no-pager`, `systemctl status skinmenu-rqworker --no-pager`, `tail -n 20 /home/deploy/apps/skinmenu/.deploy_log`, `cat /home/deploy/apps/skinmenu/.deploy_state`.
+- Health endpoint: `GET /healthz/` (checks DB + cache).
+- Replay failed lead-sync events: `python manage.py replay_outbound_events --status failed,pending --limit 50`.

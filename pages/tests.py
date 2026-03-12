@@ -1,4 +1,6 @@
 from django.core.exceptions import ValidationError
+from django.core.management import call_command
+from io import StringIO
 
 from catalog.models import Treatment, TreatmentOption
 from pages.models import HomePage, TreatmentsIndexPage, MenuSectionPage, TreatmentPage, ContactPage
@@ -112,3 +114,52 @@ class ContactPageMailtoTests(WagtailPageTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, "Open Mail")
         self.assertNotContains(response, 'href="mailto:', html=False)
+
+
+class LegacyContentCommandsTests(WagtailPageTestCase):
+    def setUp(self):
+        root_page = Page.get_first_root_node()
+        self.site = Site.objects.create(hostname="testsite", root_page=root_page, is_default_site=True)
+        self.home = HomePage(title="Home")
+        root_page.add_child(instance=self.home)
+
+    def test_audit_legacy_content_reports_issues(self):
+        self.home.sections = [
+            {
+                "type": "featured_menu",
+                "value": {"heading": "", "intro": "", "featured_pages": [], "cta_label": "", "cta_page": None},
+            }
+        ]
+        self.home.save(update_fields=["sections"])
+
+        out = StringIO()
+        call_command("audit_legacy_content", stdout=out)
+        text = out.getvalue()
+        self.assertIn("legacy_blocks: 1", text)
+        self.assertIn("issues_total:", text)
+
+    def test_cleanup_legacy_content_dry_run_does_not_persist(self):
+        self.home.sections = [
+            {
+                "type": "featured_menu",
+                "value": {"heading": "", "intro": "", "featured_pages": [], "cta_label": "", "cta_page": None},
+            }
+        ]
+        self.home.save(update_fields=["sections"])
+
+        call_command("cleanup_legacy_content")
+        self.home.refresh_from_db()
+        self.assertEqual(len(self.home.sections.raw_data), 1)
+
+    def test_cleanup_legacy_content_apply_persists(self):
+        self.home.sections = [
+            {
+                "type": "featured_menu",
+                "value": {"heading": "", "intro": "", "featured_pages": [], "cta_label": "", "cta_page": None},
+            }
+        ]
+        self.home.save(update_fields=["sections"])
+
+        call_command("cleanup_legacy_content", "--apply")
+        self.home.refresh_from_db()
+        self.assertEqual(len(self.home.sections.raw_data), 0)

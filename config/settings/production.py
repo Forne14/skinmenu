@@ -1,4 +1,5 @@
 from .base import *
+from django.core.exceptions import ImproperlyConfigured
 
 DEBUG = False
 
@@ -37,6 +38,9 @@ DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Skin Menu <noreply@sk
 
 # Timeout for SMTP connection (seconds)
 EMAIL_TIMEOUT = 10
+
+if LEAD_SYNC_ENABLED and LEAD_SYNC_BACKEND == "webhook" and not LEAD_SYNC_WEBHOOK_URL:
+    raise ImproperlyConfigured("LEAD_SYNC_WEBHOOK_URL is required when LEAD_SYNC_ENABLED=1 and backend=webhook")
 
 try:
     from .local import *

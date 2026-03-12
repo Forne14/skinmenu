@@ -2,14 +2,17 @@
 
 ## Preflight (local/CI)
 - `python manage.py check`
+- `python manage.py validate_integrations_config`
 - `python manage.py makemigrations --check --dry-run`
 - `python manage.py test --settings=config.settings.test`
 - `python manage.py audit_content_integrity`
+- `python manage.py audit_legacy_content`
 
 ## Deploy Verification
 - `systemctl status skinmenu --no-pager`
 - `systemctl status skinmenu-rqworker --no-pager`
 - `python scripts/smoke_test.py`
+- `curl -fsS https://skin-menu.co.uk/healthz/`
 - `tail -n 20 /home/deploy/apps/skinmenu/.deploy_log`
 
 ## Rollback
@@ -23,5 +26,7 @@
   - `journalctl -u skinmenu -n 120 --no-pager`
 - Worker logs:
   - `journalctl -u skinmenu-rqworker -n 120 --no-pager`
+- Lead-sync retries:
+  - `python manage.py replay_outbound_events --status failed,pending --limit 50`
 - Nginx logs:
   - `sudo tail -n 120 /var/log/nginx/error.log`

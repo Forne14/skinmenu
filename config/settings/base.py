@@ -4,6 +4,7 @@ Base settings shared by dev + production.
 
 from pathlib import Path
 import os
+from urllib.parse import urlparse, unquote
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = PROJECT_DIR.parent
@@ -13,6 +14,7 @@ BASE_DIR = PROJECT_DIR.parent
 # Core Django
 # --------------------------------------------------------------------
 INSTALLED_APPS = [
+    "integrations",
     "catalog",
     "pages",
     "search",
@@ -80,12 +82,30 @@ WSGI_APPLICATION = "config.wsgi.application"
 # --------------------------------------------------------------------
 # Database
 # --------------------------------------------------------------------
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+def _database_from_env() -> dict[str, str | int]:
+    url = os.environ.get("DATABASE_URL", "").strip()
+    if not url:
+        return {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+
+    parsed = urlparse(url)
+    if parsed.scheme in {"postgres", "postgresql"}:
+        return {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": (parsed.path or "/")[1:] or "postgres",
+            "USER": unquote(parsed.username or ""),
+            "PASSWORD": unquote(parsed.password or ""),
+            "HOST": parsed.hostname or "127.0.0.1",
+            "PORT": str(parsed.port or 5432),
+            "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", "60")),
+        }
+
+    raise RuntimeError("Unsupported DATABASE_URL scheme. Use sqlite (default) or postgres/postgresql.")
+
+
+DATABASES = {"default": _database_from_env()}
 
 
 # --------------------------------------------------------------------
@@ -225,3 +245,14 @@ CACHES = {
         "TIMEOUT": 300,  # default; individual cache.set overrides this
     }
 }
+
+# --------------------------------------------------------------------
+# Integration adapters (safe defaults)
+# --------------------------------------------------------------------
+LEAD_SYNC_ENABLED = os.environ.get("LEAD_SYNC_ENABLED", "0").lower() in {"1", "true", "yes", "on"}
+LEAD_SYNC_BACKEND = os.environ.get("LEAD_SYNC_BACKEND", "noop")
+LEAD_SYNC_WEBHOOK_URL = os.environ.get("LEAD_SYNC_WEBHOOK_URL", "")
+LEAD_SYNC_TIMEOUT_SECONDS = int(os.environ.get("LEAD_SYNC_TIMEOUT_SECONDS", "8"))
+LEAD_SYNC_QUEUE = os.environ.get("LEAD_SYNC_QUEUE", "default")
+
+BOOKING_BASE_URL = os.environ.get("BOOKING_BASE_URL", "").strip()
