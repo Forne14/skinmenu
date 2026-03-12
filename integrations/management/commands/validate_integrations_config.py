@@ -13,6 +13,10 @@ class Command(BaseCommand):
 
         if settings.LEAD_SYNC_TIMEOUT_SECONDS <= 0:
             issues.append("LEAD_SYNC_TIMEOUT_SECONDS must be > 0")
+        if settings.LEAD_SYNC_MAX_ATTEMPTS <= 0:
+            issues.append("LEAD_SYNC_MAX_ATTEMPTS must be > 0")
+        if not str(settings.LEAD_SYNC_RETRY_DELAYS).strip():
+            issues.append("LEAD_SYNC_RETRY_DELAYS must not be empty")
 
         if getattr(settings, "USE_S3_STORAGE", False):
             if "storages" not in settings.INSTALLED_APPS:

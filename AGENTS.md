@@ -20,6 +20,8 @@ This repository is a Django 5 + Wagtail 7 project with Tailwind CSS.
 - `python manage.py audit_legacy_content --fail-on-issues`: detect legacy/zombie page content debt.
 - `python manage.py cleanup_legacy_content`: preview safe legacy cleanup (`--apply` to persist).
 - `python manage.py validate_integrations_config`: fail fast on invalid integration env config.
+- `./scripts/pre_release_check.sh`: run local release gate checks before any deploy.
+- `./scripts/sqlite_backup_restore_drill.sh`: rehearse sqlite backup/restore integrity.
 
 ## Coding Style & Naming Conventions
 - Python: PEP 8, 4-space indentation, descriptive class/function names.
@@ -48,6 +50,7 @@ This repository is a Django 5 + Wagtail 7 project with Tailwind CSS.
 - Nginx site `skinmenu` fronts the app; `/static/` maps to `.../staticfiles/`, `/media/` maps to `.../media/`.
 
 ## Deployment Flow
+- Production policy: deploy only from `main` unless explicitly approved for hotfixes.
 - Canonical deploy path is `deploy.sh`. It locks deploy, validates clean git state, fetches, and checks out target commit (detached `HEAD` is expected).
 - It installs deps, runs `check --deploy`, checks migration drift, runs `migrate`, then `collectstatic --clear`.
 - It restarts `skinmenu` and `skinmenu-rqworker`, runs `scripts/smoke_test.py`, and writes `.deploy_state`/`.deploy_log`.

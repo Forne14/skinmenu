@@ -254,6 +254,8 @@ LEAD_SYNC_BACKEND = os.environ.get("LEAD_SYNC_BACKEND", "noop")
 LEAD_SYNC_WEBHOOK_URL = os.environ.get("LEAD_SYNC_WEBHOOK_URL", "")
 LEAD_SYNC_TIMEOUT_SECONDS = int(os.environ.get("LEAD_SYNC_TIMEOUT_SECONDS", "8"))
 LEAD_SYNC_QUEUE = os.environ.get("LEAD_SYNC_QUEUE", "default")
+LEAD_SYNC_MAX_ATTEMPTS = int(os.environ.get("LEAD_SYNC_MAX_ATTEMPTS", "3"))
+LEAD_SYNC_RETRY_DELAYS = os.environ.get("LEAD_SYNC_RETRY_DELAYS", "30,120,300")
 
 BOOKING_BASE_URL = os.environ.get("BOOKING_BASE_URL", "").strip()
 

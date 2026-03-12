@@ -1,0 +1,64 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+
+{% block titletag %}Outbound Events{% endblock %}
+
+{% block content %}
+  <header class="nice-padding">
+    <h1>Outbound Integration Events</h1>
+    <form method="get" style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        <option value="">All</option>
+        {% for value, label in status_choices %}
+          <option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <button class="button">Filter</button>
+    </form>
+  </header>
+
+  <div class="nice-padding">
+    <table class="listing">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Attempts</th>
+          <th>Destination</th>
+          <th>Created</th>
+          <th>Error</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in events_page %}
+          <tr>
+            <td>{{ event.id }}</td>
+            <td>{{ event.event_type }}</td>
+            <td>{{ event.status }}</td>
+            <td>{{ event.attempts }}</td>
+            <td>{{ event.destination }}</td>
+            <td>{{ event.created_at }}</td>
+            <td>{{ event.last_error|default:"-"|truncatechars:80 }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7">No events found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if events_page.has_other_pages %}
+      <div style="margin-top:12px;">
+        {% if events_page.has_previous %}
+          <a href="?page={{ events_page.previous_page_number }}{% if status %}&status={{ status }}{% endif %}">Previous</a>
+        {% endif %}
+        <span style="margin:0 8px;">Page {{ events_page.number }} of {{ events_page.paginator.num_pages }}</span>
+        {% if events_page.has_next %}
+          <a href="?page={{ events_page.next_page_number }}{% if status %}&status={{ status }}{% endif %}">Next</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+

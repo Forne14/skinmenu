@@ -6,15 +6,18 @@ class OutboundEvent(models.Model):
     STATUS_PENDING = "pending"
     STATUS_SENT = "sent"
     STATUS_FAILED = "failed"
+    STATUS_DEAD_LETTER = "dead_letter"
     STATUS_CHOICES = [
         (STATUS_PENDING, "Pending"),
         (STATUS_SENT, "Sent"),
         (STATUS_FAILED, "Failed"),
+        (STATUS_DEAD_LETTER, "Dead letter"),
     ]
 
     EVENT_NEWSLETTER_SIGNUP = "newsletter_signup"
 
     event_type = models.CharField(max_length=64, db_index=True)
+    idempotency_key = models.CharField(max_length=128, blank=True, default="", db_index=True)
     destination = models.CharField(max_length=64, default="webhook")
     payload = models.JSONField(default=dict, blank=True)
     status = models.CharField(max_length=16, choices=STATUS_CHOICES, default=STATUS_PENDING, db_index=True)
@@ -36,6 +39,12 @@ class OutboundEvent(models.Model):
 
     def mark_failed(self, error: str) -> None:
         self.status = self.STATUS_FAILED
+        self.last_error = (error or "").strip()[:1000]
+        self.attempts = self.attempts + 1
+        self.save(update_fields=["status", "last_error", "attempts", "updated_at"])
+
+    def mark_dead_letter(self, error: str) -> None:
+        self.status = self.STATUS_DEAD_LETTER
         self.last_error = (error or "").strip()[:1000]
         self.attempts = self.attempts + 1
         self.save(update_fields=["status", "last_error", "attempts", "updated_at"])
