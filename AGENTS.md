@@ -22,6 +22,9 @@ This repository is a Django 5 + Wagtail 7 project with Tailwind CSS.
 - `python manage.py validate_integrations_config`: fail fast on invalid integration env config.
 - `./scripts/pre_release_check.sh`: run local release gate checks before any deploy.
 - `./scripts/sqlite_backup_restore_drill.sh`: rehearse sqlite backup/restore integrity.
+- `python manage.py database_snapshot --output var/baseline.json`: generate DB parity snapshot.
+- `python manage.py compare_database_snapshots --left var/baseline.json --right var/candidate.json`: enforce parity.
+- `./scripts/postgres_cutover_rehearsal.sh`: non-prod sqlite->postgres rehearsal workflow.
 
 ## Coding Style & Naming Conventions
 - Python: PEP 8, 4-space indentation, descriptive class/function names.

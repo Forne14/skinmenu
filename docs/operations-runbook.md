@@ -23,6 +23,17 @@
    - `DEPLOY_REF=<sha> /home/deploy/apps/skinmenu/deploy.sh`
 3. Verify services and smoke test again.
 
+## SQLite -> Postgres Rehearsal (No-Prod)
+1. Ensure target Postgres is reachable via `DATABASE_URL`.
+2. Run:
+   - `./scripts/postgres_cutover_rehearsal.sh`
+3. Review artifacts in `var/postgres-rehearsal/<timestamp>/`:
+   - `baseline.json`
+   - `candidate.json`
+4. Confirm parity command passes:
+   - `python manage.py compare_database_snapshots --left <baseline> --right <candidate>`
+5. If parity fails, do not cut over. Fix data import/mapping first.
+
 ## Failure Triage
 - App service logs:
   - `journalctl -u skinmenu -n 120 --no-pager`

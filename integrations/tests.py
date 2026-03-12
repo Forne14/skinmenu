@@ -1,4 +1,6 @@
 from io import StringIO
+import json
+import tempfile
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
@@ -85,3 +87,42 @@ class AdminOutboundEventsViewTests(TestCase):
         response = self.client.get(reverse("integrations_outbound_events"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Outbound Integration Events")
+
+
+class DatabaseSnapshotCommandTests(TestCase):
+    def test_database_snapshot_writes_json(self):
+        with tempfile.NamedTemporaryFile(suffix=".json") as tmp:
+            call_command("database_snapshot", output=tmp.name)
+            data = json.loads(open(tmp.name, "r", encoding="utf-8").read())
+            self.assertIn("tables", data)
+            self.assertIn("database_vendor", data)
+
+    def test_compare_database_snapshots_detects_match(self):
+        with tempfile.NamedTemporaryFile(suffix=".json") as left, tempfile.NamedTemporaryFile(suffix=".json") as right:
+            payload = {
+                "tables": {
+                    "wagtailcore_page": {
+                        "count": 1,
+                        "max_id": 1,
+                        "edge_hash": "abc",
+                    }
+                }
+            }
+            left.write(json.dumps(payload).encode("utf-8"))
+            right.write(json.dumps(payload).encode("utf-8"))
+            left.flush()
+            right.flush()
+            out = StringIO()
+            call_command("compare_database_snapshots", left=left.name, right=right.name, stdout=out)
+            self.assertIn("database_snapshots_match", out.getvalue())
+
+    def test_compare_database_snapshots_detects_mismatch(self):
+        with tempfile.NamedTemporaryFile(suffix=".json") as left, tempfile.NamedTemporaryFile(suffix=".json") as right:
+            left_payload = {"tables": {"wagtailcore_page": {"count": 1, "max_id": 1, "edge_hash": "abc"}}}
+            right_payload = {"tables": {"wagtailcore_page": {"count": 2, "max_id": 2, "edge_hash": "xyz"}}}
+            left.write(json.dumps(left_payload).encode("utf-8"))
+            right.write(json.dumps(right_payload).encode("utf-8"))
+            left.flush()
+            right.flush()
+            with self.assertRaises(SystemExit):
+                call_command("compare_database_snapshots", left=left.name, right=right.name, stdout=StringIO())
