@@ -14,3 +14,7 @@ class ConsentAwareNoopAnalytics(AnalyticsPort):
             return
         logger.info("analytics_event_buffered name=%s props=%s", event.name, event.properties)
 
+
+def track_server_event(*, name: str, properties: dict, consented: bool) -> None:
+    adapter = ConsentAwareNoopAnalytics()
+    adapter.track(IntegrationEvent(name=name, properties=properties, consented=consented))

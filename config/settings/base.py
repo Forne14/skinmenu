@@ -256,3 +256,24 @@ LEAD_SYNC_TIMEOUT_SECONDS = int(os.environ.get("LEAD_SYNC_TIMEOUT_SECONDS", "8")
 LEAD_SYNC_QUEUE = os.environ.get("LEAD_SYNC_QUEUE", "default")
 
 BOOKING_BASE_URL = os.environ.get("BOOKING_BASE_URL", "").strip()
+
+# Optional S3-compatible media storage (disabled by default)
+USE_S3_STORAGE = os.environ.get("USE_S3_STORAGE", "0").lower() in {"1", "true", "yes", "on"}
+if USE_S3_STORAGE:
+    if "storages" not in INSTALLED_APPS:
+        INSTALLED_APPS.append("storages")
+    STORAGES["default"] = {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": os.environ.get("AWS_STORAGE_BUCKET_NAME", "").strip(),
+            "access_key": os.environ.get("AWS_ACCESS_KEY_ID", "").strip(),
+            "secret_key": os.environ.get("AWS_SECRET_ACCESS_KEY", "").strip(),
+            "region_name": os.environ.get("AWS_S3_REGION_NAME", "").strip() or None,
+            "endpoint_url": os.environ.get("AWS_S3_ENDPOINT_URL", "").strip() or None,
+            "default_acl": None,
+            "file_overwrite": False,
+        },
+    }
+    custom_domain = os.environ.get("AWS_S3_CUSTOM_DOMAIN", "").strip()
+    if custom_domain:
+        MEDIA_URL = f"https://{custom_domain}/"

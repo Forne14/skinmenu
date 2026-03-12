@@ -468,6 +468,42 @@
   }
 
   // ---------------------------
+  // Tracking hooks
+  // ---------------------------
+  function initTrackingHooks() {
+    const track = window.skinmenuTrack
+    if (typeof track !== 'function') return
+
+    const url = new URL(window.location.href)
+    const newsletterStatus = url.searchParams.get('newsletter')
+    const message = url.searchParams.get('newsletter_message') || ''
+    if (newsletterStatus === 'success' || newsletterStatus === 'error') {
+      const dedupeKey = `track:${window.location.pathname}:${newsletterStatus}:${message}`
+      if (!window.sessionStorage.getItem(dedupeKey)) {
+        window.sessionStorage.setItem(dedupeKey, '1')
+        track(newsletterStatus === 'success' ? 'newsletter_success' : 'newsletter_error', {
+          path: window.location.pathname,
+        })
+      }
+    }
+
+    document.querySelectorAll('a[href^="mailto:"]').forEach((a) => {
+      a.addEventListener('click', () => {
+        track('contact_open_mail', {
+          path: window.location.pathname,
+          href: a.getAttribute('href') || '',
+        })
+      })
+    })
+
+    document.querySelectorAll('form[action$="/newsletter/subscribe/"]').forEach((form) => {
+      form.addEventListener('submit', () => {
+        track('newsletter_submit', { path: window.location.pathname })
+      })
+    })
+  }
+
+  // ---------------------------
   // Boot
   // ---------------------------
   document.addEventListener('DOMContentLoaded', () => {
@@ -478,5 +514,6 @@
     initNamedCarousels()
     initAccordions()
     initMediaPlaybackRates()
+    initTrackingHooks()
   })
 })()

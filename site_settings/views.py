@@ -10,7 +10,9 @@ from django.http import HttpResponseNotAllowed
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
+from integrations.analytics import track_server_event
 from integrations.leads import enqueue_newsletter_signup
+from integrations.taxonomy import AnalyticsEvent
 
 
 def _append_newsletter_row(csv_path: Path, row: list[str]) -> None:
@@ -31,6 +33,7 @@ def newsletter_subscribe(request):
         return HttpResponseNotAllowed(["POST"])
 
     email = (request.POST.get("email") or "").strip()
+    consent_analytics = (request.POST.get("consent_analytics") or "").strip() in {"1", "true", "True", "yes"}
     if not email:
         return _newsletter_redirect(request, "error", "Email is required.")
 
@@ -52,7 +55,13 @@ def newsletter_subscribe(request):
             "submitted_at": submitted_at,
             "source_url": source_url,
             "host": request.get_host(),
+            "consent_analytics": consent_analytics,
         }
+    )
+    track_server_event(
+        name=AnalyticsEvent.NEWSLETTER_SUBMIT,
+        properties={"host": request.get_host(), "path": request.path},
+        consented=consent_analytics,
     )
 
     redirect_target = request.META.get("HTTP_REFERER", "/")

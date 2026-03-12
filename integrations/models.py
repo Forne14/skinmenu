@@ -39,4 +39,3 @@ class OutboundEvent(models.Model):
         self.last_error = (error or "").strip()[:1000]
         self.attempts = self.attempts + 1
         self.save(update_fields=["status", "last_error", "attempts", "updated_at"])
-

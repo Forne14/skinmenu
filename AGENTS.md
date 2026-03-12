@@ -42,7 +42,7 @@ This repository is a Django 5 + Wagtail 7 project with Tailwind CSS.
 - Server access: `ssh -C -i ~/.ssh/hetzner_ed25519 deploy@91.99.125.39`.
 - App root: `/home/deploy/apps/skinmenu`; virtualenv: `/home/deploy/venvs/skinmenu`.
 - Runtime env file: `/etc/skinmenu/skinmenu.env` (do not commit secrets; keep key names stable).
-- Integration env keys: `DATABASE_URL` (optional, Postgres), `LEAD_SYNC_ENABLED`, `LEAD_SYNC_BACKEND`, `LEAD_SYNC_WEBHOOK_URL`, `BOOKING_BASE_URL`.
+- Integration env keys: `DATABASE_URL` (optional, Postgres), `LEAD_SYNC_ENABLED`, `LEAD_SYNC_BACKEND`, `LEAD_SYNC_WEBHOOK_URL`, `BOOKING_BASE_URL`, `USE_S3_STORAGE` plus `AWS_*` S3 variables.
 - `skinmenu.service` runs Gunicorn on unix socket `/run/skinmenu/skinmenu.sock`.
 - `skinmenu-rqworker.service` runs `manage.py rqworker default --with-scheduler`.
 - Nginx site `skinmenu` fronts the app; `/static/` maps to `.../staticfiles/`, `/media/` maps to `.../media/`.
