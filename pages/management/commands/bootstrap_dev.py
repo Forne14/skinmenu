@@ -606,7 +606,7 @@ class Command(BaseCommand):
         BrandAppearanceSettings.for_site(site)
 
         self._set_if_empty(gs, "clinic_name", "SKINMENU")
-        self._set_if_empty(gs, "email", "hello@skinmenu.co.uk")
+        self._set_if_empty(gs, "email", "contact@skin-menu.co.uk")
         self._set_if_empty(gs, "address", "London, United Kingdom")
         gs.save()
 
