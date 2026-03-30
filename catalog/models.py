@@ -183,6 +183,7 @@ class Treatment(ClusterableModel):
         return self.name
 
 
+@register_snippet
 class TreatmentOption(ClusterableModel):
     """
     Option/variant under a treatment (e.g. PicoGenesis under Lasers).

@@ -1,3 +1,6 @@
+{% load wagtailimages_tags wagtailcore_tags wagtailsettings_tags %}
+{% get_settings %}
+
 <section class="section">
   <div class="container-shell">
     {% if block.heading %}
@@ -9,15 +12,16 @@
     {% endif %}
   </div>
 
-  {% with products=block.items.all %}
+  {% with products=block.items.all site_settings=settings.site_settings.GlobalSiteSettings %}
   {% with n=products|length %}
     {% if n == 1 %}
       <div class="container-shell">
         {% for product in products %}
+          {% with final_url=product.cta_url|default:site_settings.booking_url %}
           <div class="flex justify-center">
-            {% if product.cta_url %}
+            {% if final_url %}
               <a
-                href="{{ product.cta_url }}"
+                href="{{ final_url }}"
                 class="card p-8 min-h-[220px] flex flex-col w-full max-w-[520px]
                     no-underline text-inherit
                     transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lg
@@ -25,36 +29,39 @@
                     cursor-pointer"
                 aria-label="{{ product.title }}"
               >
-                {% include "pages/blocks/content_block_product_card_inner.html" with product=product only %}
+                {% include "pages/blocks/content_block_product_card_inner.html" with product=product %}
               </a>
             {% else %}
               <article class="card p-8 min-h-[220px] flex flex-col w-full max-w-[520px]" aria-label="{{ product.title }}">
-                {% include "pages/blocks/content_block_product_card_inner.html" with product=product only %}
+                {% include "pages/blocks/content_block_product_card_inner.html" with product=product %}
               </article>
             {% endif %}
           </div>
+          {% endwith %}
         {% endfor %}
       </div>
 
     {% elif n == 2 %}
       <div class="grid gap-6 md:grid-cols-2 justify-items-center">
         {% for product in products %}
-          {% if product.cta_url %}
+          {% with final_url=product.cta_url|default:site_settings.booking_url %}
+          {% if final_url %}
             <a
-              href="{{ product.cta_url }}"
+              href="{{ final_url }}"
               class="card p-6 md:p-8 min-h-[260px] flex flex-col w-full max-w-[520px] no-underline text-inherit
                      transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lg
                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-heading/30
                      cursor-pointer"
               aria-label="{{ product.title }}"
             >
-              {% include "pages/blocks/content_block_product_card_inner.html" with product=product only %}
+              {% include "pages/blocks/content_block_product_card_inner.html" with product=product %}
             </a>
           {% else %}
             <article class="card p-6 md:p-8 min-h-[260px] flex flex-col w-full max-w-[520px]" aria-label="{{ product.title }}">
-              {% include "pages/blocks/content_block_product_card_inner.html" with product=product only %}
+              {% include "pages/blocks/content_block_product_card_inner.html" with product=product %}
             </article>
           {% endif %}
+          {% endwith %}
         {% endfor %}
       </div>
 
@@ -67,9 +74,10 @@
         >
           <div class="flex gap-5 w-max mx-auto">
             {% for product in products %}
-              {% if product.cta_url %}
+              {% with final_url=product.cta_url|default:site_settings.booking_url %}
+              {% if final_url %}
                 <a
-                  href="{{ product.cta_url }}"
+                  href="{{ final_url }}"
                   class="card p-6 snap-start shrink-0 min-h-[280px] flex flex-col w-[300px] md:w-[350px] no-underline text-inherit
                          transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lg
                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-heading/30
@@ -77,7 +85,7 @@
                   data-hscroll-slide
                   aria-label="{{ product.title }}"
                 >
-                  {% include "pages/blocks/content_block_product_card_inner.html" with product=product only %}
+                  {% include "pages/blocks/content_block_product_card_inner.html" with product=product %}
                 </a>
               {% else %}
                 <article
@@ -85,9 +93,10 @@
                   data-hscroll-slide
                   aria-label="{{ product.title }}"
                 >
-                  {% include "pages/blocks/content_block_product_card_inner.html" with product=product only %}
+                  {% include "pages/blocks/content_block_product_card_inner.html" with product=product %}
                 </article>
               {% endif %}
+              {% endwith %}
             {% endfor %}
 
             <div class="shrink-0 w-5 sm:w-8"></div>

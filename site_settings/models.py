@@ -26,6 +26,10 @@ class GlobalSiteSettings(BaseSiteSetting):
     phone = models.CharField(max_length=50, blank=True)
 
     email = models.EmailField(blank=True)
+    booking_url = models.URLField(
+        blank=True,
+        help_text="Global booking URL (e.g. Fresha/ANS). Used as a fallback for 'Book Now' buttons.",
+    )
     instagram_url = models.URLField(blank=True)
     tiktok_url = models.URLField(blank=True)
     facebook_url = models.URLField(blank=True)
@@ -59,6 +63,7 @@ class GlobalSiteSettings(BaseSiteSetting):
                 FieldPanel("address"),
                 FieldPanel("phone"),
                 FieldPanel("email"),
+                FieldPanel("booking_url"),
                 FieldPanel("google_maps_url"),
             ],
             heading="Clinic details",

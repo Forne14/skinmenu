@@ -172,16 +172,25 @@ class MenuSectionPage(Page):
 
 
 class TreatmentPage(Page):
+    treatment = models.ForeignKey(
+        "catalog.Treatment",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="treatment_pages",
+        help_text="Link this page to a top-level treatment record.",
+    )
     option = models.ForeignKey(
         "catalog.TreatmentOption",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
         related_name="detail_pages",
-        help_text="Link this page to a normalized treatment option.",
+        help_text="[Legacy] Link this page to a treatment option.",
     )
 
     content_panels = Page.content_panels + [
+        FieldPanel("treatment"),
         FieldPanel("option"),
     ]
 
@@ -195,8 +204,8 @@ class TreatmentPage(Page):
 
     def clean(self):
         super().clean()
-        if not self.option_id:
-            raise ValidationError({"option": "Select a Treatment option before publishing this page."})
+        if not self.treatment_id and not self.option_id:
+            raise ValidationError("Select a Treatment or a Treatment option before publishing this page.")
 
 
 # ---------------------------

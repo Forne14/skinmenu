@@ -1,4 +1,5 @@
-{% load wagtailimages_tags wagtailcore_tags %}
+{% load wagtailimages_tags wagtailcore_tags wagtailsettings_tags %}
+{% get_settings %}
 
 {% if block.block_type == "rich_text" %}
   <section class="section">
@@ -50,12 +51,16 @@
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3 md:justify-end">
-              {% if block.primary_cta_url and block.primary_cta_label %}
-                <a class="btn-primary" href="{{ block.primary_cta_url }}">{{ block.primary_cta_label }}</a>
-              {% endif %}
+              {% with site_settings=settings.site_settings.GlobalSiteSettings %}
+              {% with primary_url=block.primary_cta_url|default:site_settings.booking_url %}
+                {% if primary_url and block.primary_cta_label %}
+                  <a class="btn-primary" href="{{ primary_url }}">{{ block.primary_cta_label }}</a>
+                {% endif %}
+              {% endwith %}
               {% if block.secondary_cta_url and block.secondary_cta_label %}
                 <a class="btn-secondary" href="{{ block.secondary_cta_url }}">{{ block.secondary_cta_label }}</a>
               {% endif %}
+              {% endwith %}
             </div>
           </div>
         </div>
