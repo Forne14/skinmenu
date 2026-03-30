@@ -40,7 +40,11 @@
 {% endif %}
 
 <div class="mt-auto pt-5 flex justify-center">
-  {% if product.cta_url %}
+  {% load wagtailsettings_tags %}
+  {% get_settings %}
+  {% with site_settings=settings.site_settings.GlobalSiteSettings %}
+  {% with final_url=product.cta_url|default:site_settings.booking_url %}
+  {% if final_url %}
     <span class="btn-primary inline-flex items-center justify-center px-6 py-2">
       {{ product.cta_label|default:"Book now" }}
     </span>
@@ -53,4 +57,6 @@
       {{ product.cta_label|default:"Book now" }}
     </div>
   {% endif %}
+  {% endwith %}
+  {% endwith %}
 </div>

@@ -1,0 +1,91 @@
+{% extends "wagtailadmin/admin_base.html" %}
+{% load wagtailadmin_tags i18n %}
+
+{% block bodyclass %}sm-studio editor-view{% endblock %}
+
+{% block content %}
+    {% get_comments_enabled as comments_enabled %}
+
+    <div class="sm-studio__topbar">
+        <div class="sm-studio__brand">Skinmenu Studio</div>
+        <div class="sm-studio__url">
+            <span class="sm-studio__url-label">Page</span>
+            <span class="sm-studio__url-value">Draft</span>
+        </div>
+        <div class="sm-studio__actions">
+            <button type="button" class="sm-studio__pill sm-button" data-skinmenu-modules-toggle>+</button>
+            <div class="sm-editor-layout-toggle" data-skinmenu-editor-toggle>
+                <button type="button" class="sm-editor-layout-toggle__button" data-layout="preview" aria-pressed="true">Single</button>
+                <button type="button" class="sm-editor-layout-toggle__button" data-layout="split" aria-pressed="false">Split</button>
+            </div>
+            <button type="button" class="sm-studio__pill sm-button" data-skinmenu-action="preview" data-preview-url="">Preview</button>
+            <button type="button" class="sm-studio__pill sm-button" data-skinmenu-action="publish">Publish</button>
+            <button type="button" class="sm-studio__pill sm-button" data-skinmenu-action="save">Save</button>
+            <button type="button" class="sm-studio__pill sm-button" data-skinmenu-action="code">&lt;/&gt;</button>
+        </div>
+    </div>
+
+    <div class="sm-studio__layout">
+        <aside class="sm-studio__sidebar sm-studio__sidebar--left">
+            <div class="sm-studio__nav">
+                <a href="{% url 'wagtailadmin_explore_root' %}">Pages</a>
+                <a href="{% url 'wagtailadmin_pages:search' %}">Search</a>
+                <a href="{% url 'wagtailimages:index' %}">Assets</a>
+                <a href="{% url 'wagtaildocs:index' %}">Documents</a>
+                <a href="{% url 'wagtailsnippets:index' %}">Snippets</a>
+            </div>
+            <div class="sm-studio__panel">
+                <h3>Layers</h3>
+                <p>Section hierarchy will appear here.</p>
+            </div>
+        </aside>
+
+        <main class="sm-studio__canvas">
+            <div class="sm-studio__canvas-toolbar">
+                <button type="button">Desktop</button>
+                <button type="button">Tablet</button>
+                <button type="button">Mobile</button>
+                <div class="sm-studio__zoom">81%</div>
+            </div>
+            <div class="sm-studio__canvas-frame">
+                <div class="sm-studio__canvas-placeholder">Preview available after saving.</div>
+            </div>
+        </main>
+
+        <aside class="sm-studio__sidebar sm-studio__sidebar--right">
+            <div class="sm-studio__tabs">
+                <button type="button" class="is-active">Content</button>
+                <button type="button">Style</button>
+                <button type="button">Interaction</button>
+            </div>
+
+            <form
+                id="page-edit-form"
+                action="{{ action_url }}"
+                method="POST"
+                novalidate
+                {% if form_is_multipart or form.is_multipart %}enctype="multipart/form-data"{% endif %}
+                data-edit-form
+                data-controller="w-unsaved"
+                data-action="w-unsaved#submit beforeunload@window->w-unsaved#confirm change->w-unsaved#check keyup->w-unsaved#check"
+                data-w-unsaved-confirmation-value="true"
+                data-w-unsaved-force-value="{{ has_unsaved_changes|yesno:'true,false' }}"
+                data-w-unsaved-watch-value="edits"
+            >
+                {% csrf_token %}
+                {{ edit_handler.render_form_content }}
+
+                <div class="sm-studio__form-actions">
+                    {{ action_menu.render_html }}
+                </div>
+            </form>
+        </aside>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    {{ media.js }}
+    {% if edit_handler_data %}{{ edit_handler_data|json_script:"w-edit-handler-data" }}{% endif %}
+    {% include "wagtailadmin/pages/_editor_js.html" %}
+{% endblock %}

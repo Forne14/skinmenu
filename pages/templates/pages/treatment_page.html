@@ -1,25 +1,31 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags content_blocks %}
+{% load wagtailcore_tags wagtailimages_tags wagtailsettings_tags content_blocks %}
 
 {% block content %}
-  {% with option=page.option %}
+  {% get_settings %}
+  {% with treatment=page.treatment option=page.option %}
+  {% with active_item=treatment|default:option %}
   <section class="section">
     <div class="container-shell">
       <div class="grid gap-8 lg:grid-cols-12 lg:gap-10">
         <div class="lg:col-span-7">
           <h1 class="mt-2 text-3xl md:text-5xl leading-[1.05]">
-            {{ option.name|default:page.title }}
+            {{ active_item.name|default:page.title }}
           </h1>
 
-          {% if option and option.summary %}
+          {% if active_item and active_item.summary %}
             <p class="mt-5 text-lg text-muted max-w-prose">
-              {{ option.summary }}
+              {{ active_item.summary }}
             </p>
+          {% elif active_item and active_item.long_description %}
+            <div class="mt-5 text-lg text-muted max-w-prose prose prose-lg">
+               {{ active_item.long_description|richtext }}
+            </div>
           {% endif %}
 
-          {% if option and option.facts.exists %}
+          {% if active_item and active_item.facts.exists %}
             <div class="mt-7 flex flex-wrap gap-2 text-sm text-muted">
-              {% for fact in option.facts.all %}
+              {% for fact in active_item.facts.all %}
                 <span class="pill">{{ fact.label }}: {{ fact.value }}</span>
               {% endfor %}
             </div>
@@ -27,8 +33,8 @@
         </div>
 
         <div class="lg:col-span-5">
-          {% if option and option.featured_image %}
-            {% image option.featured_image fill-1100x900 as img %}
+          {% if active_item and active_item.featured_image %}
+            {% image active_item.featured_image fill-1100x900 as img %}
             <div class="card overflow-hidden p-2">
               <img class="w-full rounded-2xl object-cover" src="{{ img.url }}" alt="{{ img.alt|default:page.title }}" />
             </div>
@@ -38,10 +44,10 @@
     </div>
   </section>
 
-  {% if option and option.prices.exists %}
+  {% if active_item and active_item.prices.exists %}
     <section class="section">
       <div class="container-shell">
-        {% with prices=option.prices.all %}
+        {% with prices=active_item.prices.all %}
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {% for price in prices %}
             <div class="card p-6">
@@ -67,12 +73,13 @@
     </section>
   {% endif %}
 
-  {% if option and option.content_blocks.exists %}
-    {% render_content_blocks option.content_blocks.all %}
+  {% if active_item and active_item.content_blocks.exists %}
+    {% render_content_blocks active_item.content_blocks.all %}
   {% endif %}
 
   {% if faq_schema_json %}
     <script type="application/ld+json">{{ faq_schema_json|safe }}</script>
   {% endif %}
+  {% endwith %}
   {% endwith %}
 {% endblock %}

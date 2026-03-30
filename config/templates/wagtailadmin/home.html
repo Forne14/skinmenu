@@ -1,0 +1,92 @@
+{% extends "wagtailadmin/generic/base.html" %}
+{% load wagtailadmin_tags wagtailcore_tags i18n %}
+
+{% block extra_css %}
+    {{ block.super }}
+    {{ media.css }}
+{% endblock %}
+
+{% block content %}
+    <div class="sm-admin-dashboard">
+        <header class="sm-admin-hero">
+            <div>
+                <span class="sm-admin-hero__badge">Skinmenu Studio</span>
+                <h1 class="sm-admin-hero__title">Welcome back, {{ user.get_short_name|default:user.get_username }}</h1>
+                <p class="sm-admin-hero__sub">Manage treatments, pages, media, and the clinic story from one place.</p>
+
+                <form
+                    class="w-mt-4"
+                    action="{% if root_page.pk %}{% url 'wagtailadmin_explore' root_page.pk %}{% else %}{% url 'wagtailadmin_explore_root' %}{% endif %}"
+                    method="get"
+                    novalidate
+                    role="search"
+                >
+                    {% for field in search_form %}
+                        {% formattedfield field=field sr_only_label=True icon="search" %}
+                    {% endfor %}
+                    <div class="submit w-sr-only"><input type="submit" value="Search" class="button" /></div>
+                </form>
+            </div>
+
+            <div class="sm-admin-panel">
+                <h2>Site snapshot</h2>
+                {% component site_summary %}
+                <div class="sm-admin-panel__actions">
+                    <a href="{% url 'wagtailadmin_explore_root' %}" class="button button-secondary">Browse pages</a>
+                    <a href="{% url 'wagtailimages:index' %}" class="button button-secondary">Media library</a>
+                </div>
+            </div>
+        </header>
+
+        <section class="sm-admin-card-grid">
+            <a class="sm-admin-card" href="{% url 'wagtailadmin_explore_root' %}">
+                <div class="sm-admin-card__label">Editing</div>
+                <div class="sm-admin-card__value">Pages + Content</div>
+                <div class="sm-admin-muted">Core site experience</div>
+            </a>
+            <a class="sm-admin-card" href="{% url 'wagtailsnippets:index' %}">
+                <div class="sm-admin-card__label">Catalog</div>
+                <div class="sm-admin-card__value">Treatments</div>
+                <div class="sm-admin-muted">Options, prices, FAQs</div>
+            </a>
+            <a class="sm-admin-card" href="/admin/users/">
+                <div class="sm-admin-card__label">People</div>
+                <div class="sm-admin-card__value">Team + Reviews</div>
+                <div class="sm-admin-muted">Profiles and testimonials</div>
+            </a>
+            <a class="sm-admin-card" href="{% url 'wagtailsettings:edit' 'site_settings' 'brandappearancesettings' %}">
+                <div class="sm-admin-card__label">Operations</div>
+                <div class="sm-admin-card__value">Settings</div>
+                <div class="sm-admin-muted">Brand + location data</div>
+            </a>
+        </section>
+
+        <div class="sm-admin-panels">
+            <div class="sm-admin-panel__stack">
+                {% if panels %}
+                    {% for panel in panels %}
+                        {% component panel fallback_render_method=True %}
+                    {% endfor %}
+                {% else %}
+                    <section class="sm-admin-panel">
+                        <p>{% trans "This dashboard will show recent content activity." %}</p>
+                    </section>
+                {% endif %}
+            </div>
+            <div class="sm-admin-panel">
+                <h2>Need a hand?</h2>
+                <p class="sm-admin-muted">Shortcuts for common editing tasks.</p>
+                <div class="sm-admin-panel__actions">
+                    <a class="button" href="{% url 'wagtailadmin_explore_root' %}">Explore pages</a>
+                    <a class="button button-secondary" href="{% url 'wagtailadmin_pages:search' %}">Search content</a>
+                    <a class="button button-secondary" href="{% url 'wagtailsettings:edit' 'site_settings' 'brandappearancesettings' %}">Brand settings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    {{ media.js }}
+{% endblock %}

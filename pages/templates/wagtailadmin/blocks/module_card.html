@@ -1,0 +1,14 @@
+{% load wagtailadmin_tags %}
+<section class="sm-module-card">
+    <header class="sm-module-card__header">
+        <div class="sm-module-card__label">{{ block_definition.label }}</div>
+        {% if help_text %}
+            <p class="sm-module-card__help">{{ help_text }}</p>
+        {% endif %}
+    </header>
+    <div class="sm-module-card__body">
+        {% for child in children.values %}
+            {{ child }}
+        {% endfor %}
+    </div>
+</section>
