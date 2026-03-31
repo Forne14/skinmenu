@@ -4,7 +4,7 @@ from catalog.models import Treatment, TreatmentOption
 from pages.models import TreatmentPage
 
 class Command(BaseCommand):
-    help = "Repairs unlinked TreatmentPage records on production by re-creating missing snippets."
+    help = "Repairs unlinked TreatmentPage records on production by linking to available Treatments or Options."
 
     @transaction.atomic
     def handle(self, *args, **options):
@@ -12,25 +12,29 @@ class Command(BaseCommand):
         self.stdout.write(f"Found {pages.count()} TreatmentPages.")
 
         for page in pages:
-            # We assume for now that each Page should have a corresponding top-level Treatment snippet.
-            # If the page was meant to be an Option, the editor can adjust it later, 
-            # but this will at least restore content visibility.
+            # 1. Try to find a specific Option first (since Options hold the Prices/Facts)
+            option = TreatmentOption.objects.filter(treatment__slug=page.slug).first()
+            if not option:
+                # Try by option name if slug doesn't match
+                option = TreatmentOption.objects.filter(name__icontains=page.title).first()
+
+            if option:
+                page.option = option
+                page.treatment = option.treatment
+                page.save_revision().publish()
+                self.stdout.write(f"Linked Page '{page.title}' to Option '{option.name}' and Treatment '{option.treatment.name}'")
+                continue
+
+            # 2. Fallback to top-level Treatment if no specific option found
+            treatment = Treatment.objects.filter(slug=page.slug).first()
+            if not treatment:
+                treatment = Treatment.objects.filter(name__icontains=page.title).first()
             
-            treatment, created = Treatment.objects.get_or_create(
-                slug=page.slug,
-                defaults={
-                    "name": page.title,
-                    "summary": page.summary if hasattr(page, 'summary') else "",
-                    "is_active": True,
-                }
-            )
-            
-            if created:
-                self.stdout.write(f"Created Treatment snippet for: {page.title}")
-            
-            if page.treatment_id != treatment.id:
+            if treatment:
                 page.treatment = treatment
                 page.save_revision().publish()
                 self.stdout.write(f"Linked Page '{page.title}' to Treatment '{treatment.name}'")
+            else:
+                self.stdout.write(self.style.WARNING(f"Could not find matching Treatment or Option for: {page.title}"))
 
         self.stdout.write(self.style.SUCCESS("Successfully repaired treatment links."))

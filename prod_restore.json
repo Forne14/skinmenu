@@ -1,0 +1,2751 @@
+[
+{
+  "model": "catalog.cliniclocation",
+  "pk": 1,
+  "fields": {
+    "name": "SKINMENU",
+    "address": "SKINMENU\r\nLower Ground Floor\r\n120 Pall mall\r\nSW1Y 5EA",
+    "city": "",
+    "postcode": "",
+    "country": "",
+    "phone": "",
+    "email": "hello@skinmenu.co.uk",
+    "hours": "",
+    "map_url": "https://maps.app.goo.gl/fsFajg8J3c8pDK5g7?g_st=ic",
+    "map_embed_url": "",
+    "timezone": "",
+    "is_primary": true
+  }
+},
+{
+  "model": "catalog.treatment",
+  "pk": 8,
+  "fields": {
+    "name": "LASERS",
+    "slug": "lasers",
+    "summary": "",
+    "long_description": "<p data-block-key=\"mks5p\">Our laser approach is tailored and multi-modality.</p><p data-block-key=\"8pv2r\"></p><p data-block-key=\"d6h6c\">We use a curated combination of technologies to treat skin tone, texture, hyperpigmentation and redness with precision.</p><p data-block-key=\"cch1d\"></p><p data-block-key=\"8kmap\">Often layered and combined with other treatments for enhanced and refined results.</p>",
+    "featured_image": 4,
+    "primary_location": null,
+    "sort_order": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatment",
+  "pk": 9,
+  "fields": {
+    "name": "FILLERS",
+    "slug": "filler",
+    "summary": "",
+    "long_description": "<p data-block-key=\"9p10q\">Dermal fillers help restore volume and enhance facial structure, bringing gentle definition.</p><p data-block-key=\"2knk5\">We specialise in subtle, undetectable tweaks, complimenting your features</p>",
+    "featured_image": 4,
+    "primary_location": null,
+    "sort_order": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatment",
+  "pk": 10,
+  "fields": {
+    "name": "BOTOX",
+    "slug": "botox",
+    "summary": "",
+    "long_description": "<p data-block-key=\"u255v\">Botox helps ease dynamic lines and restore a calm, refreshed quality to the face. Each treatment is placed with precision to maintain expression while achieving a smoother finish.</p>",
+    "featured_image": 4,
+    "primary_location": null,
+    "sort_order": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatment",
+  "pk": 11,
+  "fields": {
+    "name": "SKIN BOOSTERS",
+    "slug": "skin-boosters",
+    "summary": "",
+    "long_description": "<p data-block-key=\"vbp82\">At SKINMENU we tailor these treatments to your skin's needs, often combining boosters with lasers or peels for enhanced results.</p>",
+    "featured_image": 4,
+    "primary_location": null,
+    "sort_order": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatment",
+  "pk": 12,
+  "fields": {
+    "name": "POLYNUCLEOTIDES",
+    "slug": "polynucleotides",
+    "summary": "",
+    "long_description": "<p data-block-key=\"lce02\">improve skin quality by supporting cellular repair, hydration &amp; elasticity. They work by creating an optimal environment for the skin's collagen producing cells, enhancing tissue renewal and strengthening the skin's foundation. They are used for concerns such as under-eye crepiness, fine lines, dullness and compromised skin quality.<br/></p><p data-block-key=\"fobih\">At <b>SKINMENU</b>, we integrate polynucleotides into multi-modality treatment plans to achieve smoother, healthier-looking skin over time.</p>",
+    "featured_image": 4,
+    "primary_location": null,
+    "sort_order": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatment",
+  "pk": 13,
+  "fields": {
+    "name": "HAIR",
+    "slug": "hair",
+    "summary": "",
+    "long_description": "<p data-block-key=\"dthqr\">Our hair treatments focus on supporting growth, strengthening follicles and improving scalp health through a combination of regenerative injectables and prescription-grade at-home care.</p><p data-block-key=\"5snd5\"></p><p data-block-key=\"a2nnq\">Each plan is tailored to the pattern and cause of hair thinning, often combining multiple modalities for more cohesive results.</p>",
+    "featured_image": 3,
+    "primary_location": null,
+    "sort_order": 6,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatment",
+  "pk": 14,
+  "fields": {
+    "name": "CHEMICAL PEELS",
+    "slug": "chemical-peels",
+    "summary": "",
+    "long_description": "<p data-block-key=\"v7rco\">Chemical peels use carefully selected acids to improve tone, texture and overall skin clarity. At SKINMENU every peel is chosen and tailored to your skin's needs, concerns and goals. Peels are often combined with microneedling, lasers or injectables as part of a wider treatment plan.</p>",
+    "featured_image": 4,
+    "primary_location": null,
+    "sort_order": 7,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatment",
+  "pk": 15,
+  "fields": {
+    "name": "MICRONEEDLING",
+    "slug": "micro-needling",
+    "summary": "",
+    "long_description": "<p data-block-key=\"0r2rv\">Microneedling improves skin texture, clarity and overall quality by creating micro-channels that stimulate collagen and enhance the effectiveness of targeted actives.</p><p data-block-key=\"26ngs\">Each treatment is customised and often combined with regenerative solutions or chemical peels to elevate results.</p>",
+    "featured_image": 4,
+    "primary_location": null,
+    "sort_order": 8,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatment",
+  "pk": 16,
+  "fields": {
+    "name": "FACIALS",
+    "slug": "facials",
+    "summary": "",
+    "long_description": "<p data-block-key=\"8zm0a\">Our facials are designed to reset, clarify and support overall skin health. Each treatment is tailored to your skin's needs, focusing on refinement, clarity and a balanced complexion. At SKINMENU we often incorporate facials into your skin plan to prime your skin for more intensive treatments.</p><p data-block-key=\"9b4ss\"></p><p data-block-key=\"70j81\"></p>",
+    "featured_image": 3,
+    "primary_location": null,
+    "sort_order": 9,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatmentoption",
+  "pk": 1,
+  "fields": {
+    "treatment": 8,
+    "name": "PicoGenesis",
+    "summary": "Add a one-paragraph summary explaining outcomes, suitability, and approach.",
+    "long_description": "",
+    "featured_image": null,
+    "sort_order": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatmentoption",
+  "pk": 2,
+  "fields": {
+    "treatment": 8,
+    "name": "PicoGenesis FX",
+    "summary": "Add a one-paragraph summary explaining outcomes, suitability, and approach.",
+    "long_description": "",
+    "featured_image": null,
+    "sort_order": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatmentoption",
+  "pk": 3,
+  "fields": {
+    "treatment": 8,
+    "name": "Laser Genesis",
+    "summary": "Add a one-paragraph summary explaining outcomes, suitability, and approach.",
+    "long_description": "",
+    "featured_image": null,
+    "sort_order": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatmentoption",
+  "pk": 4,
+  "fields": {
+    "treatment": 8,
+    "name": "Lipo-Laser",
+    "summary": "Add a one-paragraph summary explaining outcomes, suitability, and approach.",
+    "long_description": "",
+    "featured_image": null,
+    "sort_order": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatmentoption",
+  "pk": 5,
+  "fields": {
+    "treatment": 8,
+    "name": "PicoGlow",
+    "summary": "Add a one-paragraph summary explaining outcomes, suitability, and approach.",
+    "long_description": "",
+    "featured_image": null,
+    "sort_order": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatmentoption",
+  "pk": 6,
+  "fields": {
+    "treatment": 8,
+    "name": "Fractional CO2",
+    "summary": "Add a one-paragraph summary explaining outcomes, suitability, and approach.",
+    "long_description": "",
+    "featured_image": null,
+    "sort_order": 6,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatmentoption",
+  "pk": 7,
+  "fields": {
+    "treatment": 8,
+    "name": "Laser Hair Removal",
+    "summary": "Add a one-paragraph summary explaining outcomes, suitability, and approach.",
+    "long_description": "",
+    "featured_image": null,
+    "sort_order": 7,
+    "is_active": true
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 1,
+  "fields": {
+    "option": 1,
+    "sort_order": 1,
+    "label": "Duration",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 2,
+  "fields": {
+    "option": 1,
+    "sort_order": 2,
+    "label": "Downtime",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 3,
+  "fields": {
+    "option": 1,
+    "sort_order": 3,
+    "label": "From",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 4,
+  "fields": {
+    "option": 2,
+    "sort_order": 1,
+    "label": "Duration",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 5,
+  "fields": {
+    "option": 2,
+    "sort_order": 2,
+    "label": "Downtime",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 6,
+  "fields": {
+    "option": 2,
+    "sort_order": 3,
+    "label": "From",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 7,
+  "fields": {
+    "option": 3,
+    "sort_order": 1,
+    "label": "Duration",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 8,
+  "fields": {
+    "option": 3,
+    "sort_order": 2,
+    "label": "Downtime",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 9,
+  "fields": {
+    "option": 3,
+    "sort_order": 3,
+    "label": "From",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 10,
+  "fields": {
+    "option": 4,
+    "sort_order": 1,
+    "label": "Duration",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 11,
+  "fields": {
+    "option": 4,
+    "sort_order": 2,
+    "label": "Downtime",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 12,
+  "fields": {
+    "option": 4,
+    "sort_order": 3,
+    "label": "From",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 13,
+  "fields": {
+    "option": 5,
+    "sort_order": 1,
+    "label": "Duration",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 14,
+  "fields": {
+    "option": 5,
+    "sort_order": 2,
+    "label": "Downtime",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 15,
+  "fields": {
+    "option": 5,
+    "sort_order": 3,
+    "label": "From",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 16,
+  "fields": {
+    "option": 6,
+    "sort_order": 1,
+    "label": "Duration",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 17,
+  "fields": {
+    "option": 6,
+    "sort_order": 2,
+    "label": "Downtime",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 18,
+  "fields": {
+    "option": 6,
+    "sort_order": 3,
+    "label": "From",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 19,
+  "fields": {
+    "option": 7,
+    "sort_order": 1,
+    "label": "Duration",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 20,
+  "fields": {
+    "option": 7,
+    "sort_order": 2,
+    "label": "Downtime",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentoptionfact",
+  "pk": 21,
+  "fields": {
+    "option": 7,
+    "sort_order": 3,
+    "label": "From",
+    "value": "TBC"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 15,
+  "fields": {
+    "option": 1,
+    "sort_order": 1,
+    "question": "Is this treatment suitable for me?",
+    "answer": "<p>Suitability is confirmed during consultation.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 16,
+  "fields": {
+    "option": 1,
+    "sort_order": 2,
+    "question": "When will I see results?",
+    "answer": "<p>Timelines vary—your clinician will advise based on the treatment.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 17,
+  "fields": {
+    "option": 2,
+    "sort_order": 1,
+    "question": "Is this treatment suitable for me?",
+    "answer": "<p>Suitability is confirmed during consultation.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 18,
+  "fields": {
+    "option": 2,
+    "sort_order": 2,
+    "question": "When will I see results?",
+    "answer": "<p>Timelines vary—your clinician will advise based on the treatment.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 19,
+  "fields": {
+    "option": 3,
+    "sort_order": 1,
+    "question": "Is this treatment suitable for me?",
+    "answer": "<p>Suitability is confirmed during consultation.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 20,
+  "fields": {
+    "option": 3,
+    "sort_order": 2,
+    "question": "When will I see results?",
+    "answer": "<p>Timelines vary—your clinician will advise based on the treatment.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 21,
+  "fields": {
+    "option": 4,
+    "sort_order": 1,
+    "question": "Is this treatment suitable for me?",
+    "answer": "<p>Suitability is confirmed during consultation.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 22,
+  "fields": {
+    "option": 4,
+    "sort_order": 2,
+    "question": "When will I see results?",
+    "answer": "<p>Timelines vary—your clinician will advise based on the treatment.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 23,
+  "fields": {
+    "option": 5,
+    "sort_order": 1,
+    "question": "Is this treatment suitable for me?",
+    "answer": "<p>Suitability is confirmed during consultation.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 24,
+  "fields": {
+    "option": 5,
+    "sort_order": 2,
+    "question": "When will I see results?",
+    "answer": "<p>Timelines vary—your clinician will advise based on the treatment.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 25,
+  "fields": {
+    "option": 6,
+    "sort_order": 1,
+    "question": "Is this treatment suitable for me?",
+    "answer": "<p>Suitability is confirmed during consultation.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 26,
+  "fields": {
+    "option": 6,
+    "sort_order": 2,
+    "question": "When will I see results?",
+    "answer": "<p>Timelines vary—your clinician will advise based on the treatment.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 27,
+  "fields": {
+    "option": 7,
+    "sort_order": 1,
+    "question": "Is this treatment suitable for me?",
+    "answer": "<p data-block-key=\"sy76u\">Suitability is confirmed during consultation.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentfaq",
+  "pk": 28,
+  "fields": {
+    "option": 7,
+    "sort_order": 2,
+    "question": "When will I see results?",
+    "answer": "<p data-block-key=\"1udrc\">Timelines vary—your clinician will advise based on the treatment.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 22,
+  "fields": {
+    "option": 1,
+    "sort_order": 1,
+    "title": "Consultation",
+    "body": "<p>We discuss goals, suitability, and a personalised plan.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 23,
+  "fields": {
+    "option": 1,
+    "sort_order": 2,
+    "title": "Treatment",
+    "body": "<p>The procedure is performed with a focus on comfort and precision.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 24,
+  "fields": {
+    "option": 1,
+    "sort_order": 3,
+    "title": "Aftercare",
+    "body": "<p>Clear guidance and follow-up recommendations are provided.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 25,
+  "fields": {
+    "option": 2,
+    "sort_order": 1,
+    "title": "Consultation",
+    "body": "<p>We discuss goals, suitability, and a personalised plan.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 26,
+  "fields": {
+    "option": 2,
+    "sort_order": 2,
+    "title": "Treatment",
+    "body": "<p>The procedure is performed with a focus on comfort and precision.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 27,
+  "fields": {
+    "option": 2,
+    "sort_order": 3,
+    "title": "Aftercare",
+    "body": "<p>Clear guidance and follow-up recommendations are provided.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 28,
+  "fields": {
+    "option": 3,
+    "sort_order": 1,
+    "title": "Consultation",
+    "body": "<p>We discuss goals, suitability, and a personalised plan.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 29,
+  "fields": {
+    "option": 3,
+    "sort_order": 2,
+    "title": "Treatment",
+    "body": "<p>The procedure is performed with a focus on comfort and precision.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 30,
+  "fields": {
+    "option": 3,
+    "sort_order": 3,
+    "title": "Aftercare",
+    "body": "<p>Clear guidance and follow-up recommendations are provided.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 31,
+  "fields": {
+    "option": 4,
+    "sort_order": 1,
+    "title": "Consultation",
+    "body": "<p>We discuss goals, suitability, and a personalised plan.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 32,
+  "fields": {
+    "option": 4,
+    "sort_order": 2,
+    "title": "Treatment",
+    "body": "<p>The procedure is performed with a focus on comfort and precision.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 33,
+  "fields": {
+    "option": 4,
+    "sort_order": 3,
+    "title": "Aftercare",
+    "body": "<p>Clear guidance and follow-up recommendations are provided.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 34,
+  "fields": {
+    "option": 5,
+    "sort_order": 1,
+    "title": "Consultation",
+    "body": "<p>We discuss goals, suitability, and a personalised plan.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 35,
+  "fields": {
+    "option": 5,
+    "sort_order": 2,
+    "title": "Treatment",
+    "body": "<p>The procedure is performed with a focus on comfort and precision.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 36,
+  "fields": {
+    "option": 5,
+    "sort_order": 3,
+    "title": "Aftercare",
+    "body": "<p>Clear guidance and follow-up recommendations are provided.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 37,
+  "fields": {
+    "option": 6,
+    "sort_order": 1,
+    "title": "Consultation",
+    "body": "<p>We discuss goals, suitability, and a personalised plan.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 38,
+  "fields": {
+    "option": 6,
+    "sort_order": 2,
+    "title": "Treatment",
+    "body": "<p>The procedure is performed with a focus on comfort and precision.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 39,
+  "fields": {
+    "option": 6,
+    "sort_order": 3,
+    "title": "Aftercare",
+    "body": "<p>Clear guidance and follow-up recommendations are provided.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 40,
+  "fields": {
+    "option": 7,
+    "sort_order": 1,
+    "title": "Consultation",
+    "body": "<p data-block-key=\"zzfwf\">We discuss goals, suitability, and a personalised plan.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 41,
+  "fields": {
+    "option": 7,
+    "sort_order": 2,
+    "title": "Treatment",
+    "body": "<p data-block-key=\"xej2z\">The procedure is performed with a focus on comfort and precision.</p>"
+  }
+},
+{
+  "model": "catalog.treatmentstep",
+  "pk": 42,
+  "fields": {
+    "option": 7,
+    "sort_order": 3,
+    "title": "Aftercare",
+    "body": "<p data-block-key=\"vp8x3\">Clear guidance and follow-up recommendations are provided.</p>"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 23,
+  "fields": {
+    "block_type": "steps",
+    "eyebrow": "tailored and multi-modality",
+    "heading": "THE LASER MENU",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 24,
+  "fields": {
+    "block_type": "products",
+    "eyebrow": "",
+    "heading": "PRICING",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 25,
+  "fields": {
+    "block_type": "steps",
+    "eyebrow": "",
+    "heading": "THE FILLER MENU",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 26,
+  "fields": {
+    "block_type": "products",
+    "eyebrow": "",
+    "heading": "PRICING",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 27,
+  "fields": {
+    "block_type": "products",
+    "eyebrow": "",
+    "heading": "PRICING",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 28,
+  "fields": {
+    "block_type": "products",
+    "eyebrow": "",
+    "heading": "PRICING",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 29,
+  "fields": {
+    "block_type": "products",
+    "eyebrow": "",
+    "heading": "PRICING",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 30,
+  "fields": {
+    "block_type": "steps",
+    "eyebrow": "Gentle & powerful hair stimulation",
+    "heading": "THE HAIR MENU",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 31,
+  "fields": {
+    "block_type": "products",
+    "eyebrow": "",
+    "heading": "SKINMENU TREATMENT OPTIONS",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 32,
+  "fields": {
+    "block_type": "steps",
+    "eyebrow": "The ultimate skin reset",
+    "heading": "THE PEEL MENU",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 33,
+  "fields": {
+    "block_type": "products",
+    "eyebrow": "",
+    "heading": "PRICING",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 34,
+  "fields": {
+    "block_type": "steps",
+    "eyebrow": "A TIMELESS COLLAGEN-INDUCTION TREATMENT",
+    "heading": "THE MICRONEEDLING MENU",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 35,
+  "fields": {
+    "block_type": "products",
+    "eyebrow": "",
+    "heading": "PRICING",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 36,
+  "fields": {
+    "block_type": "steps",
+    "eyebrow": "To elevate your skin maintenance regime",
+    "heading": "THE FACIAL MENU",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 37,
+  "fields": {
+    "block_type": "products",
+    "eyebrow": "",
+    "heading": "PRICING",
+    "subheading": "",
+    "body": "",
+    "primary_cta_label": "",
+    "primary_cta_url": "",
+    "secondary_cta_label": "",
+    "secondary_cta_url": "",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 38,
+  "fields": {
+    "block_type": "cta",
+    "eyebrow": "",
+    "heading": "Book a consultation",
+    "subheading": "",
+    "body": "Discuss the right option for your skin with a clinician-led consultation.",
+    "primary_cta_label": "Enquire",
+    "primary_cta_url": "/contact/",
+    "secondary_cta_label": "Explore the menu",
+    "secondary_cta_url": "/menu/",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 39,
+  "fields": {
+    "block_type": "cta",
+    "eyebrow": "",
+    "heading": "Book a consultation",
+    "subheading": "",
+    "body": "Discuss the right option for your skin with a clinician-led consultation.",
+    "primary_cta_label": "Enquire",
+    "primary_cta_url": "/contact/",
+    "secondary_cta_label": "Explore the menu",
+    "secondary_cta_url": "/menu/",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 40,
+  "fields": {
+    "block_type": "cta",
+    "eyebrow": "",
+    "heading": "Book a consultation",
+    "subheading": "",
+    "body": "Discuss the right option for your skin with a clinician-led consultation.",
+    "primary_cta_label": "Enquire",
+    "primary_cta_url": "/contact/",
+    "secondary_cta_label": "Explore the menu",
+    "secondary_cta_url": "/menu/",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 41,
+  "fields": {
+    "block_type": "cta",
+    "eyebrow": "",
+    "heading": "Book a consultation",
+    "subheading": "",
+    "body": "Discuss the right option for your skin with a clinician-led consultation.",
+    "primary_cta_label": "Enquire",
+    "primary_cta_url": "/contact/",
+    "secondary_cta_label": "Explore the menu",
+    "secondary_cta_url": "/menu/",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 42,
+  "fields": {
+    "block_type": "cta",
+    "eyebrow": "",
+    "heading": "Book a consultation",
+    "subheading": "",
+    "body": "Discuss the right option for your skin with a clinician-led consultation.",
+    "primary_cta_label": "Enquire",
+    "primary_cta_url": "/contact/",
+    "secondary_cta_label": "Explore the menu",
+    "secondary_cta_url": "/menu/",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 43,
+  "fields": {
+    "block_type": "cta",
+    "eyebrow": "",
+    "heading": "Book a consultation",
+    "subheading": "",
+    "body": "Discuss the right option for your skin with a clinician-led consultation.",
+    "primary_cta_label": "Enquire",
+    "primary_cta_url": "/contact/",
+    "secondary_cta_label": "Explore the menu",
+    "secondary_cta_url": "/menu/",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblock",
+  "pk": 44,
+  "fields": {
+    "block_type": "cta",
+    "eyebrow": "",
+    "heading": "Book a consultation",
+    "subheading": "",
+    "body": "Discuss the right option for your skin with a clinician-led consultation.",
+    "primary_cta_label": "Enquire",
+    "primary_cta_url": "https://example.com",
+    "secondary_cta_label": "Explore the menu",
+    "secondary_cta_url": "https://example.com",
+    "media_image": null,
+    "media_video": null,
+    "media_position": "right",
+    "loop": true,
+    "playback_rate": "1.0"
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 58,
+  "fields": {
+    "block": 23,
+    "sort_order": 1,
+    "title": "PicoGenesis",
+    "body": "<p data-block-key=\"chq8c\">What is it for:</p><p data-block-key=\"17nvh\">- Sunspots &amp; freckles</p><p data-block-key=\"7jusg\">- Melasma</p><p data-block-key=\"2ddap\">- Post-inflammatory hyperpigmentation</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 59,
+  "fields": {
+    "block": 23,
+    "sort_order": 2,
+    "title": "PicoGenesis FX",
+    "body": "<p data-block-key=\"hqes1\">What is it for:</p><p data-block-key=\"24gbc\">- Texture</p><p data-block-key=\"5m3n7\">- Hyperpigmentation</p><p data-block-key=\"84b8v\">- Skin rejuvenation</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 60,
+  "fields": {
+    "block": 23,
+    "sort_order": 3,
+    "title": "Laser Genesis",
+    "body": "<p data-block-key=\"hqes1\">What is it for:</p><p data-block-key=\"8lcg1\">- Rosacea &amp; redness</p><p data-block-key=\"3mt34\">- Acne</p><p data-block-key=\"1gi2r\">- Skin rejuventation</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 61,
+  "fields": {
+    "block": 23,
+    "sort_order": 4,
+    "title": "Limelight IPL",
+    "body": "<p data-block-key=\"hqes1\">What is it for:</p><p data-block-key=\"4c87t\">- Sun spots &amp; freckles</p><p data-block-key=\"d1bed\">- Rosacea &amp; redness</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 62,
+  "fields": {
+    "block": 23,
+    "sort_order": 5,
+    "title": "Laser Vein Removal",
+    "body": "<p data-block-key=\"hqes1\">What is it for:</p><p data-block-key=\"fvele\">- Leg Veins</p><p data-block-key=\"93v6i\">- Periorbital veins</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 63,
+  "fields": {
+    "block": 23,
+    "sort_order": 6,
+    "title": "Laser Hair Removal",
+    "body": "<p data-block-key=\"hqes1\">What is it for:</p><p data-block-key=\"57i00\">- Facial &amp; neck hair removal</p><p data-block-key=\"4f8sq\">- Shaving bumps</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 64,
+  "fields": {
+    "block": 24,
+    "sort_order": 1,
+    "title": "COOL LASER",
+    "body": "",
+    "label": "",
+    "value": "Neck\nFace",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "from £550",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 65,
+  "fields": {
+    "block": 24,
+    "sort_order": 2,
+    "title": "LASER HAIR REMOVAL",
+    "body": "",
+    "label": "",
+    "value": "Face\nBody",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "from £75",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 66,
+  "fields": {
+    "block": 24,
+    "sort_order": 3,
+    "title": "LASER VEIN REMOVAL",
+    "body": "",
+    "label": "",
+    "value": "Face\nLegs\nPeri-orbital",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "from £350",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 67,
+  "fields": {
+    "block": 24,
+    "sort_order": 4,
+    "title": "PICO LASER",
+    "body": "",
+    "label": "",
+    "value": "PicoGenesis FX - Face & Neck\nPicoGenesis - Face & Neck",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "from £300",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 68,
+  "fields": {
+    "block": 24,
+    "sort_order": 5,
+    "title": "LASER GENESIS + LIMELIGHT IPL",
+    "body": "",
+    "label": "",
+    "value": "Face\nNeck\nDecolletage",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "From £450",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 69,
+  "fields": {
+    "block": 24,
+    "sort_order": 6,
+    "title": "LASER GENESIS",
+    "body": "",
+    "label": "",
+    "value": "Face\nNeck\nBody",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "from £250",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 70,
+  "fields": {
+    "block": 25,
+    "sort_order": 1,
+    "title": "Juläine - Biostimulatory Filler",
+    "body": "<p data-block-key=\"gtjm9\">As next generation biostimulatory designed to enhance collagen production and strengthen the skin's structural support.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 71,
+  "fields": {
+    "block": 25,
+    "sort_order": 2,
+    "title": "Dermal Fillers",
+    "body": "<p data-block-key=\"9le24\">Hyaluronic acid-based dermal fillers, used elegantly to enhance:</p><ul><li data-block-key=\"7j3ms\">Lips</li><li data-block-key=\"a7l51\">Cheeks</li><li data-block-key=\"5aavg\">Chin</li><li data-block-key=\"a24vb\">Jawline</li><li data-block-key=\"sm48\">Nasolabial Folds and Marionette Lines</li><li data-block-key=\"fka0o\">Tear Trough</li></ul>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 72,
+  "fields": {
+    "block": 25,
+    "sort_order": 3,
+    "title": "Filler dissolving",
+    "body": "<p data-block-key=\"rowes\">Dissolving of hyaluronic acid-based dermal filler</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 73,
+  "fields": {
+    "block": 26,
+    "sort_order": 1,
+    "title": "Juläine - Biostimulatory Filler",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "from £1000 per session",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 74,
+  "fields": {
+    "block": 26,
+    "sort_order": 2,
+    "title": "Dermal Filler",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "From £350 per ml",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 75,
+  "fields": {
+    "block": 26,
+    "sort_order": 3,
+    "title": "Filler Dissolving",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "from £350",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 76,
+  "fields": {
+    "block": 27,
+    "sort_order": 1,
+    "title": "1 area",
+    "body": "",
+    "label": "",
+    "value": "Forehead\nFrown lines\nCrow's feet",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£250",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 77,
+  "fields": {
+    "block": 27,
+    "sort_order": 2,
+    "title": "2 areas",
+    "body": "",
+    "label": "",
+    "value": "Forehead\nFrown\nCrow's feet",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£300",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 78,
+  "fields": {
+    "block": 27,
+    "sort_order": 3,
+    "title": "3 Areas",
+    "body": "",
+    "label": "",
+    "value": "Forehead\nFrown\nCrow's feet",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£350",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 79,
+  "fields": {
+    "block": 27,
+    "sort_order": 4,
+    "title": "Masseter/Jaw Slimming",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£450",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 80,
+  "fields": {
+    "block": 27,
+    "sort_order": 5,
+    "title": "Under-arms/Hyperhidrosis",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£650",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 81,
+  "fields": {
+    "block": 27,
+    "sort_order": 6,
+    "title": "Small areas",
+    "body": "",
+    "label": "",
+    "value": "Bunny Lines\nDAO\nGummy Smile\nLip Flip",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 82,
+  "fields": {
+    "block": 28,
+    "sort_order": 1,
+    "title": "Profhilo",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£350",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 83,
+  "fields": {
+    "block": 28,
+    "sort_order": 2,
+    "title": "Skinvive",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "from £350",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 84,
+  "fields": {
+    "block": 28,
+    "sort_order": 3,
+    "title": "Sunekos",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "from £350",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 85,
+  "fields": {
+    "block": 29,
+    "sort_order": 1,
+    "title": "FULL FACE",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£650",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 86,
+  "fields": {
+    "block": 29,
+    "sort_order": 2,
+    "title": "NECK",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£350",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 87,
+  "fields": {
+    "block": 29,
+    "sort_order": 3,
+    "title": "EYES",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£350",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 88,
+  "fields": {
+    "block": 30,
+    "sort_order": 1,
+    "title": "PRP (Platelet-Rich Plasma)",
+    "body": "<p data-block-key=\"gohmh\">PRP uses your own platelet-rich plasma to deliver growth factors that support follicle activity and improve scalp environment. It can help strengthen existing hairs, reduce shedding and encourage healthier growth over time.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 89,
+  "fields": {
+    "block": 30,
+    "sort_order": 2,
+    "title": "Hair Exosomes",
+    "body": "<p data-block-key=\"3qesu\">Exosomes contain signalling molecules that support regeneration and cellular communication within the scalp. They help improve hair density, support follicles under stress and enhance overall scalp condition.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 90,
+  "fields": {
+    "block": 30,
+    "sort_order": 3,
+    "title": "Hair Regen Treatment (PRP + Exosomes)",
+    "body": "<p data-block-key=\"3qesu\">Our Hair Regen protocol combines the benefits of PRP with exosomes for enhanced support.</p><p data-block-key=\"192s7\"></p><p data-block-key=\"annvm\">The dual approach targets multiple pathways: PRP delivers growth factors while exosomes promote regenerative signalling, creating a more robust environment for hair strength and density.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 91,
+  "fields": {
+    "block": 30,
+    "sort_order": 4,
+    "title": "Hair Formula",
+    "body": "<p data-block-key=\"3qesu\">All hair plans at <b>SKIN MENU</b> include Hair Formula, our bespoke prescription containing clinically proven hair actives. This tailored regime supports in-clinic treatments by strengthening follicles, reducing shedding and optimising long-term results.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 92,
+  "fields": {
+    "block": 31,
+    "sort_order": 1,
+    "title": "Hair Regeneration Package",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£800",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 93,
+  "fields": {
+    "block": 31,
+    "sort_order": 2,
+    "title": "PRP Hair Stimulation",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "from £400",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 94,
+  "fields": {
+    "block": 31,
+    "sort_order": 3,
+    "title": "Exosomes Hair Treatment",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "from £500",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 95,
+  "fields": {
+    "block": 32,
+    "sort_order": 1,
+    "title": "Level 1:",
+    "body": "<p data-block-key=\"yv4x0\">Superficial peels with no downtime.</p><p data-block-key=\"5va60\">These are designed to brighten, smooth and refresh the skin, and can be safely combined with treatments such as microneedling, lasers or injectables for enhanced results.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 96,
+  "fields": {
+    "block": 32,
+    "sort_order": 2,
+    "title": "Level 2:",
+    "body": "<p data-block-key=\"mutp4\">Very light peeling or flaking, with little to no downtime.</p><p data-block-key=\"93rkv\">These peels target pigmentation, congestion and early textural changes, and are often combined with microneedling or laser treatments for a more comprehensive outcome.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 97,
+  "fields": {
+    "block": 32,
+    "sort_order": 3,
+    "title": "Level 3:",
+    "body": "<p data-block-key=\"mutp4\">Gentle medium-depth peel with approximately 7–14 days of peeling.</p><p data-block-key=\"ergmr\">Used to address acne and mild hyperpigmentation.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 98,
+  "fields": {
+    "block": 32,
+    "sort_order": 4,
+    "title": "Level 4:",
+    "body": "<p data-block-key=\"mutp4\">Medium-depth peel with around 5–7 days of peeling.</p><p data-block-key=\"deepb\">These formulations penetrate deeper layers of the skin to target acne, significant pigmentation and textural irregularities.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 99,
+  "fields": {
+    "block": 32,
+    "sort_order": 5,
+    "title": "Level 5:",
+    "body": "<p data-block-key=\"mutp4\">Medium-depth peel with approximately 5–7 days of peeling.</p><p data-block-key=\"5o9ai\">Used for more advanced resurfacing needs, offering stronger corrective potential for persistent pigmentation and uneven texture.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 100,
+  "fields": {
+    "block": 33,
+    "sort_order": 1,
+    "title": "Level 1:",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£175",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 101,
+  "fields": {
+    "block": 33,
+    "sort_order": 2,
+    "title": "Level 2",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£250",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 102,
+  "fields": {
+    "block": 33,
+    "sort_order": 3,
+    "title": "Level 3",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£350",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 103,
+  "fields": {
+    "block": 33,
+    "sort_order": 4,
+    "title": "Level 4",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£450",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 104,
+  "fields": {
+    "block": 33,
+    "sort_order": 5,
+    "title": "Level 5",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£550",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 105,
+  "fields": {
+    "block": 34,
+    "sort_order": 1,
+    "title": "PRP Microneedling",
+    "body": "<p data-block-key=\"ldz9h\">Microneedling performed with platelet-rich plasma (PRP) to support repair, improve texture and enhance skin quality.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 106,
+  "fields": {
+    "block": 34,
+    "sort_order": 2,
+    "title": "Exosomes Microneedling",
+    "body": "<p data-block-key=\"i358b\">Microneedling enhanced with Exosomes for regenerative benefits, improving tone, clarity and overall skin resilience.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 107,
+  "fields": {
+    "block": 34,
+    "sort_order": 3,
+    "title": "Advanced Microneedling",
+    "body": "<p data-block-key=\"i358b\">A combination of microneedling with a bespoke chemical peel to boost brightness, refine texture and enhance overall glow.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 108,
+  "fields": {
+    "block": 35,
+    "sort_order": 1,
+    "title": "PRP Microneedling",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£450",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 109,
+  "fields": {
+    "block": 35,
+    "sort_order": 2,
+    "title": "Exosomes Microneedling",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£550",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 110,
+  "fields": {
+    "block": 35,
+    "sort_order": 3,
+    "title": "Advanced Microneedling",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£350",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 111,
+  "fields": {
+    "block": 36,
+    "sort_order": 1,
+    "title": "THE RESET FACIAL",
+    "body": "<p data-block-key=\"xll9f\">A targeted, extraction-focused treatment designed for congested or acne-prone skin. This facial works to clear blocked pores, reduce surface build-up and restore balance, leaving the skin fresher and more refined.</p><p data-block-key=\"fql7j\"></p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 112,
+  "fields": {
+    "block": 36,
+    "sort_order": 2,
+    "title": "THE CUSTOM FACIAL",
+    "body": "<p data-block-key=\"dh2yt\">A fully tailored facial designed around your skin’s specific needs. This treatment may include steam, extractions, bespoke masks and targeted steps selected to support clarity, hydration and overall skin quality. Ideal for clients seeking a personalised, restorative approach.</p>",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 113,
+  "fields": {
+    "block": 37,
+    "sort_order": 1,
+    "title": "THE RESET FACIAL",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£150",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.contentblockitem",
+  "pk": 114,
+  "fields": {
+    "block": 37,
+    "sort_order": 2,
+    "title": "THE CUSTOM FACIAL",
+    "body": "",
+    "label": "",
+    "value": "",
+    "url": "",
+    "image": null,
+    "video": null,
+    "price_text": "£150",
+    "cta_label": "",
+    "cta_url": ""
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 8,
+  "fields": {
+    "treatment": 8,
+    "sort_order": 1,
+    "block": 23
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 9,
+  "fields": {
+    "treatment": 8,
+    "sort_order": 2,
+    "block": 24
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 10,
+  "fields": {
+    "treatment": 9,
+    "sort_order": 1,
+    "block": 25
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 11,
+  "fields": {
+    "treatment": 9,
+    "sort_order": 2,
+    "block": 26
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 12,
+  "fields": {
+    "treatment": 10,
+    "sort_order": 1,
+    "block": 27
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 13,
+  "fields": {
+    "treatment": 11,
+    "sort_order": 1,
+    "block": 28
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 14,
+  "fields": {
+    "treatment": 12,
+    "sort_order": 1,
+    "block": 29
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 15,
+  "fields": {
+    "treatment": 13,
+    "sort_order": 1,
+    "block": 30
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 16,
+  "fields": {
+    "treatment": 13,
+    "sort_order": 2,
+    "block": 31
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 17,
+  "fields": {
+    "treatment": 14,
+    "sort_order": 1,
+    "block": 32
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 18,
+  "fields": {
+    "treatment": 14,
+    "sort_order": 2,
+    "block": 33
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 19,
+  "fields": {
+    "treatment": 15,
+    "sort_order": 1,
+    "block": 34
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 20,
+  "fields": {
+    "treatment": 15,
+    "sort_order": 2,
+    "block": 35
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 21,
+  "fields": {
+    "treatment": 16,
+    "sort_order": 1,
+    "block": 36
+  }
+},
+{
+  "model": "catalog.treatmentcontentblock",
+  "pk": 22,
+  "fields": {
+    "treatment": 16,
+    "sort_order": 2,
+    "block": 37
+  }
+},
+{
+  "model": "catalog.treatmentoptioncontentblock",
+  "pk": 1,
+  "fields": {
+    "option": 1,
+    "sort_order": 4,
+    "block": 38
+  }
+},
+{
+  "model": "catalog.treatmentoptioncontentblock",
+  "pk": 2,
+  "fields": {
+    "option": 2,
+    "sort_order": 4,
+    "block": 39
+  }
+},
+{
+  "model": "catalog.treatmentoptioncontentblock",
+  "pk": 3,
+  "fields": {
+    "option": 3,
+    "sort_order": 4,
+    "block": 40
+  }
+},
+{
+  "model": "catalog.treatmentoptioncontentblock",
+  "pk": 4,
+  "fields": {
+    "option": 4,
+    "sort_order": 4,
+    "block": 41
+  }
+},
+{
+  "model": "catalog.treatmentoptioncontentblock",
+  "pk": 5,
+  "fields": {
+    "option": 5,
+    "sort_order": 4,
+    "block": 42
+  }
+},
+{
+  "model": "catalog.treatmentoptioncontentblock",
+  "pk": 6,
+  "fields": {
+    "option": 6,
+    "sort_order": 4,
+    "block": 43
+  }
+},
+{
+  "model": "catalog.treatmentoptioncontentblock",
+  "pk": 7,
+  "fields": {
+    "option": 7,
+    "sort_order": 4,
+    "block": 44
+  }
+},
+{
+  "model": "pages.homepage",
+  "pk": 3,
+  "fields": {
+    "sections": "[{\"type\": \"hero\", \"value\": {\"headline\": \"YOUR BEST SKIN, ON THE MENU\", \"subheadline\": \"\", \"primary_cta\": {\"label\": \"Get Started\", \"url\": \"https://portal.aestheticnursesoftware.com/book-online/5695\"}, \"cta_position\": \"center\", \"hero_media\": [{\"type\": \"item\", \"value\": {\"image\": null, \"video\": 1, \"loop\": true, \"playback_rate\": \"0.75\", \"pos_x\": 49, \"pos_y\": 24}, \"id\": \"5e4796c8-793c-4f32-ac49-2f5991750ced\"}], \"hero_images\": []}, \"id\": \"5d52d4dd-7741-47cb-9532-51e50974508f\"}, {\"type\": \"treatments\", \"value\": {\"heading\": \"Treatments\", \"intro\": \"\", \"items\": [{\"type\": \"item\", \"value\": {\"page\": 29, \"image\": 15, \"blurb\": \"\"}, \"id\": \"e640f847-c829-43f6-bcf0-0eff266a87c7\"}, {\"type\": \"item\", \"value\": {\"page\": 37, \"image\": 6, \"blurb\": \"\"}, \"id\": \"6dfd937c-eba1-49b6-8123-ec6a61021564\"}, {\"type\": \"item\", \"value\": {\"page\": 38, \"image\": 7, \"blurb\": \"\"}, \"id\": \"92e13f28-8957-4465-a409-89b4f2fe2f57\"}, {\"type\": \"item\", \"value\": {\"page\": 39, \"image\": 16, \"blurb\": \"\"}, \"id\": \"239fd65c-7510-45bf-8c49-542b64ad476f\"}, {\"type\": \"item\", \"value\": {\"page\": 40, \"image\": 9, \"blurb\": \"\"}, \"id\": \"6bb5ec17-0066-4615-ae05-2510206dd81f\"}, {\"type\": \"item\", \"value\": {\"page\": 41, \"image\": 17, \"blurb\": \"\"}, \"id\": \"2e8c7b8a-4a4e-441a-9248-b381bd50ae06\"}, {\"type\": \"item\", \"value\": {\"page\": 42, \"image\": 11, \"blurb\": \"\"}, \"id\": \"45741185-0e2e-4402-bfe7-345f46cec505\"}], \"cta_label\": \"See full menu\", \"cta_page\": 25}, \"id\": \"6d1e442d-881e-4432-8cc9-6bffe971998b\"}, {\"type\": \"reviews_slider\", \"value\": {\"heading\": \"REVIEWS\", \"reviews\": [{\"type\": \"item\", \"value\": {\"quote\": \"I went to Dr Tego for my first chemical peel and I highly recommend the service!\", \"author\": \"Asata SJ\", \"source\": \"Google Reviews\", \"link\": \"https://maps.app.goo.gl/a3wtzuMm5D9FyZGh6\"}, \"id\": \"ba70aedb-c7ea-4a8e-b48c-ef7aa39b0e56\"}, {\"type\": \"item\", \"value\": {\"quote\": \"From the virtual consolation to just before applying the treatment she carefully walked me through the process with in a depth explanation of what the treatment entails and addressed all my questions.\", \"author\": \"Rhianna M\", \"source\": \"Google review\", \"link\": \"https://maps.app.goo.gl/XvXJLYkgz4bDMohe7\"}, \"id\": \"fcd59717-c713-4705-869f-7b209d5e0454\"}, {\"type\": \"item\", \"value\": {\"quote\": \"Both Dr Tego and Nicole are lovely and welcoming. Highly skilled and fully personalised experience for own skin care journey.\", \"author\": \"Sophie M\", \"source\": \"Google reviews\", \"link\": \"https://maps.app.goo.gl/qWsTcuy1dgTDct1w5\"}, \"id\": \"6b3d6759-7159-45de-8cc4-f9ebc85030b8\"}, {\"type\": \"item\", \"value\": {\"quote\": \"The service I received was professional, comfortable, and Dr. Tego made sure I knew exactly what to expect. I\\u2019m really excited to see how my skin looks by the 28-day mark.\", \"author\": \"Rikeja M\", \"source\": \"Google reviews\", \"link\": \"https://maps.app.goo.gl/bZXWcpFEBfjT5Y2m6\"}, \"id\": \"05d1ccff-2b58-418f-bc97-157974cc0d39\"}, {\"type\": \"item\", \"value\": {\"quote\": \"Dr Tego is absolutely amazing! She recently did Exosomes Microneedling for my hair, and I couldn\\u2019t be happier with how patient and kind she was throughout the entire process.\", \"author\": \"Tosin B\", \"source\": \"Google reviews\", \"link\": \"https://maps.app.goo.gl/p9wCvzGtuBLpLR8H6\"}, \"id\": \"b9dcdbe9-ae1f-4e2f-ae5b-a52065267175\"}, {\"type\": \"item\", \"value\": {\"quote\": \"Dr Tego is the best in London, she offers a wide range of services with the best products which she thoroughly researches.\", \"author\": \"Innes K\", \"source\": \"Google reviews\", \"link\": \"https://maps.app.goo.gl/yRVG2fJrpgbX2UVV6\"}, \"id\": \"6203965d-186f-4c3c-9d5c-0270464e3732\"}]}, \"id\": \"ff6333ab-cf3a-49fa-8008-584ece87b5bd\"}]"
+  }
+},
+{
+  "model": "pages.standardpage",
+  "pk": 22,
+  "fields": {
+    "body": "<p data-block-key=\"tqoub\"></p><p data-block-key=\"deern\"><b>Last updated:</b> 5th January 2025</p><p data-block-key=\"as9g1\">SKINMENU is committed to protecting your privacy and personal data. This Privacy Policy explains how we collect, use, store and protect your information when you visit our website or engage with our services.</p><h3 data-block-key=\"cmck\"><b>1. Who We Are</b></h3><p data-block-key=\"89ium\">SKINMENU is a UK-based medical aesthetics clinic providing skin health and aesthetic treatments.</p><p data-block-key=\"fue3\"><b>Data Controller:</b> SKINMENU</p><p data-block-key=\"41fk9\"><b>Contact email:</b> contact@skin-menu.co.uk</p><p data-block-key=\"4s1pa\"><b>Registered address:</b> 120 Pall Mall, London, SW1Y 5EA</p><h3 data-block-key=\"ant39\"><b>2. Information We Collect</b></h3><p data-block-key=\"8avug\">We may collect and process the following types of personal data:</p><p data-block-key=\"dino3\"><b>Information you provide directly</b></p><ul><li data-block-key=\"d1jqj\">Name<br/></li><li data-block-key=\"fgchv\">Email address<br/></li><li data-block-key=\"350ak\">Phone number<br/></li><li data-block-key=\"2gfg3\">Date of birth<br/></li><li data-block-key=\"1gtei\">Information submitted via enquiry or booking forms<br/></li><li data-block-key=\"7okge\">Information provided during consultations<br/></li></ul><p data-block-key=\"1p44\"><b>Automatically collected information</b></p><ul><li data-block-key=\"fsiab\">IP address<br/></li><li data-block-key=\"13ut5\">Browser type and device information<br/></li><li data-block-key=\"ce106\">Pages visited and time spent on the website<br/></li><li data-block-key=\"fjn3i\">Cookies and similar technologies<br/></li></ul><p data-block-key=\"fpg4n\"><b>Special category data</b></p><p data-block-key=\"8q6v9\">When you become a patient, we may collect health-related information necessary for medical consultations and treatments. This data is handled with enhanced confidentiality.</p><h3 data-block-key=\"cfgev\"><b>3. How We Use Your Information</b></h3><p data-block-key=\"95ipn\">We use your personal data to:</p><ul><li data-block-key=\"7mv26\">Respond to enquiries and booking requests<br/></li><li data-block-key=\"6u914\">Provide consultations and treatments<br/></li><li data-block-key=\"eutvn\">Manage appointments and patient records<br/></li><li data-block-key=\"elreo\">Communicate important service information<br/></li><li data-block-key=\"1jj6m\">Improve our website and services<br/></li><li data-block-key=\"4dh43\">Meet legal and regulatory obligations<br/></li></ul><p data-block-key=\"210ik\">We will only use your data where we have a lawful basis to do so.</p><h3 data-block-key=\"96i6r\"><b>4. Lawful Bases for Processing</b></h3><p data-block-key=\"4eav9\">Under UK GDPR, we rely on the following lawful bases:</p><ul><li data-block-key=\"1gjrd\">Consent<br/></li><li data-block-key=\"9pgrt\">Performance of a contract<br/></li><li data-block-key=\"5t0m1\">Legal obligation<br/></li><li data-block-key=\"1pm81\">Legitimate interests<br/></li><li data-block-key=\"pao6\">Provision of healthcare and medical treatment<br/></li></ul><h3 data-block-key=\"2hpki\"><b>5. Marketing Communications</b></h3><p data-block-key=\"vruu\">If you opt in, we may send you updates about SKINMENU, services or educational content. You can withdraw consent at any time by using the unsubscribe link or contacting us directly.</p><p data-block-key=\"cn189\">We do not sell your data to third parties.</p><h3 data-block-key=\"dck3o\"><b>6. Sharing Your Information</b></h3><p data-block-key=\"apfv3\">We may share your data with:</p><ul><li data-block-key=\"fppmd\">Secure booking and practice management software providers<br/></li><li data-block-key=\"blp3n\">Payment processors<br/></li><li data-block-key=\"4p19g\">Regulatory bodies where required by law<br/></li><li data-block-key=\"dkjtq\">Professional advisors such as accountants or legal advisers<br/></li></ul><p data-block-key=\"c8emu\">All third parties are required to handle your data securely and in line with data protection law.</p><h3 data-block-key=\"4v36k\"><b>7. Data Storage and Security</b></h3><p data-block-key=\"8mim6\">Your data is stored securely using appropriate technical and organisational measures. Access is restricted to authorised personnel only.</p><p data-block-key=\"e8kf6\">Medical records are stored in accordance with NHS, GMC and CQC guidance where applicable.</p><h3 data-block-key=\"ctqg9\"><b>8. How Long We Keep Your Data</b></h3><p data-block-key=\"169h8\">We retain personal data only for as long as necessary:</p><ul><li data-block-key=\"a25hi\">Enquiry data is typically kept for up to 12 months<br/></li><li data-block-key=\"8f9i4\">Patient medical records are retained in line with legal and clinical requirements<br/></li></ul><h3 data-block-key=\"81srd\"><b>9. Your Rights</b></h3><p data-block-key=\"9srt3\">You have the right to:</p><ul><li data-block-key=\"dmqhh\">Access your personal data<br/></li><li data-block-key=\"6js6c\">Request correction of inaccurate data<br/></li><li data-block-key=\"7c56h\">Request erasure where applicable<br/></li><li data-block-key=\"b7lb2\">Restrict or object to processing<br/></li><li data-block-key=\"7n16t\">Withdraw consent at any time<br/></li><li data-block-key=\"6lmjl\">Lodge a complaint with the Information Commissioner’s Office (ICO)<br/></li></ul><p data-block-key=\"e863f\">To exercise your rights, please contact us using the details above.</p><h3 data-block-key=\"8p44c\"><b>10. Cookies</b></h3><p data-block-key=\"kunq\">Our website uses cookies to enhance user experience and analyse website performance. You can manage cookie preferences through your browser settings or our cookie banner.</p><h3 data-block-key=\"7dbpr\"><b>11. Third-Party Links</b></h3><p data-block-key=\"a3ojf\">Our website may contain links to third-party sites. We are not responsible for their privacy practices and encourage you to review their policies separately.</p><h3 data-block-key=\"1jbgp\"><b>12. Changes to This Policy</b></h3><p data-block-key=\"8gjgu\">We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date.</p><h3 data-block-key=\"jlil\"><b>13. Contact Us</b></h3><p data-block-key=\"e5dm8\">If you have any questions about this Privacy Policy or how your data is handled, please contact:</p><p data-block-key=\"2d69n\"><b>Email:</b> <a href=\"mailto:contact@skin-menu.co.uk\">contact@skin-menu.co.uk</a></p>"
+  }
+},
+{
+  "model": "pages.standardpage",
+  "pk": 23,
+  "fields": {
+    "body": "[]"
+  }
+},
+{
+  "model": "pages.standardpage",
+  "pk": 24,
+  "fields": {
+    "body": "<p data-block-key=\"jwjmi\"></p><p data-block-key=\"2pgaa\"><b>Last updated:</b> 5th January 2026</p><p data-block-key=\"frbea\">These Terms of Service govern your use of the SKINMENU website and any services accessed through it. By using this website, you agree to these terms.</p><h3 data-block-key=\"b42tg\"><b>1. About SKINMENU</b></h3><p data-block-key=\"cgm7f\">SKINMENU is a UK-based medical aesthetics clinic providing professional skin health and aesthetic treatments. All treatments are subject to consultation and clinical suitability.</p><h3 data-block-key=\"e4l31\"><b>2. Use of the Website</b></h3><p data-block-key=\"1rnn6\">By using this website, you agree that you will:</p><ul><li data-block-key=\"2b2tt\">Use the site for lawful purposes only<br/></li><li data-block-key=\"30n7m\">Not misuse, interfere with, or attempt to gain unauthorised access to the website<br/></li><li data-block-key=\"c281r\">Not copy, reproduce, or distribute website content without permission<br/></li></ul><p data-block-key=\"apqvk\">We reserve the right to suspend or restrict access if these terms are breached.</p><h3 data-block-key=\"fnsgb\"><b>3. Medical Information Disclaimer</b></h3><p data-block-key=\"e0nvf\">All content on this website is provided for general informational purposes only. It does not constitute medical advice and should not be relied upon as such.</p><p data-block-key=\"6a1dm\">Individual treatment suitability varies. All treatments offered by SKINMENU require a professional consultation and may require a cooling-off period in line with UK regulations.</p><h3 data-block-key=\"8c100\"><b>4. Appointments and Consultations</b></h3><p data-block-key=\"2fmcl\">Submitting an enquiry or booking request does not guarantee an appointment or treatment.</p><p data-block-key=\"beiv4\">Appointments are confirmed only once you receive confirmation from SKINMENU. We reserve the right to decline treatment if it is not clinically appropriate.</p><h3 data-block-key=\"f6co6\"><b>5. Fees and Payments</b></h3><p data-block-key=\"28bm4\">Prices listed on the website are indicative and may be subject to change.</p><p data-block-key=\"cn41a\">Final treatment costs will be confirmed following consultation. Payment terms, deposits, and cancellation policies will be communicated separately at the time of booking.</p><h3 data-block-key=\"8osqu\"><b>6. Cancellations and Late Arrivals</b></h3><p data-block-key=\"8sbpj\">Cancellation and rescheduling policies are outlined at the time of booking and may vary by treatment.</p><p data-block-key=\"9cuvv\">Late arrival may result in reduced treatment time or cancellation without refund, depending on clinical scheduling constraints.</p><h3 data-block-key=\"d5gl5\"><b>7. Results and Outcomes</b></h3><p data-block-key=\"f5gvf\">All aesthetic and medical treatments carry inherent risks and variable outcomes.</p><p data-block-key=\"41r34\">SKINMENU does not guarantee specific results. Outcomes depend on individual factors including skin type, medical history, lifestyle, and adherence to aftercare advice.</p><h3 data-block-key=\"2kb8t\"><b>8. Intellectual Property</b></h3><p data-block-key=\"4a5ho\">All website content, including text, branding, images, logos, and designs, is the property of SKINMENU unless otherwise stated.</p><p data-block-key=\"5hkam\">You may not copy, reproduce, or use any content without prior written consent.</p><h3 data-block-key=\"84u2b\"><b>9. Third-Party Links</b></h3><p data-block-key=\"536kv\">This website may contain links to third-party websites. These links are provided for convenience only.</p><p data-block-key=\"2964p\">SKINMENU has no control over and accepts no responsibility for third-party content, policies, or practices.</p><h3 data-block-key=\"4tlno\"><b>10. Limitation of Liability</b></h3><p data-block-key=\"12uo0\">To the fullest extent permitted by law, SKINMENU is not liable for:</p><ul><li data-block-key=\"bjr1j\">Any loss or damage arising from use of this website<br/></li><li data-block-key=\"brma6\">Reliance on website content<br/></li><li data-block-key=\"5ve\">Delays, interruptions, or technical issues<br/></li></ul><p data-block-key=\"dos82\">Nothing in these terms limits liability for death or personal injury caused by negligence, fraud, or any liability that cannot be excluded under UK law.</p><h3 data-block-key=\"9bels\"><b>11. Data Protection</b></h3><p data-block-key=\"eijt3\">Personal data is handled in accordance with our Privacy Policy. By using this website, you agree to our data practices as outlined there.</p><h3 data-block-key=\"io1m\"><b>12. Changes to These Terms</b></h3><p data-block-key=\"f8kj2\">We may update these Terms of Service at any time. Updated terms will be posted on this page with a revised date.</p><p data-block-key=\"62kff\">Continued use of the website constitutes acceptance of the updated terms.</p><h3 data-block-key=\"fe7oq\"><b>13. Governing Law</b></h3><p data-block-key=\"8pf1s\">These Terms of Service are governed by and interpreted in accordance with the laws of England and Wales.</p><p data-block-key=\"9j763\">Any disputes will be subject to the exclusive jurisdiction of the courts of England and Wales.</p><h3 data-block-key=\"700b6\"><b>14. Contact</b></h3><p data-block-key=\"59d81\">If you have any questions about these Terms of Service, please contact:</p><p data-block-key=\"bj519\"><b>Email:</b> <a href=\"mailto:contact@skin-menu.co.uk\">contact@skin-menu.co.uk</a></p>"
+  }
+},
+{
+  "model": "pages.treatmentsindexpage",
+  "pk": 25,
+  "fields": {
+    "intro": "<p data-block-key=\"644r1\">Explore the menu by category. Each treatment page includes key facts, what to expect, and FAQs.</p>",
+    "featured_image": 4,
+    "sections": "[]"
+  }
+},
+{
+  "model": "pages.menusectionpage",
+  "pk": 29,
+  "fields": {
+    "hero": "[{\"type\": \"hero_block\", \"value\": {\"headline\": \"LASERS\", \"subheadline\": \"\", \"primary_cta\": {\"label\": \"BOOK NOW\", \"url\": \"https://portal.aestheticnursesoftware.com/book-online/5695\"}, \"cta_position\": \"center\", \"hero_media\": [{\"type\": \"item\", \"value\": {\"image\": null, \"video\": 4, \"loop\": true, \"playback_rate\": \"1.0\", \"pos_x\": 49, \"pos_y\": 73}, \"id\": \"d6a5ca43-0ca5-4aea-8962-8f75bb9ed016\"}], \"hero_images\": []}, \"id\": \"900eaa34-2063-47ca-9994-26cb8bb10888\"}]",
+    "intro": "<p data-block-key=\"mks5p\">Our laser approach is tailored and multi-modality.</p><p data-block-key=\"8pv2r\"></p><p data-block-key=\"d6h6c\">We use a curated combination of technologies to treat skin tone, texture, hyperpigmentation and redness with precision.</p><p data-block-key=\"cch1d\"></p><p data-block-key=\"8kmap\">Often layered and combined with other treatments for enhanced and refined results.</p>",
+    "treatment": 8
+  }
+},
+{
+  "model": "pages.menusectionpage",
+  "pk": 37,
+  "fields": {
+    "hero": "[{\"type\": \"hero_block\", \"value\": {\"headline\": \"FILLER\", \"subheadline\": \"\", \"primary_cta\": {\"label\": \"BOOK NOW\", \"url\": \"https://portal.aestheticnursesoftware.com/book-online/5695\"}, \"cta_position\": \"center\", \"hero_media\": [{\"type\": \"item\", \"value\": {\"image\": null, \"video\": 1, \"loop\": true, \"playback_rate\": \"1.0\", \"pos_x\": 51, \"pos_y\": 23}, \"id\": \"dc0e20a2-842f-40a1-8ce1-0efee10d27e5\"}], \"hero_images\": []}, \"id\": \"a46707e6-0981-4bfc-8f7c-2340c132aa46\"}]",
+    "intro": "<p data-block-key=\"9p10q\">Dermal fillers help restore volume and enhance facial structure, bringing gentle definition.</p><p data-block-key=\"2knk5\">We specialise in subtle, undetectable tweaks, complimenting your features</p>",
+    "treatment": 9
+  }
+},
+{
+  "model": "pages.menusectionpage",
+  "pk": 38,
+  "fields": {
+    "hero": "[{\"type\": \"hero_block\", \"value\": {\"headline\": \"BOTOX\", \"subheadline\": \"\", \"primary_cta\": {\"label\": \"BOOK NOW\", \"url\": \"https://portal.aestheticnursesoftware.com/book-online/5695\"}, \"show_primary_cta\": true, \"cta_position\": \"center\", \"hero_media\": [{\"type\": \"item\", \"value\": {\"image\": null, \"video\": 8, \"loop\": true, \"playback_rate\": \"1.0\", \"pos_x\": 50, \"pos_y\": 45}, \"id\": \"54de0887-f09c-439f-9969-13f3b29f65ac\"}], \"hero_images\": []}, \"id\": \"115edb1c-d125-4b99-9931-a8278ac145ff\"}]",
+    "intro": "<p data-block-key=\"u255v\">Botox helps ease dynamic lines and restore a calm, refreshed quality to the face. Each treatment is placed with precision to maintain expression while achieving a smoother finish.</p>",
+    "treatment": 10
+  }
+},
+{
+  "model": "pages.menusectionpage",
+  "pk": 39,
+  "fields": {
+    "hero": "[{\"type\": \"hero_block\", \"value\": {\"headline\": \"SKIN BOOSTERS\", \"subheadline\": \"\", \"primary_cta\": {\"label\": \"BOOK NOW\", \"url\": \"https://portal.aestheticnursesoftware.com/book-online/5695\"}, \"show_primary_cta\": true, \"cta_position\": \"center\", \"hero_media\": [{\"type\": \"item\", \"value\": {\"image\": null, \"video\": 18, \"loop\": true, \"playback_rate\": \"0.75\", \"pos_x\": 50, \"pos_y\": 50}, \"id\": \"95f4d417-df31-428c-b1b2-cbec73d3eb0f\"}], \"hero_images\": []}, \"id\": \"3cc80ba0-3fe2-4b68-b2d3-ec925cc62371\"}]",
+    "intro": "<p data-block-key=\"vbp82\">At SKINMENU we tailor these treatments to your skin's needs, often combining boosters with lasers or peels for enhanced results.</p>",
+    "treatment": 11
+  }
+},
+{
+  "model": "pages.menusectionpage",
+  "pk": 41,
+  "fields": {
+    "hero": "[{\"type\": \"hero_block\", \"value\": {\"headline\": \"POLYNUCLEOTIDES\", \"subheadline\": \"\", \"primary_cta\": {\"label\": \"BOOK NOW\", \"url\": \"https://portal.aestheticnursesoftware.com/book-online/5695\"}, \"show_primary_cta\": true, \"cta_position\": \"center\", \"hero_media\": [{\"type\": \"item\", \"value\": {\"image\": null, \"video\": 19, \"loop\": true, \"playback_rate\": \"0.75\", \"pos_x\": 48, \"pos_y\": 50}, \"id\": \"bb5cdd56-7655-4073-9b09-e7b335074071\"}], \"hero_images\": []}, \"id\": \"faad8d91-8057-4745-b1be-c0f5375b9890\"}]",
+    "intro": "<p data-block-key=\"lce02\">improve skin quality by supporting cellular repair, hydration &amp; elasticity. They work by creating an optimal environment for the skin's collagen producing cells, enhancing tissue renewal and strengthening the skin's foundation. They are used for concerns such as under-eye crepiness, fine lines, dullness and compromised skin quality.<br/></p><p data-block-key=\"fobih\">At <b>SKINMENU</b>, we integrate polynucleotides into multi-modality treatment plans to achieve smoother, healthier-looking skin over time.</p>",
+    "treatment": 12
+  }
+},
+{
+  "model": "pages.menusectionpage",
+  "pk": 42,
+  "fields": {
+    "hero": "[{\"type\": \"hero_block\", \"value\": {\"headline\": \"HAIR\", \"subheadline\": \"\", \"primary_cta\": {\"label\": \"BOOK NOW\", \"url\": \"https://portal.aestheticnursesoftware.com/book-online/5695\"}, \"show_primary_cta\": true, \"cta_position\": \"center\", \"hero_media\": [{\"type\": \"item\", \"value\": {\"image\": null, \"video\": 20, \"loop\": true, \"playback_rate\": \"0.75\", \"pos_x\": 50, \"pos_y\": 74}, \"id\": \"c42bee21-1e4b-4500-9700-a454495735c1\"}], \"hero_images\": []}, \"id\": \"a8654845-dad6-40c0-a3f2-5fed29d12311\"}]",
+    "intro": "<p data-block-key=\"dthqr\">Our hair treatments focus on supporting growth, strengthening follicles and improving scalp health through a combination of regenerative injectables and prescription-grade at-home care.</p><p data-block-key=\"5snd5\"></p><p data-block-key=\"a2nnq\">Each plan is tailored to the pattern and cause of hair thinning, often combining multiple modalities for more cohesive results.</p>",
+    "treatment": 13
+  }
+},
+{
+  "model": "pages.menusectionpage",
+  "pk": 44,
+  "fields": {
+    "hero": "[{\"type\": \"hero_block\", \"value\": {\"headline\": \"SKIN PEELS\", \"subheadline\": \"\", \"primary_cta\": {\"label\": \"BOOK NOW\", \"url\": \"https://portal.aestheticnursesoftware.com/book-online/5695\"}, \"show_primary_cta\": true, \"cta_position\": \"center\", \"hero_media\": [{\"type\": \"item\", \"value\": {\"image\": null, \"video\": 21, \"loop\": true, \"playback_rate\": \"0.75\", \"pos_x\": 50, \"pos_y\": 50}, \"id\": \"f3c5901e-ce04-4e68-b8f8-26047c069f59\"}], \"hero_images\": []}, \"id\": \"d1e5b8e3-60bd-45bd-a488-6382250243e5\"}]",
+    "intro": "<p data-block-key=\"v7rco\">Chemical peels use carefully selected acids to improve tone, texture and overall skin clarity. At SKINMENU every peel is chosen and tailored to your skin's needs, concerns and goals. Peels are often combined with microneedling, lasers or injectables as part of a wider treatment plan.</p>",
+    "treatment": 14
+  }
+},
+{
+  "model": "pages.menusectionpage",
+  "pk": 45,
+  "fields": {
+    "hero": "[{\"type\": \"hero_block\", \"value\": {\"headline\": \"MICRONEEDLING\", \"subheadline\": \"\", \"primary_cta\": {\"label\": \"BOOK NOW\", \"url\": \"https://portal.aestheticnursesoftware.com/book-online/5695\"}, \"cta_position\": \"center\", \"hero_media\": [{\"type\": \"item\", \"value\": {\"image\": null, \"video\": 17, \"loop\": true, \"playback_rate\": \"0.75\", \"pos_x\": 50, \"pos_y\": 59}, \"id\": \"a19af1d2-306e-49fd-a102-f8b749df7e5d\"}], \"hero_images\": []}, \"id\": \"a072eaa5-2ff4-425f-9ba4-2c4e9e83e3cd\"}]",
+    "intro": "<p data-block-key=\"0r2rv\">Microneedling improves skin texture, clarity and overall quality by creating micro-channels that stimulate collagen and enhance the effectiveness of targeted actives.</p><p data-block-key=\"26ngs\">Each treatment is customised and often combined with regenerative solutions or chemical peels to elevate results.</p>",
+    "treatment": 15
+  }
+},
+{
+  "model": "pages.menusectionpage",
+  "pk": 46,
+  "fields": {
+    "hero": "[{\"type\": \"hero_block\", \"value\": {\"headline\": \"FACIALS\", \"subheadline\": \"\", \"primary_cta\": {\"label\": \"BOOK NOW\", \"url\": \"https://portal.aestheticnursesoftware.com/book-online/5695\"}, \"cta_position\": \"center\", \"hero_media\": [{\"type\": \"item\", \"value\": {\"image\": null, \"video\": 7, \"loop\": true, \"playback_rate\": \"1.0\", \"pos_x\": 51, \"pos_y\": 54}, \"id\": \"e5d56731-a206-45f4-a372-8bca1a582be8\"}], \"hero_images\": []}, \"id\": \"1e4a43be-c131-4828-8049-98d7b2fdf450\"}]",
+    "intro": "<p data-block-key=\"8zm0a\">Our facials are designed to reset, clarify and support overall skin health. Each treatment is tailored to your skin's needs, focusing on refinement, clarity and a balanced complexion. At SKINMENU we often incorporate facials into your skin plan to prime your skin for more intensive treatments.</p><p data-block-key=\"9b4ss\"></p><p data-block-key=\"70j81\"></p>",
+    "treatment": 16
+  }
+},
+{
+  "model": "pages.treatmentpage",
+  "pk": 30,
+  "fields": {
+    "treatment": 8,
+    "option": 1
+  }
+},
+{
+  "model": "pages.treatmentpage",
+  "pk": 31,
+  "fields": {
+    "treatment": 8,
+    "option": 2
+  }
+},
+{
+  "model": "pages.treatmentpage",
+  "pk": 32,
+  "fields": {
+    "treatment": 8,
+    "option": 3
+  }
+},
+{
+  "model": "pages.treatmentpage",
+  "pk": 33,
+  "fields": {
+    "treatment": 8,
+    "option": 4
+  }
+},
+{
+  "model": "pages.treatmentpage",
+  "pk": 34,
+  "fields": {
+    "treatment": 8,
+    "option": 5
+  }
+},
+{
+  "model": "pages.treatmentpage",
+  "pk": 35,
+  "fields": {
+    "treatment": 8,
+    "option": 6
+  }
+},
+{
+  "model": "pages.treatmentpage",
+  "pk": 36,
+  "fields": {
+    "treatment": 8,
+    "option": 7
+  }
+},
+{
+  "model": "pages.blogindexpage",
+  "pk": 28,
+  "fields": {
+    "intro": ""
+  }
+},
+{
+  "model": "pages.blogpagetag",
+  "pk": 2,
+  "fields": {
+    "tag": 1,
+    "content_object": 43
+  }
+},
+{
+  "model": "pages.blogpage",
+  "pk": 43,
+  "fields": {
+    "date": "2026-01-04",
+    "featured_image": 4,
+    "excerpt": "BLOG",
+    "body": "[{\"type\": \"image\", \"value\": {\"image\": 3, \"caption\": \"CAPTION\"}, \"id\": \"35961076-56ad-4e17-a610-f04fe22a793c\"}, {\"type\": \"rich_text\", \"value\": \"<p data-block-key=\\\"p9t8l\\\"><b>HEADER</b></p>\", \"id\": \"e9bb9cd9-6528-4f94-99b6-b54e87532a7f\"}, {\"type\": \"rich_text\", \"value\": \"<p data-block-key=\\\"p9t8l\\\">BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY <a linktype=\\\"page\\\" id=\\\"3\\\">Home</a><br/></p>\", \"id\": \"618301be-f516-4b0f-a5f9-c9b9538685fe\"}, {\"type\": \"pull_quote\", \"value\": {\"quote\": \"QUOTE\", \"attribution\": \"google review\"}, \"id\": \"1907b544-42fa-4d4d-a58d-7684bdc07a72\"}, {\"type\": \"faq\", \"value\": {\"eyebrow\": \"eyebrow\", \"heading\": \"Frequently asked questions\", \"items\": [{\"type\": \"item\", \"value\": {\"question\": \"is it true\", \"answer\": \"<p data-block-key=\\\"fz6qh\\\">yes</p>\"}, \"id\": \"b42b8659-1400-4c58-a81d-f75d5af529d8\"}]}, \"id\": \"24068463-0c43-4334-8575-3d0c3d76672c\"}, {\"type\": \"cta\", \"value\": {\"heading\": \"get started book now\", \"body\": \"\", \"primary_cta\": {\"label\": \"book now\", \"url\": \"https://drtegoclinic.co.uk\"}, \"secondary_cta\": {\"label\": \"book now\", \"url\": \"https://drtegoclinic.co.uk\"}}, \"id\": \"fac23731-af1b-4ab1-8003-b00939dc6c33\"}]"
+  }
+},
+{
+  "model": "pages.contactpageformfield",
+  "pk": 1,
+  "fields": {
+    "sort_order": 0,
+    "clean_name": "name",
+    "label": "Name",
+    "field_type": "singleline",
+    "required": true,
+    "choices": "",
+    "default_value": "",
+    "help_text": "Please enter your name here",
+    "page": 27
+  }
+},
+{
+  "model": "pages.contactpageformfield",
+  "pk": 2,
+  "fields": {
+    "sort_order": 1,
+    "clean_name": "email",
+    "label": "Email",
+    "field_type": "email",
+    "required": true,
+    "choices": "",
+    "default_value": "",
+    "help_text": "Please enter your email here",
+    "page": 27
+  }
+},
+{
+  "model": "pages.contactpageformfield",
+  "pk": 3,
+  "fields": {
+    "sort_order": 2,
+    "clean_name": "message",
+    "label": "Message",
+    "field_type": "multiline",
+    "required": true,
+    "choices": "",
+    "default_value": "",
+    "help_text": "Hello...",
+    "page": 27
+  }
+},
+{
+  "model": "pages.contactpage",
+  "pk": 27,
+  "fields": {
+    "to_address": "hello@skinmenu.co.uk",
+    "from_address": "no-reply@skinmenu.local",
+    "subject": "New enquiry — SKINMENU",
+    "intro": "<p data-block-key=\"rfayt\">Email us and we’ll respond with consultation availability.</p>",
+    "featured_image": 4,
+    "map_embed_url": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3042.7098560997024!2d-0.13388478747735838!3d51.507402510585194!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x82d7d32806d2528d%3A0x9465ced5fe22e415!2sDr%20Tego%20Clinic!5e1!3m2!1sen!2s!4v1767532070588!5m2!1sen!2s",
+    "booking_links": "[{\"type\": \"link\", \"value\": {\"label\": \"Instagram\", \"url\": \"https://www.example.com\", \"note\": \"\"}, \"id\": \"3d5d2dbf-e08b-41bd-87f6-a4a2844dac02\"}, {\"type\": \"link\", \"value\": {\"label\": \"Tiktok\", \"url\": \"https://www.example.com\", \"note\": \"\"}, \"id\": \"4aa4a612-e120-42b1-8ad0-be57a66c65e1\"}]",
+    "thank_you_text": "<p data-block-key=\"ncuie\">Thank you — we’ve received your message and will respond shortly.</p>"
+  }
+},
+{
+  "model": "pages.aboutpage",
+  "pk": 26,
+  "fields": {
+    "intro": "<p data-block-key=\"a9xrs\">SKINMENU is a curated space for modern skin health — editorial, evidence-led, and quietly luxurious.</p>",
+    "sections": "[{\"type\": \"hero\", \"value\": {\"headline\": \"ABOUT\", \"subheadline\": \"\", \"primary_cta\": {\"label\": \"GET STARTED\", \"url\": \"https://portal.aestheticnursesoftware.com/book-online/5695\"}, \"show_primary_cta\": false, \"cta_position\": \"center\", \"hero_media\": [{\"type\": \"item\", \"value\": {\"image\": null, \"video\": 16, \"loop\": true, \"playback_rate\": \"0.75\", \"pos_x\": 44, \"pos_y\": 24}, \"id\": \"118b8095-4d55-4d24-8067-eb77333fcc5e\"}], \"hero_images\": []}, \"id\": \"250d3d18-a607-4176-9d5f-8040533b90f1\"}, {\"type\": \"who\", \"value\": {\"eyebrow\": \"SKIN MENU\", \"heading\": \"WHO ARE WE\", \"body\": \"<p data-block-key=\\\"mxk80\\\">SKINMENU is a curated space for modern skin health and natural aesthetic refinement.<br/></p><p data-block-key=\\\"6nah4\\\">Every treatment is part of a bespoke composition layered with intention, grounded in expertise, and tailored to the nuances of your skin.<br/></p><p data-block-key=\\\"6vl6v\\\">We believe in the power of subtlety, the beauty of individuality, and the importance of skin that feels as good as it looks.<br/></p><p data-block-key=\\\"a3id5\\\">Our approach blends precision, inclusivity, and quiet artistry to create results that whisper, not shout.</p>\", \"media\": {\"image\": 4, \"video\": null, \"loop\": true, \"playback_rate\": \"1.0\", \"pos_x\": 50, \"pos_y\": 50}, \"buttons\": []}, \"id\": \"0a4966cb-409f-49e9-aaaa-e8f146ba3052\"}, {\"type\": \"values\", \"value\": {\"eyebrow\": \"What we believe in\", \"heading\": \"OUR VALUES\", \"values\": [{\"type\": \"item\", \"value\": {\"title\": \"CURATION\", \"text\": \"A tailored menu for every face. Treatments composed with precision, restraint, and quiet artistry.\"}, \"id\": \"ab4f8829-54d3-427a-bbdc-2f84e98b7139\"}, {\"type\": \"item\", \"value\": {\"title\": \"CONFIDENCE\", \"text\": \"Results that feel effortless: radiant skin, natural enhancement, and a sense of ease in your own features.\"}, \"id\": \"ab9d386e-f33b-4cb3-b99c-ba9823a5cee2\"}, {\"type\": \"item\", \"value\": {\"title\": \"INTEGRITY\", \"text\": \"A commitment to evidence, ethics, and honesty. We do what\\u2019s right for your skin, not what\\u2019s fashionable.\"}, \"id\": \"358cde92-3707-4d69-8c65-7e88318b16bc\"}, {\"type\": \"item\", \"value\": {\"title\": \"INCLUSIVITY\", \"text\": \"Beauty is diverse. Our approach embraces every tone and texture with equal depth and understanding.\"}, \"id\": \"1a74a6a3-5c3d-4f32-8d56-33195800a267\"}, {\"type\": \"item\", \"value\": {\"title\": \"SUBTLETY\", \"text\": \"We refine, not reinvent. Timeless, natural outcomes that enhance without altering identity.\"}, \"id\": \"e3ea9a1e-86b3-4083-bede-9ecfa272f9ce\"}, {\"type\": \"item\", \"value\": {\"title\": \"INNOVATION\", \"text\": \"We use advanced technologies and multi-modality techniques to achieve intelligent, long-lasting change.\"}, \"id\": \"678329c0-a959-4e4a-880b-b7181306a767\"}]}, \"id\": \"fc66ddf9-e1d8-490f-8344-0ad307a05d25\"}, {\"type\": \"founder\", \"value\": {\"eyebrow\": \"Clinician-led\", \"heading\": \"Dr Tego\", \"body\": \"<p data-block-key=\\\"pdj1d\\\">Dr Tego Kirnon-Jackman MBBS MS BSc is a multi-award winning medical and aesthetic doctor with a passion for blending clinical precision with quiet artistry. Her work is shaped by an expert understanding of skin physiology, anatomy and the power of subtle enhancement.</p><p data-block-key=\\\"c3r3v\\\"></p><p data-block-key=\\\"4t5rl\\\">With a multi-modality apporach and a strong focus on inclusivity, she composes personalised \\\"menus\\\" that respect individuality and celebrate natural features</p><p data-block-key=\\\"6q8en\\\"></p><p data-block-key=\\\"4tvr9\\\">Her vision is to redefine modern aesthetics as a space of confidence, clarity and intelligent refinement.</p><p data-block-key=\\\"d3763\\\"></p>\", \"media\": {\"image\": 13, \"video\": null, \"loop\": false, \"playback_rate\": \"1.0\", \"pos_x\": 45, \"pos_y\": 22}, \"buttons\": [{\"type\": \"item\", \"value\": {\"label\": \"label\", \"page\": null, \"url\": \"https://portal.aestheticnursesoftware.com/book-online/5695\"}, \"id\": \"84f06c50-be4e-4dc5-be18-03aa8c00501b\"}]}, \"id\": \"83564358-6bf3-4bd9-9bce-002fe8397c8d\"}]"
+  }
+},
+{
+  "model": "pages.aboutteammember",
+  "pk": 4,
+  "fields": {
+    "page": 26,
+    "name": "Nicole",
+    "role": "Skin Therapist",
+    "experience": "",
+    "bio": "Nicole is a skin therapist and final year nursing student with a strong interest in holistic skin health. She is passionate about supporting clients with acne and hyperpigmentation through evidence informed treatments and personalised skin plans. Her approach focuses on improving skin health while supporting confidence and long term results.",
+    "image": 12
+  }
+},
+{
+  "model": "pages.aboutteammember",
+  "pk": 5,
+  "fields": {
+    "page": 26,
+    "name": "Dr Gauthami",
+    "role": "Aesthetic Doctor",
+    "experience": "",
+    "bio": "Dr Gauthami is an aesthetic doctor and aspiring GP with a holistic approach to wellness and preventative care. She combines medical and aesthetic treatments to support long term health, confidence, and natural results. Her practice reflects a strong belief in lifestyle optimisation, movement, and sustainable daily habits as part of overall wellbeing.",
+    "image": 14
+  }
+}
+]
