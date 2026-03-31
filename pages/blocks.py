@@ -98,7 +98,7 @@ class MediaChooserBlock(blocks.StructBlock):
 
 class SkinmenuModuleBlock(blocks.StructBlock):
     class Meta:
-        form_template = "wagtailadmin/blocks/module_card.html"
+        pass
 
 # ---------------------------
 # Homepage blocks

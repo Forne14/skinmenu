@@ -4,7 +4,7 @@
 {% block content %}
   {% get_settings %}
   {% with treatment=page.treatment option=page.option %}
-  {% with active_item=treatment|default:option %}
+  {% with active_item=option|default:treatment %}
   <section class="section">
     <div class="container-shell">
       <div class="grid gap-8 lg:grid-cols-12 lg:gap-10">

@@ -171,7 +171,6 @@ class Treatment(ClusterableModel):
             heading="Status",
         ),
         InlinePanel("content_blocks", label="Content blocks"),
-        InlinePanel("options", label="Options"),
     ]
 
     class Meta:
